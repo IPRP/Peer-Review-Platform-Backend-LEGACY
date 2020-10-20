@@ -21,9 +21,18 @@ sudo ./install_mongodb.sh
 
 ## 🏃‍♂️ Run
 
-TODO
+### Linux
 
+```bash
+chmod +x run_mongodb.sh
+./run_mongodb.sh
+```
 
+### WSL2 + Windows
+
+```
+.\run_mongodb.bat
+```
 
 ## ❌Uninstall
 
