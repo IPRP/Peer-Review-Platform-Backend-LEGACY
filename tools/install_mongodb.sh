@@ -48,4 +48,5 @@ echo "MongoDB successfully installed!"
 # Configure service so that password is not needed when starting MongoDB
 user=$(whoami)
 sudo bash -c "echo '$user ALL=(ALL:ALL) NOPASSWD:/usr/sbin/service mongodb start' >> /etc/sudoers"
+sudo bash -c "echo '$user ALL=(ALL:ALL) NOPASSWD:/usr/sbin/service mongodb stop' >> /etc/sudoers"
 echo "MongoDB can now be started via 'sudo service mongodb start', password is not needed."

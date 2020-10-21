@@ -1,3 +1,18 @@
+# Java
+
+## 🛠 Installation
+
+## Linux + WSL2
+
+```bash
+chmod +x install_java.sh
+sudo ./install_java.sh
+```
+
+## Windows
+
+TODO
+
 # MongoDB
 
 ## 🛠 Installation
@@ -52,5 +67,6 @@ sc.exe delete MongoDB
 
 ## 📕 Sources
 
+* https://github.com/ojdkbuild/ojdkbuild
 * https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/
 * https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/
