@@ -1,4 +1,4 @@
-# Java
+# Java ☕
 
 ## 🛠 Installation
 
@@ -11,9 +11,13 @@ sudo ./install_java.sh
 
 ## Windows
 
-TODO
+```
+.\install_java.bat
+```
 
-# MongoDB
+
+
+# MongoDB 🍃
 
 ## 🛠 Installation
 
