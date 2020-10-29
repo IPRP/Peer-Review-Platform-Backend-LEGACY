@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class RestTemplate {
 
-    @GetMapping("/")
+    @GetMapping("/testing")
     public String sayHi() {
         return "Hi!";
     }
