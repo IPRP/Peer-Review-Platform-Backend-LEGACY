@@ -15,7 +15,7 @@ public class RestDefault {
      * @return JSON mit den Daten
      */
     @GetMapping("/")
-    public String rest_get_dashboard(int id){
+    public String restgetdashboard(int id){
         return "{DATEN}";
     }
 
@@ -25,7 +25,7 @@ public class RestDefault {
      * @param pw User passwort
      */
     @GetMapping("/login")
-    public void rest_get_login(int id, String pw){
+    public void restgetlogin(int id, String pw){
     }
 
     /**
@@ -34,7 +34,7 @@ public class RestDefault {
      * @return JSON mit der Abgabe
      */
     @GetMapping("/data")
-    public String rest_get_data(int id){
+    public String restgetdata(int id){
         return "{DATEN}";
     }
 
@@ -43,7 +43,7 @@ public class RestDefault {
      * @param id deliveryid
      */
     @PostMapping("/data")
-    public void rest_post_data(int id){
+    public void restpostdata(int id){
     }
 
     /**
@@ -51,7 +51,7 @@ public class RestDefault {
      * @param id deliveryid
      */
     @PutMapping("/data")
-    public void rest_put_data(int id){
+    public void restputdata(int id){
     }
 
     /**
@@ -59,6 +59,6 @@ public class RestDefault {
      * @param id deliveryid
      */
     @DeleteMapping("/data")
-    public void rest_del_data(int id){
+    public void restdeldata(int id){
     }
 }

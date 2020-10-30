@@ -27,7 +27,7 @@ class AuthProvider : AuthenticationProvider{
 
         return if (name == "admin" && password == "admin") {
             val grantedAuths: MutableList<GrantedAuthority> = ArrayList()
-            grantedAuths.add(SimpleGrantedAuthority("ROLE_USER"))
+            grantedAuths.add(SimpleGrantedAuthority("ROLEUSER"))
             val principal: UserDetails = User(name, password, grantedAuths)
             UsernamePasswordAuthenticationToken(principal, password, grantedAuths)
         } else {

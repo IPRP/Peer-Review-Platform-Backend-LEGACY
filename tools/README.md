@@ -5,14 +5,14 @@
 ## Linux + WSL2
 
 ```bash
-chmod +x install_java.sh
-sudo ./install_java.sh
+chmod +x installjava.sh
+sudo ./installjava.sh
 ```
 
 ## Windows
 
 ```
-.\install_java.bat
+.\installjava.bat
 ```
 
 
@@ -26,8 +26,8 @@ sudo ./install_java.sh
 > Note: The following script is only supported on Ubuntu
 
 ```bash
-chmod +x install_mongodb.sh
-sudo ./install_mongodb.sh
+chmod +x installmongodb.sh
+sudo ./installmongodb.sh
 ```
 
 ### Windows
@@ -35,7 +35,7 @@ sudo ./install_mongodb.sh
 > Note: When prompted by the installer choose to install MongoDB as a service
 
 ```bash
-.\install_mongodb.bat
+.\installmongodb.bat
 ```
 
 ## 🏃‍♂️ Run
@@ -43,14 +43,14 @@ sudo ./install_mongodb.sh
 ### Linux
 
 ```bash
-chmod +x run_mongodb.sh
-./run_mongodb.sh
+chmod +x runmongodb.sh
+./runmongodb.sh
 ```
 
 ### WSL2 + Windows
 
 ```
-.\run_mongodb.bat
+.\runmongodb.bat
 ```
 
 ## ❌Uninstall

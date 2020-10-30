@@ -22,7 +22,7 @@
 ##
 ##############################################################################
 
-# Attempt to set APP_HOME
+# Attempt to set APPHOME
 # Resolve links: $0 may be a link
 PRG="$0"
 # Need this for relative symlinks.
@@ -37,17 +37,17 @@ while [ -h "$PRG" ] ; do
 done
 SAVED="`pwd`"
 cd "`dirname \"$PRG\"`/" >/dev/null
-APP_HOME="`pwd -P`"
+APPHOME="`pwd -P`"
 cd "$SAVED" >/dev/null
 
-APP_NAME="Gradle"
-APP_BASE_NAME=`basename "$0"`
+APPNAME="Gradle"
+APPBASENAME=`basename "$0"`
 
-# Add default JVM options here. You can also use JAVA_OPTS and GRADLE_OPTS to pass JVM options to this script.
-DEFAULT_JVM_OPTS='"-Xmx64m" "-Xms64m"'
+# Add default JVM options here. You can also use JAVAOPTS and GRADLEOPTS to pass JVM options to this script.
+DEFAULTJVMOPTS='"-Xmx64m" "-Xms64m"'
 
-# Use the maximum available, or set MAX_FD != -1 to use that value.
-MAX_FD="maximum"
+# Use the maximum available, or set MAXFD != -1 to use that value.
+MAXFD="maximum"
 
 warn () {
     echo "$*"
@@ -80,55 +80,55 @@ case "`uname`" in
     ;;
 esac
 
-CLASSPATH=$APP_HOME/gradle/wrapper/gradle-wrapper.jar
+CLASSPATH=$APPHOME/gradle/wrapper/gradle-wrapper.jar
 
 
 # Determine the Java command to use to start the JVM.
-if [ -n "$JAVA_HOME" ] ; then
-    if [ -x "$JAVA_HOME/jre/sh/java" ] ; then
+if [ -n "$JAVAHOME" ] ; then
+    if [ -x "$JAVAHOME/jre/sh/java" ] ; then
         # IBM's JDK on AIX uses strange locations for the executables
-        JAVACMD="$JAVA_HOME/jre/sh/java"
+        JAVACMD="$JAVAHOME/jre/sh/java"
     else
-        JAVACMD="$JAVA_HOME/bin/java"
+        JAVACMD="$JAVAHOME/bin/java"
     fi
     if [ ! -x "$JAVACMD" ] ; then
-        die "ERROR: JAVA_HOME is set to an invalid directory: $JAVA_HOME
+        die "ERROR: JAVAHOME is set to an invalid directory: $JAVAHOME
 
-Please set the JAVA_HOME variable in your environment to match the
+Please set the JAVAHOME variable in your environment to match the
 location of your Java installation."
     fi
 else
     JAVACMD="java"
-    which java >/dev/null 2>&1 || die "ERROR: JAVA_HOME is not set and no 'java' command could be found in your PATH.
+    which java >/dev/null 2>&1 || die "ERROR: JAVAHOME is not set and no 'java' command could be found in your PATH.
 
-Please set the JAVA_HOME variable in your environment to match the
+Please set the JAVAHOME variable in your environment to match the
 location of your Java installation."
 fi
 
 # Increase the maximum file descriptors if we can.
 if [ "$cygwin" = "false" -a "$darwin" = "false" -a "$nonstop" = "false" ] ; then
-    MAX_FD_LIMIT=`ulimit -H -n`
+    MAXFDLIMIT=`ulimit -H -n`
     if [ $? -eq 0 ] ; then
-        if [ "$MAX_FD" = "maximum" -o "$MAX_FD" = "max" ] ; then
-            MAX_FD="$MAX_FD_LIMIT"
+        if [ "$MAXFD" = "maximum" -o "$MAXFD" = "max" ] ; then
+            MAXFD="$MAXFDLIMIT"
         fi
-        ulimit -n $MAX_FD
+        ulimit -n $MAXFD
         if [ $? -ne 0 ] ; then
-            warn "Could not set maximum file descriptor limit: $MAX_FD"
+            warn "Could not set maximum file descriptor limit: $MAXFD"
         fi
     else
-        warn "Could not query maximum file descriptor limit: $MAX_FD_LIMIT"
+        warn "Could not query maximum file descriptor limit: $MAXFDLIMIT"
     fi
 fi
 
 # For Darwin, add options to specify how the application appears in the dock
 if $darwin; then
-    GRADLE_OPTS="$GRADLE_OPTS \"-Xdock:name=$APP_NAME\" \"-Xdock:icon=$APP_HOME/media/gradle.icns\""
+    GRADLEOPTS="$GRADLEOPTS \"-Xdock:name=$APPNAME\" \"-Xdock:icon=$APPHOME/media/gradle.icns\""
 fi
 
 # For Cygwin or MSYS, switch paths to Windows format before running java
 if [ "$cygwin" = "true" -o "$msys" = "true" ] ; then
-    APP_HOME=`cygpath --path --mixed "$APP_HOME"`
+    APPHOME=`cygpath --path --mixed "$APPHOME"`
     CLASSPATH=`cygpath --path --mixed "$CLASSPATH"`
 
     JAVACMD=`cygpath --unix "$JAVACMD"`
@@ -142,8 +142,8 @@ if [ "$cygwin" = "true" -o "$msys" = "true" ] ; then
     done
     OURCYGPATTERN="(^($ROOTDIRS))"
     # Add a user-defined pattern to the cygpath arguments
-    if [ "$GRADLE_CYGPATTERN" != "" ] ; then
-        OURCYGPATTERN="$OURCYGPATTERN|($GRADLE_CYGPATTERN)"
+    if [ "$GRADLECYGPATTERN" != "" ] ; then
+        OURCYGPATTERN="$OURCYGPATTERN|($GRADLECYGPATTERN)"
     fi
     # Now convert the arguments - kludge to limit ourselves to /bin/sh
     i=0
@@ -177,9 +177,9 @@ save () {
     for i do printf %s\\n "$i" | sed "s/'/'\\\\''/g;1s/^/'/;\$s/\$/' \\\\/" ; done
     echo " "
 }
-APP_ARGS=`save "$@"`
+APPARGS=`save "$@"`
 
 # Collect all arguments for the java command, following the shell quoting and substitution rules
-eval set -- $DEFAULT_JVM_OPTS $JAVA_OPTS $GRADLE_OPTS "\"-Dorg.gradle.appname=$APP_BASE_NAME\"" -classpath "\"$CLASSPATH\"" org.gradle.wrapper.GradleWrapperMain "$APP_ARGS"
+eval set -- $DEFAULTJVMOPTS $JAVAOPTS $GRADLEOPTS "\"-Dorg.gradle.appname=$APPBASENAME\"" -classpath "\"$CLASSPATH\"" org.gradle.wrapper.GradleWrapperMain "$APPARGS"
 
 exec "$JAVACMD" "$@"
