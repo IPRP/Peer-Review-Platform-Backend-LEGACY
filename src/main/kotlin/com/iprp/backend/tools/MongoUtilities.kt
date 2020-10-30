@@ -22,8 +22,8 @@ class MongoUtilities {
                 val builder = ProcessBuilder()
 
                 when(os) {
-                    "win" -> builder.command(".\\tools\\runmongodb.bat")
-                    "uni" -> builder.command("bash", "tools/runmongodb.sh")
+                    "win" -> builder.command(".\\tools\\run_mongodb.bat")
+                    "uni" -> builder.command("bash", "tools/run_mongodb.sh")
                 }
 
                 try {

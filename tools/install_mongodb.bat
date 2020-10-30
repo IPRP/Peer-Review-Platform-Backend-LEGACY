@@ -6,7 +6,7 @@ if not exist temp (mkdir temp)
 set file=temp\installer.msi
 set downloadpath=%mypath%%file%
 :: Set URL
-set url="https://fastdl.mongodb.org/windows/mongodb-windows-x8664-4.4.1-signed.msi"
+set url="https://fastdl.mongodb.org/windows/mongodb-windows-x86_64-4.4.1-signed.msi"
 :: Download installer
 echo Downloading installer...
 echo This can take a while...

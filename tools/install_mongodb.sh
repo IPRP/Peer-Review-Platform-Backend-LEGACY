@@ -14,7 +14,7 @@ sudo apt-get install -y gnupg
 wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
 
 # Get Ubuntu Version
-version=$(lsbrelease -d | sed -n -e 's/^.*Ubuntu //p' | sed 's/.\{6\}$//')
+version=$(lsb_release -d | sed -n -e 's/^.*Ubuntu //p' | sed 's/.\{6\}$//')
 
 # Create a list file for MongoDB
 case $version in

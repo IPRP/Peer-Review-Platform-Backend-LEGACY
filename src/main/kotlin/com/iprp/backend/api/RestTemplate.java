@@ -13,7 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class RestTemplate {
 
+<<<<<<< HEAD
     @GetMapping("/testing")
+=======
+    @GetMapping("/")
+>>>>>>> parent of 6b78157... Neu ohne _
     public String sayHi() {
         return "Hi!";
     }
