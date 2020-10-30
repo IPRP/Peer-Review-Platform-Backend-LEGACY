@@ -6,7 +6,7 @@ import com.iprp.backend.enums.STATUS;
 import com.iprp.backend.review.Review;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
+//@RestController
 public class RestStudent {
 
     /**

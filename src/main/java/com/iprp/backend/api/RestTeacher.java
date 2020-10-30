@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
  * Rest Routes des Teachers
  * @author Georg Reisinger
  */
-@RestController
+//@RestController
 public class RestTeacher {
 
     /**
