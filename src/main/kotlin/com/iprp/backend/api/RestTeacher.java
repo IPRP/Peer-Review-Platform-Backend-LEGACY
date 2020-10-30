@@ -15,7 +15,7 @@ public class RestTeacher {
      * @return JSON mit den Dashboard Daten
      */
     @GetMapping("/teacher")
-    public String rest_get_teacher(){
+    public String restgetteacher(){
         return "{inhalt: inhalt}";
     }
 
@@ -25,7 +25,7 @@ public class RestTeacher {
      * @return JSON mit den Daten des Workshops
      */
     @GetMapping("/teacher/workshop")
-    public String rest_get_teacher_workshop(int id){
+    public String restgetteacherworkshop(int id){
         return "{inhalt: inhalt}";
     }
 
@@ -34,7 +34,7 @@ public class RestTeacher {
      * @param workshop Neues Objekt des Workshops
      */
     @PutMapping("/teacher/workshop")
-    public void rest_put_teacher_workshop(Workshop workshop){
+    public void restputteacherworkshop(Workshop workshop){
     }
 
     /**
@@ -42,7 +42,7 @@ public class RestTeacher {
      * @param id Workshop id die zum löschen ist
      */
     @DeleteMapping("/teacher/workshop")
-    public void rest_del_teacher_workshop(int id){
+    public void restdelteacherworkshop(int id){
     }
 
     /**
@@ -50,7 +50,7 @@ public class RestTeacher {
      * @return id des erstellten workshops
      */
     @PostMapping("/teacher/workshop")
-    public int rest_post_teacher_workshop(int id){
+    public int restpostteacherworkshop(int id){
         return 0;
     }
 
@@ -59,7 +59,7 @@ public class RestTeacher {
      * @return JSON mit allen Workshops des Lehrers
      */
     @GetMapping("/teacher/workshops")
-    public String rest_get_teacher_workshops(){
+    public String restgetteacherworkshops(){
         return "{inhalt: inhalt}";
     }
 
@@ -69,7 +69,7 @@ public class RestTeacher {
      * @return JSON mit den zuteilungen
      */
     @GetMapping("/teacher/workshop/assign")
-    public String rest_get_teacher_workshop_assign(int id){
+    public String restgetteacherworkshopassign(int id){
         return "{inhalt: inhalt}";
     }
 
@@ -80,7 +80,7 @@ public class RestTeacher {
      * @param student2ID Zweite Studenetenid
      */
     @PutMapping("/teacher/workshop/assign")
-    public void rest_put_teacher_workshop_assign(int id, int student1ID, int student2ID){
+    public void restputteacherworkshopassign(int id, int student1ID, int student2ID){
     }
 
     /**
@@ -88,7 +88,7 @@ public class RestTeacher {
      * @param id Workshop für die Zuteilung
      */
     @PutMapping("/teacher/workshop/assign/auto")
-    public void rest_put_teacher_workshop_assign_auto(int id){
+    public void restputteacherworkshopassignauto(int id){
     }
 
     /**
@@ -97,7 +97,7 @@ public class RestTeacher {
      * @return JSON mit den Reviews
      */
     @GetMapping("/teacher/reviews")
-    public String rest_get_teacher_reviews(int id){
+    public String restgetteacherreviews(int id){
         return "{inhalt: inhalt}";
     }
 
@@ -107,7 +107,7 @@ public class RestTeacher {
      * @return JSON mit dem Review
      */
     @GetMapping("/teacher/review")
-    public String rest_get_teacher_review(int reviewID){
+    public String restgetteacherreview(int reviewID){
         return "{inhalt: inhalt}";
     }
 
@@ -117,7 +117,7 @@ public class RestTeacher {
      * @return JSON mit den abgaben
      */
     @GetMapping("/teacher/deliverys")
-    public String rest_get_teacher_deliverys(int id){
+    public String restgetteacherdeliverys(int id){
         return "{inhalt: inhalt}";
     }
 
@@ -127,7 +127,7 @@ public class RestTeacher {
      * @return JSON mit der Abgabe
      */
     @GetMapping("/teacher/delivery")
-    public String rest_get_teacher_delivery(int deliveryid){
+    public String restgetteacherdelivery(int deliveryid){
         return "{inhalt: inhalt}";
     }
 }
