@@ -14,17 +14,16 @@ public class RestStudent {
      * @return JSON mit den Dashboard Daten
      */
     @GetMapping("/student")
-    public String restgetstudent(){
+    public String student(){
         return "{inhalt: inhalt}";
     }
 
     /**
      * Workshop auswählen
-     * @param id ID des Workshops
      * @return JSON mit den Daten des Workshops
      */
     @GetMapping("/student/workshop")
-    public String restgetstudentworkshop(int id){
+    public String studentworkshop(@RequestBody String payload){
         return "{inhalt: inhalt}";
     }
 
@@ -33,85 +32,75 @@ public class RestStudent {
      * @return JSON mit allen Workshops des Lehrers
      */
     @GetMapping("/student/workshops")
-    public String restgetstudentworkshops(){
+    public String studentworkshops(){
         return "{inhalt: inhalt}";
     }
 
     /**
      * Alle Reviews des Studenten
-     * @param id Studenten id
-     * @param statusFilter Filter für den Status der Reviews
      * @return JSON mit den Reviews
      */
     @GetMapping("/student/reviews")
-    public String restgetstudentreviews(int id, STATUS statusFilter){
+    public String studentreviews(@RequestBody String payload){
         return "{inhalt: inhalt}";
     }
 
     /**
      * Einzelnes Review ausgeben
-     * @param reviewID Review ID
      * @return JSON mit dem Review
      */
     @GetMapping("/student/review")
-    public String restgetstudentreview(int reviewID){
+    public String getstudentreview(@RequestBody String payload){
         return "{inhalt: inhalt}";
     }
 
     /**
      * Bearbeitet Einzelnes Review ausgeben
-     * @param review neues review Obj
      */
     @PutMapping("/student/review")
-    public void restputstudentreview(Review review){
+    public void putstudentreview(@RequestBody String payload){
     }
 
     /**
      * Erstellt Review
-     * @param review neues review Obj
      */
     @PostMapping("/student/review")
-    public void restpoststudentreview(Review review){
+    public void studentreview(@RequestBody String payload){
     }
     /**
      * Löscht Einzelnes Review ausgeben
-     * @param reviewID Review ID
      */
     @DeleteMapping("/student/review")
-    public void restdelstudentreview(int reviewID){
+    public void restdelstudentreview(@RequestBody String payload){
     }
     /**
      * Download Einzelnes Review
-     * @param reviewID Review ID
      */
     @GetMapping("/student/review/dl")
-    public void restgetstudentreviewdl(int reviewID){
+    public void studentreviewdl(@RequestBody String payload){
     }
 
 
     /**
      * Bearbeitet eine Abgabe
-     * @param delivery neues Abgabe Obj
      */
     @PutMapping("/student/delivery")
-    public void restputstudentdelivery(Delivery delivery){
+    public void putstudentdelivery(@RequestBody String payload){
     }
 
     /**
      * Einzelen Abgabe ausgeben
-     * @param deliveryid Abgaben ID
      * @return JSON mit der Abgabe
      */
     @GetMapping("/student/delivery")
-    public String restgetstudentdelivery(int deliveryid){
+    public String getstudentdelivery(@RequestBody String payload){
         return "{inhalt: inhalt}";
     }
 
     /**
      * Erstellt abgabe
-     * @param delivery neues Abgabe Obj
      */
     @PostMapping("/student/delivery")
-    public void restgetstudentdelivery(Delivery delivery){
+    public void poststudentdelivery(@RequestBody String payload){
     }
 }

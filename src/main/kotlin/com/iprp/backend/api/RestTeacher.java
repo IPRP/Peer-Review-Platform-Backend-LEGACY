@@ -15,34 +15,31 @@ public class RestTeacher {
      * @return JSON mit den Dashboard Daten
      */
     @GetMapping("/teacher")
-    public String restgetteacher(){
+    public String teacher(){
         return "{inhalt: inhalt}";
     }
 
     /**
      * Workshop auswählen
-     * @param id ID des Workshops
      * @return JSON mit den Daten des Workshops
      */
     @GetMapping("/teacher/workshop")
-    public String restgetteacherworkshop(int id){
+    public String getteacherworkshop(@RequestBody String payload){
         return "{inhalt: inhalt}";
     }
 
     /**
      * Editiert einen Workshop
-     * @param workshop Neues Objekt des Workshops
      */
     @PutMapping("/teacher/workshop")
-    public void restputteacherworkshop(Workshop workshop){
+    public void putteacherworkshop(@RequestBody String payload){
     }
 
     /**
      * Löscht einen Workshop
-     * @param id Workshop id die zum löschen ist
      */
     @DeleteMapping("/teacher/workshop")
-    public void restdelteacherworkshop(int id){
+    public void delteacherworkshop(@RequestBody String payload){
     }
 
     /**
@@ -50,7 +47,7 @@ public class RestTeacher {
      * @return id des erstellten workshops
      */
     @PostMapping("/teacher/workshop")
-    public int restpostteacherworkshop(int id){
+    public int postteacherworkshop(@RequestBody String payload){
         return 0;
     }
 
@@ -59,75 +56,66 @@ public class RestTeacher {
      * @return JSON mit allen Workshops des Lehrers
      */
     @GetMapping("/teacher/workshops")
-    public String restgetteacherworkshops(){
+    public String teacherworkshops(){
         return "{inhalt: inhalt}";
     }
 
     /**
      * Zeigt alle zuweisungen eines gewählten workshops
-     * @param id Ausgewählter Workshop
      * @return JSON mit den zuteilungen
      */
     @GetMapping("/teacher/workshop/assign")
-    public String restgetteacherworkshopassign(int id){
+    public String getteacherworkshopassign(@RequestBody String payload){
         return "{inhalt: inhalt}";
     }
 
     /**
      * Manuelle zuteilung
-     * @param id Workshop zu dem zugeteilt wird
-     * @param student1ID Erste Studenetenid
-     * @param student2ID Zweite Studenetenid
      */
     @PutMapping("/teacher/workshop/assign")
-    public void restputteacherworkshopassign(int id, int student1ID, int student2ID){
+    public void putteacherworkshopassign(@RequestBody String payload){
     }
 
     /**
      * Automatische zuteilung starten
-     * @param id Workshop für die Zuteilung
      */
     @PutMapping("/teacher/workshop/assign/auto")
-    public void restputteacherworkshopassignauto(int id){
+    public void putteacherworkshopassignauto(@RequestBody String payload){
     }
 
     /**
      * Alle Reviews eines Workshops
-     * @param id Workshop id
      * @return JSON mit den Reviews
      */
     @GetMapping("/teacher/reviews")
-    public String restgetteacherreviews(int id){
+    public String getteacherreviews(@RequestBody String payload){
         return "{inhalt: inhalt}";
     }
 
     /**
      * Einzelnes Review ausgeben
-     * @param reviewID Review ID
      * @return JSON mit dem Review
      */
     @GetMapping("/teacher/review")
-    public String restgetteacherreview(int reviewID){
+    public String getteacherreview(@RequestBody String payload){
         return "{inhalt: inhalt}";
     }
 
     /**
      * Alle abgaben von einem Workshop
-     * @param id Workshop ID
      * @return JSON mit den abgaben
      */
     @GetMapping("/teacher/deliverys")
-    public String restgetteacherdeliverys(int id){
+    public String getteacherdeliverys(@RequestBody String payload){
         return "{inhalt: inhalt}";
     }
 
     /**
      * Einzelen Abgabe ausgeben
-     * @param deliveryid Abgaben ID
      * @return JSON mit der Abgabe
      */
     @GetMapping("/teacher/delivery")
-    public String restgetteacherdelivery(int deliveryid){
+    public String getteacherdelivery(@RequestBody String payload){
         return "{inhalt: inhalt}";
     }
 }
