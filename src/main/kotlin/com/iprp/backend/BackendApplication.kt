@@ -1,6 +1,5 @@
 package com.iprp.backend
 
-import com.iprp.backend.data.repos.PersonRepository
 import com.iprp.backend.data.user.Student
 import com.iprp.backend.data.user.Teacher
 import com.iprp.backend.tools.MongoUtilities
@@ -11,9 +10,6 @@ import org.springframework.boot.runApplication
 
 @SpringBootApplication
 class BackendApplication : CommandLineRunner {
-
-    @Autowired
-    lateinit var repo: PersonRepository
 
     companion object {
         @JvmStatic
@@ -26,15 +22,7 @@ class BackendApplication : CommandLineRunner {
         }
     }
 
-    override fun run(vararg args: String?) {
-        repo.deleteAll()
-        // Save something
-        repo.save(Student("a", "Max", "Mustermann"))
-        repo.save(Teacher("b", "John", "Doe"))
-        // Fetch all
-        println("Persons found:")
-        repo.findAll().forEach { println(it.lastname) }
-    }
+    override fun run(vararg args: String?) {}
 
 }
 
