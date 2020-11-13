@@ -32,6 +32,20 @@ dependencies {
     testImplementation("org.springframework.security:spring-security-test")
 }
 
+
+// Mix Java and Kotlin in directories
+// See: https://kotlinlang.org/docs/reference/using-gradle.html
+// Initial source: https://stackoverflow.com/a/38721694/12347616
+sourceSets.main {
+    java.srcDirs("src/main/java", "src/main/kotlin")
+}
+kotlin {
+    sourceSets["main"].apply {
+        kotlin.srcDirs("src/main/kotlin", "src/main/java")
+    }
+}
+
+
 tasks.withType<Test> {
     useJUnitPlatform()
 }
