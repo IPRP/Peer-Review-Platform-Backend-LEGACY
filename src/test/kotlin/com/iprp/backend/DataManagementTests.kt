@@ -1,5 +1,6 @@
 package com.iprp.backend
 
+import com.iprp.backend.data.repos.PersonRepository
 import com.iprp.backend.data.repos.StudentRepository
 import com.iprp.backend.data.repos.TeacherRepository
 import com.iprp.backend.data.repos.WrapperRepository
@@ -23,12 +24,14 @@ class DataManagementTests {
 
     @Autowired
     lateinit var repo: WrapperRepository
+    lateinit var personRepo: PersonRepository
     lateinit var studentRepo: StudentRepository
     lateinit var teacherRepo: TeacherRepository
 
 
     @BeforeAll
     fun setup() {
+        personRepo = repo.personRepository
         studentRepo = repo.studentRepository
         teacherRepo = repo.teacherRepository
     }
@@ -38,6 +41,30 @@ class DataManagementTests {
         repo.deleteAll()
     }
 
+
+    @Test
+    fun getAllPersons() {
+        // Save something
+        personRepo.save(Student("a", "Max", "Mustermann"))
+        personRepo.save(Teacher("b", "John", "Doe"))
+        // Fetch all
+        val foundPersons = personRepo.findAll()
+
+        Assertions.assertEquals(2, foundPersons.size)
+    }
+
+    @Test
+    fun getAllStudents() {
+        // Save something
+        personRepo.save(Student("a", "Max", "Mustermann"))
+        personRepo.save(Teacher("b", "John", "Doe"))
+        // Fetch all students
+        val foundStudents = studentRepo.findAll()
+
+        Assertions.assertEquals(1, foundStudents.size)
+    }
+
+    /**
     @Test
     fun getAllPersons() {
         // Save something
@@ -58,6 +85,6 @@ class DataManagementTests {
         val foundStudents = studentRepo.findAll()
 
         Assertions.assertEquals(1, foundStudents.size)
-    }
+    }*/
 
 }

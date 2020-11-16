@@ -13,6 +13,9 @@ import kotlinx.coroutines.*
  */
 @Component
 class WrapperRepository {
+
+    @Autowired
+    lateinit var personRepository: PersonRepository
     @Autowired
     lateinit var studentRepository: StudentRepository
     @Autowired

@@ -1,6 +1,7 @@
 package com.iprp.backend.data.user
 
 import org.springframework.data.annotation.Id
+import org.springframework.data.mongodb.core.mapping.Document
 
 /**
  *
@@ -8,6 +9,8 @@ import org.springframework.data.annotation.Id
  * @author Kacper Urbaniec
  * @version 2020-11-05
  */
+
+@Document(collection = "person")
 open class Person(
     @Id
     val id: String,
