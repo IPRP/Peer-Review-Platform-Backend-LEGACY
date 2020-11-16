@@ -20,31 +20,38 @@ class WrapperRepository {
     lateinit var studentRepository: StudentRepository
     @Autowired
     lateinit var teacherRepository: TeacherRepository
+    @Autowired
+    lateinit var reviewRepository: ReviewRepository
 
     /**
      * Deletes all documents from all repositories.
      */
     fun deleteAll() {
-        studentRepository.deleteAll()
-        teacherRepository.deleteAll()
+        personRepository.deleteAll()
+        reviewRepository.deleteAll()
     }
 
     fun findAllPersons(): List<Person>{
-        return runBlocking {  findAllPersonsAsync() }
+        return personRepository.findAll()
     }
 
+    /**
+     * Legacy code
+     *
     private suspend fun findAllPersonsAsync(): List<Person>{
         // Kotlin with async await
         // See: https://stackoverflow.com/a/52372823/12347616
         val studentJob = GlobalScope.async {
-            studentRepository.findAll() as MutableList<Person>
+        studentRepository.findAll() as MutableList<Person>
         }
         val teacherJob = GlobalScope.async {
-            teacherRepository.findAll() as List<Person>
+        teacherRepository.findAll() as List<Person>
         }
         val students = studentJob.await()
         val teachers = teacherJob.await()
         students.addAll(teachers)
         return students
     }
+     */
+
 }

@@ -1,9 +1,7 @@
 package com.iprp.backend
 
-import com.iprp.backend.data.repos.PersonRepository
-import com.iprp.backend.data.repos.StudentRepository
-import com.iprp.backend.data.repos.TeacherRepository
-import com.iprp.backend.data.repos.WrapperRepository
+import com.iprp.backend.data.Review
+import com.iprp.backend.data.repos.*
 import com.iprp.backend.data.user.Student
 import com.iprp.backend.data.user.Teacher
 import org.junit.jupiter.api.*
@@ -27,6 +25,7 @@ class DataManagementTests {
     lateinit var personRepo: PersonRepository
     lateinit var studentRepo: StudentRepository
     lateinit var teacherRepo: TeacherRepository
+    lateinit var reviewRepository: ReviewRepository
 
 
     @BeforeAll
@@ -34,6 +33,7 @@ class DataManagementTests {
         personRepo = repo.personRepository
         studentRepo = repo.studentRepository
         teacherRepo = repo.teacherRepository
+        reviewRepository = repo.reviewRepository
     }
 
     @BeforeEach
@@ -64,27 +64,17 @@ class DataManagementTests {
         Assertions.assertEquals(1, foundStudents.size)
     }
 
-    /**
     @Test
-    fun getAllPersons() {
+    fun getAllReviews() {
         // Save something
-        studentRepo.save(Student("a", "Max", "Mustermann"))
-        teacherRepo.save(Teacher("b", "John", "Doe"))
-        // Fetch all
-        val foundPersons = repo.findAllPersons()
+        reviewRepository.save(Review("a", "a1"))
+        reviewRepository.save(Review("b", "b2"))
+        // Fetch all students
+        val foundReviews = reviewRepository.findAll()
 
-        Assertions.assertEquals(2, foundPersons.size)
+        Assertions.assertEquals(2, foundReviews.size)
     }
 
-    @Test
-    fun getAllStudents() {
-        // Save something
-        studentRepo.save(Student("a", "Max", "Mustermann"))
-        teacherRepo.save(Teacher("b", "John", "Doe"))
-        // Fetch all students
-        val foundStudents = studentRepo.findAll()
 
-        Assertions.assertEquals(1, foundStudents.size)
-    }*/
 
 }

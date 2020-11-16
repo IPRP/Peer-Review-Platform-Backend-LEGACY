@@ -1,9 +1,6 @@
 package com.iprp.backend
 
-import com.iprp.backend.data.user.Student
-import com.iprp.backend.data.user.Teacher
 import com.iprp.backend.tools.MongoUtilities
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
