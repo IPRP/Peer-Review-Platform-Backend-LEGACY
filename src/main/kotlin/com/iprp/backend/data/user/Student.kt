@@ -12,4 +12,4 @@ import org.springframework.data.mongodb.core.mapping.Document
  */
 @Document(collection = "person")
 @TypeAlias("student")
-class Student(id: String, firstname: String, lastname: String) : Person(id, firstname, lastname)
+class Student(id: String, firstname: String, lastname: String, var group: String) : Person(id, firstname, lastname)

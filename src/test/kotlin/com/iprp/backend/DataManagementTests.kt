@@ -45,7 +45,7 @@ class DataManagementTests {
     @Test
     fun getAllPersons() {
         // Save something
-        personRepo.save(Student("a", "Max", "Mustermann"))
+        personRepo.save(Student("a", "Max", "Mustermann", "3A"))
         personRepo.save(Teacher("b", "John", "Doe"))
         // Fetch all
         val foundPersons = personRepo.findAll()
@@ -56,12 +56,13 @@ class DataManagementTests {
     @Test
     fun getAllStudents() {
         // Save something
-        personRepo.save(Student("a", "Max", "Mustermann"))
+        personRepo.save(Student("a", "Max", "Mustermann","3A"))
         personRepo.save(Teacher("b", "John", "Doe"))
         // Fetch all students
         val foundStudents = studentRepo.findAll()
 
         Assertions.assertEquals(1, foundStudents.size)
+        Assertions.assertEquals("3A", foundStudents[0].group)
     }
 
     @Test
