@@ -1,13 +1,13 @@
 package com.iprp.backend
 
 import com.iprp.backend.data.Review
+import com.iprp.backend.data.Workshop
 import com.iprp.backend.data.repos.*
 import com.iprp.backend.data.user.Student
 import com.iprp.backend.data.user.Teacher
 import org.junit.jupiter.api.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.event.annotation.BeforeTestClass
 
 
 // Add custom properties
@@ -22,10 +22,16 @@ class DataManagementTests {
 
     @Autowired
     lateinit var repo: WrapperRepository
+    @Autowired
     lateinit var personRepo: PersonRepository
+    @Autowired
     lateinit var studentRepo: StudentRepository
+    @Autowired
     lateinit var teacherRepo: TeacherRepository
-    lateinit var reviewRepository: ReviewRepository
+    @Autowired
+    lateinit var reviewRepo: ReviewRepository
+    @Autowired
+    lateinit var workshopRepo: WorkshopRepository
 
 
     @BeforeAll
@@ -33,7 +39,8 @@ class DataManagementTests {
         personRepo = repo.personRepository
         studentRepo = repo.studentRepository
         teacherRepo = repo.teacherRepository
-        reviewRepository = repo.reviewRepository
+        reviewRepo = repo.reviewRepository
+        workshopRepo = repo.workshopRepository
     }
 
     @BeforeEach
@@ -68,14 +75,37 @@ class DataManagementTests {
     @Test
     fun getAllReviews() {
         // Save something
-        reviewRepository.save(Review("a", "a1"))
-        reviewRepository.save(Review("b", "b2"))
+        reviewRepo.save(Review("a", "a1"))
+        reviewRepo.save(Review("b", "b2"))
         // Fetch all students
-        val foundReviews = reviewRepository.findAll()
+        val foundReviews = reviewRepo.findAll()
 
         Assertions.assertEquals(2, foundReviews.size)
     }
 
+    @Test
+    fun workshopStudentSave() {
+        // DBref docs
+        // See: https://docs.spring.io/spring-data/mongodb/docs/1.2.0.RELEASE/reference/pdf/spring-data-mongodb-parent-reference.pdf
+        // --
+        // Save something
+        val workShop = Workshop(mutableListOf())
+        val student = Student("w", "Max", "Mustermann", "3A")
+        personRepo.save(student)
+        workShop.addStudent(student)
+        workshopRepo.save(workShop)
+        // Update student
+        student.group = "3B"
+        personRepo.save(student)
+
+        val foundWorkshops = workshopRepo.findAll()
+        val studentsFromWorkshopRepo = foundWorkshops[0].students
+        val studentsFromStudentRepo = studentRepo.findAll()
+
+        // Check update
+        Assertions.assertEquals("3B", studentsFromWorkshopRepo[0].group)
+        Assertions.assertEquals("3B", studentsFromStudentRepo[0].group)
+    }
 
 
 }

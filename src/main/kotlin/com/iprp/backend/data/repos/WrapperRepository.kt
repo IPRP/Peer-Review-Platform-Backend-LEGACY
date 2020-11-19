@@ -22,6 +22,8 @@ class WrapperRepository {
     lateinit var teacherRepository: TeacherRepository
     @Autowired
     lateinit var reviewRepository: ReviewRepository
+    @Autowired
+    lateinit var workshopRepository: WorkshopRepository
 
     /**
      * Deletes all documents from all repositories.
@@ -29,6 +31,7 @@ class WrapperRepository {
     fun deleteAll() {
         personRepository.deleteAll()
         reviewRepository.deleteAll()
+        workshopRepository.deleteAll()
     }
 
     fun findAllPersons(): List<Person>{
