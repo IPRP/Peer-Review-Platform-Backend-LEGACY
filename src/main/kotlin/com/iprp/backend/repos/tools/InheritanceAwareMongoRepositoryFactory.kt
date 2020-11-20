@@ -1,4 +1,4 @@
-package com.iprp.backend.data.repos.tools
+package com.iprp.backend.repos.tools
 
 import org.springframework.data.mapping.context.MappingContext
 import org.springframework.data.mongodb.core.MongoOperations

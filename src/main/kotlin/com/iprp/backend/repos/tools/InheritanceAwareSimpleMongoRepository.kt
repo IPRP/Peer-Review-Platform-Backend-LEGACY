@@ -1,4 +1,4 @@
-package com.iprp.backend.data.repos.tools
+package com.iprp.backend.repos.tools
 
 import org.bson.Document
 import org.springframework.data.annotation.TypeAlias

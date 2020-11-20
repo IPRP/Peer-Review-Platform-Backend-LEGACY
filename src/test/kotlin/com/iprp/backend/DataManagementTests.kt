@@ -2,7 +2,7 @@ package com.iprp.backend
 
 import com.iprp.backend.data.Review
 import com.iprp.backend.data.Workshop
-import com.iprp.backend.data.repos.*
+import com.iprp.backend.repos.*
 import com.iprp.backend.data.user.Student
 import com.iprp.backend.data.user.Teacher
 import org.junit.jupiter.api.*
@@ -76,6 +76,7 @@ class DataManagementTests {
     fun getAllReviews() {
         // Save something
         val student = Student("w", "Max", "Mustermann", "3A")
+        personRepo.save(student)
         reviewRepo.save(Review(student))
         reviewRepo.save(Review(student))
         // Fetch all students
@@ -90,7 +91,7 @@ class DataManagementTests {
         // See: https://docs.spring.io/spring-data/mongodb/docs/1.2.0.RELEASE/reference/pdf/spring-data-mongodb-parent-reference.pdf
         // --
         // Save something
-        val workShop = Workshop(mutableListOf())
+        val workShop = Workshop("a", "a", mutableListOf(), mutableListOf())
         val student = Student("w", "Max", "Mustermann", "3A")
         personRepo.save(student)
         workShop.addStudent(student)

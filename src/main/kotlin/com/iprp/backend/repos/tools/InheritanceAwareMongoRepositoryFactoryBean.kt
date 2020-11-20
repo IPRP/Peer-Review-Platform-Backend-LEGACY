@@ -1,4 +1,4 @@
-package com.iprp.backend.data.repos.tools
+package com.iprp.backend.repos.tools
 
 import org.springframework.data.mongodb.core.MongoOperations
 import org.springframework.data.mongodb.repository.support.MongoRepositoryFactoryBean

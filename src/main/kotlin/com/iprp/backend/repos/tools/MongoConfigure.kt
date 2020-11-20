@@ -1,6 +1,6 @@
-package com.iprp.backend.data.repos.tools
+package com.iprp.backend.repos.tools
 
-import com.iprp.backend.data.repos.PersonRepository
+import com.iprp.backend.repos.PersonRepository
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories
 

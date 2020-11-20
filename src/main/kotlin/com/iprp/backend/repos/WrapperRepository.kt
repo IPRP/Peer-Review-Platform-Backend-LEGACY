@@ -1,9 +1,8 @@
-package com.iprp.backend.data.repos
+package com.iprp.backend.repos
 
 import com.iprp.backend.data.user.Person
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
-import kotlinx.coroutines.*
 
 /**
  *
@@ -24,6 +23,14 @@ class WrapperRepository {
     lateinit var reviewRepository: ReviewRepository
     @Autowired
     lateinit var workshopRepository: WorkshopRepository
+    @Autowired
+    lateinit var submissionRepository: SubmissionRepository
+    @Autowired
+    lateinit var submissionRoundRepository: SubmissionRoundRepository
+    @Autowired
+    lateinit var gradeRepository: GradeRepository
+    @Autowired
+    lateinit var gradeRoundRepository: GradeRoundRepository
 
     /**
      * Deletes all documents from all repositories.
@@ -32,6 +39,10 @@ class WrapperRepository {
         personRepository.deleteAll()
         reviewRepository.deleteAll()
         workshopRepository.deleteAll()
+        gradeRepository.deleteAll()
+        gradeRoundRepository.deleteAll()
+        submissionRepository.deleteAll()
+        submissionRoundRepository.deleteAll()
     }
 
     fun findAllPersons(): List<Person>{
