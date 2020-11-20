@@ -1,6 +1,8 @@
 package com.iprp.backend.data
 
+import com.iprp.backend.data.user.Student
 import org.springframework.data.annotation.Id
+import org.springframework.data.mongodb.core.mapping.DBRef
 
 /**
  *
@@ -9,7 +11,10 @@ import org.springframework.data.annotation.Id
  * @version 2020-10-29
  */
 class Review(
+    @DBRef
+    val student: Student,
+) {
     @Id
-    val id: String,
-    val title: String,
-)
+    lateinit var id: String
+        private set
+}

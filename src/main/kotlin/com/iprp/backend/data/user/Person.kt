@@ -12,8 +12,11 @@ import org.springframework.data.mongodb.core.mapping.Document
 
 @Document(collection = "person")
 open class Person(
-    @Id
-    private val id: String,
+    id: String,
     val firstname: String,
     val lastname: String
-)
+) {
+    @Id
+    var id: String = id
+        private set
+}

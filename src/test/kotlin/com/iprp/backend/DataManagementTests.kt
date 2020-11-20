@@ -75,8 +75,9 @@ class DataManagementTests {
     @Test
     fun getAllReviews() {
         // Save something
-        reviewRepo.save(Review("a", "a1"))
-        reviewRepo.save(Review("b", "b2"))
+        val student = Student("w", "Max", "Mustermann", "3A")
+        reviewRepo.save(Review(student))
+        reviewRepo.save(Review(student))
         // Fetch all students
         val foundReviews = reviewRepo.findAll()
 
@@ -105,6 +106,17 @@ class DataManagementTests {
         // Check update
         Assertions.assertEquals("3B", studentsFromWorkshopRepo[0].group)
         Assertions.assertEquals("3B", studentsFromStudentRepo[0].group)
+    }
+
+    @Test
+    fun searchReviews() {
+        val student = Student("w", "Max", "Mustermann", "3A")
+        personRepo.save(student)
+        reviewRepo.save(Review(student))
+
+        val foundReviews = reviewRepo.findByStudentId(student.id)
+
+        Assertions.assertEquals(1, foundReviews.size)
     }
 
 
