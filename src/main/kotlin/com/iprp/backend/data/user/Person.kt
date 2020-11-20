@@ -4,7 +4,7 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 
 /**
- *
+ * Represents a person in the Peer Review system.
  *
  * @author Kacper Urbaniec
  * @version 2020-11-05

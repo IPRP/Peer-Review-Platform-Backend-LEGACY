@@ -1,20 +1,23 @@
-package com.iprp.backend.data.grade
+package com.iprp.backend.data.review
 
 import com.iprp.backend.data.Workshop
+import com.iprp.backend.data.submission.Submission
 import com.iprp.backend.data.user.Student
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.DBRef
 
 /**
- * Used to retrieve the overall grade of a student from a workshop.
+ * A review a students submits for a given submission.
  *
  * @author Kacper Urbaniec
- * @version 2020-11-20
+ * @version 2020-10-29
  */
-class Grade(
-    var grade: Int,
-    @DBRef val grades: List<GradeRound>,
+class Review(
+    var title: String,
+    var grades: List<Int>,
     @DBRef val student: Student,
+    @DBRef val criteria: ReviewCriteria,
+    @DBRef val submission: Submission,
     @DBRef val workshop: Workshop,
 ) {
     @Id

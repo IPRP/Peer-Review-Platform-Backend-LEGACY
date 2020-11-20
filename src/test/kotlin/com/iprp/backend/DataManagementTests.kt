@@ -1,7 +1,11 @@
 package com.iprp.backend
 
-import com.iprp.backend.data.Review
+import com.iprp.backend.data.review.Review
 import com.iprp.backend.data.Workshop
+import com.iprp.backend.data.review.ReviewCriteria
+import com.iprp.backend.data.review.ReviewCriterionTuple
+import com.iprp.backend.data.review.ReviewCriterionType
+import com.iprp.backend.data.submission.Submission
 import com.iprp.backend.repos.*
 import com.iprp.backend.data.user.Student
 import com.iprp.backend.data.user.Teacher
@@ -22,16 +26,13 @@ class DataManagementTests {
 
     @Autowired
     lateinit var repo: WrapperRepository
-    @Autowired
     lateinit var personRepo: PersonRepository
-    @Autowired
     lateinit var studentRepo: StudentRepository
-    @Autowired
     lateinit var teacherRepo: TeacherRepository
-    @Autowired
     lateinit var reviewRepo: ReviewRepository
-    @Autowired
+    lateinit var reviewCriteriaRepo: ReviewCriteriaRepository
     lateinit var workshopRepo: WorkshopRepository
+    lateinit var submissionRepo: SubmissionRepository
 
 
     @BeforeAll
@@ -40,7 +41,9 @@ class DataManagementTests {
         studentRepo = repo.studentRepository
         teacherRepo = repo.teacherRepository
         reviewRepo = repo.reviewRepository
+        reviewCriteriaRepo = repo.reviewCriteriaRepository
         workshopRepo = repo.workshopRepository
+        submissionRepo = repo.submissionRepository
     }
 
     @BeforeEach
@@ -75,14 +78,26 @@ class DataManagementTests {
     @Test
     fun getAllReviews() {
         // Save something
-        val student = Student("w", "Max", "Mustermann", "3A")
+        var student = Student("w", "Max", "Mustermann", "3A")
         personRepo.save(student)
-        reviewRepo.save(Review(student))
-        reviewRepo.save(Review(student))
+        student = studentRepo.findAll()[0]
+        var workshop = Workshop("a", "a", mutableListOf(), mutableListOf(), mutableListOf(), mutableListOf())
+        workshopRepo.save(workshop)
+        workshop = workshopRepo.findAll()[0]
+        var submission = Submission("a", "a", mutableListOf(), workshop, student, mutableListOf())
+        submissionRepo.save(submission)
+        submission = submissionRepo.findAll()[0]
+        var reviewCriteria = ReviewCriteria(mutableListOf(ReviewCriterionTuple(ReviewCriterionType.Grade, "a")))
+        reviewCriteriaRepo.save(reviewCriteria)
+        reviewCriteria = reviewCriteriaRepo.findAll()[0]
+        val grades = mutableListOf(1)
+        val review = Review("a", grades, student, reviewCriteria, submission, workshop)
+        reviewRepo.save(review)
+
         // Fetch all students
         val foundReviews = reviewRepo.findAll()
 
-        Assertions.assertEquals(2, foundReviews.size)
+        Assertions.assertEquals(1, foundReviews.size)
     }
 
     @Test
@@ -91,7 +106,7 @@ class DataManagementTests {
         // See: https://docs.spring.io/spring-data/mongodb/docs/1.2.0.RELEASE/reference/pdf/spring-data-mongodb-parent-reference.pdf
         // --
         // Save something
-        val workShop = Workshop("a", "a", mutableListOf(), mutableListOf())
+        val workShop = Workshop("a", "a", mutableListOf(), mutableListOf(), mutableListOf(), mutableListOf())
         val student = Student("w", "Max", "Mustermann", "3A")
         personRepo.save(student)
         workShop.addStudent(student)
@@ -111,9 +126,21 @@ class DataManagementTests {
 
     @Test
     fun searchReviews() {
-        val student = Student("w", "Max", "Mustermann", "3A")
+        var student = Student("w", "Max", "Mustermann", "3A")
         personRepo.save(student)
-        reviewRepo.save(Review(student))
+        student = studentRepo.findAll()[0]
+        var workshop = Workshop("a", "a", mutableListOf(), mutableListOf(), mutableListOf(), mutableListOf())
+        workshopRepo.save(workshop)
+        workshop = workshopRepo.findAll()[0]
+        var submission = Submission("a", "a", mutableListOf(), workshop, student, mutableListOf())
+        submissionRepo.save(submission)
+        submission = submissionRepo.findAll()[0]
+        var reviewCriteria = ReviewCriteria(mutableListOf(ReviewCriterionTuple(ReviewCriterionType.Grade, "a")))
+        reviewCriteriaRepo.save(reviewCriteria)
+        reviewCriteria = reviewCriteriaRepo.findAll()[0]
+        val grades = mutableListOf(1)
+        val review = Review("a", grades, student, reviewCriteria, submission, workshop)
+        reviewRepo.save(review)
 
         val foundReviews = reviewRepo.findByStudentId(student.id)
 

@@ -22,6 +22,8 @@ class WrapperRepository {
     @Autowired
     lateinit var reviewRepository: ReviewRepository
     @Autowired
+    lateinit var reviewCriteriaRepository: ReviewCriteriaRepository
+    @Autowired
     lateinit var workshopRepository: WorkshopRepository
     @Autowired
     lateinit var submissionRepository: SubmissionRepository
@@ -43,6 +45,7 @@ class WrapperRepository {
         gradeRoundRepository.deleteAll()
         submissionRepository.deleteAll()
         submissionRoundRepository.deleteAll()
+        reviewCriteriaRepository.deleteAll()
     }
 
     fun findAllPersons(): List<Person>{
