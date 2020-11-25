@@ -2,8 +2,8 @@ package com.iprp.backend.repos
 
 import com.iprp.backend.data.review.Review
 import com.iprp.backend.data.Workshop
+import com.iprp.backend.data.grade.GradeCollection
 import com.iprp.backend.data.grade.Grade
-import com.iprp.backend.data.grade.GradeRound
 import com.iprp.backend.data.review.ReviewCriteria
 import com.iprp.backend.data.submission.Submission
 import com.iprp.backend.data.submission.SubmissionRound
@@ -57,7 +57,9 @@ interface ReviewRepository : MongoRepository<Review, String> {
 interface ReviewCriteriaRepository : MongoRepository<ReviewCriteria, String>
 
 
-interface GradeRepository : MongoRepository<Grade, String>
+interface GradeCollectionRepository : MongoRepository<GradeCollection, String> {
+    fun findByStudentIdAndWorkshopId(student_id: String, workshop_id: String): GradeCollection
+}
 
-interface GradeRoundRepository : MongoRepository<GradeRound, String>
+interface GradeRepository : MongoRepository<Grade, String>
 

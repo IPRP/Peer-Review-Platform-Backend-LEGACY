@@ -1,6 +1,7 @@
 package com.iprp.backend.data
 
-import com.iprp.backend.data.grade.Grade
+import com.iprp.backend.data.grade.GradeCollection
+import com.iprp.backend.data.review.ReviewCriteria
 import com.iprp.backend.data.submission.SubmissionRound
 import com.iprp.backend.data.user.Student
 import com.iprp.backend.data.user.Teacher
@@ -23,8 +24,9 @@ class Workshop(
     val anonymous: Boolean,
     @DBRef var students: MutableList<Student>,
     @DBRef var teachers: MutableList<Teacher>,
+    @DBRef var criteria: ReviewCriteria,
     @DBRef var rounds: MutableList<SubmissionRound>,
-    @DBRef var grades: MutableList<Grade>
+    @DBRef var grades: MutableList<GradeCollection>
 ) {
     @Id
     lateinit var id: String

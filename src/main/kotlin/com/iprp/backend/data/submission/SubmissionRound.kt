@@ -1,7 +1,7 @@
 package com.iprp.backend.data.submission
 
 import com.iprp.backend.data.Workshop
-import com.iprp.backend.data.grade.GradeRound
+import com.iprp.backend.data.grade.Grade
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.DBRef
 import java.time.LocalDateTime
@@ -17,7 +17,7 @@ class SubmissionRound(
     var end: LocalDateTime,
     @DBRef val workshop: Workshop,
     @DBRef val submissions: List<Submission>,
-    @DBRef val grades: List<GradeRound>
+    @DBRef val grades: List<Grade>
 ) {
     @Id
     lateinit var id: String

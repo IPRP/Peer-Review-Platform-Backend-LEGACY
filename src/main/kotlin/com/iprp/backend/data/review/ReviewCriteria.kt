@@ -28,6 +28,7 @@ class ReviewCriteria(
                         "point"         -> type = ReviewCriterionType.Point
                         "grade"         -> type = ReviewCriterionType.Grade
                         "percentage"    -> type = ReviewCriterionType.Percentage
+                        "truefalse"     -> type = ReviewCriterionType.TrueFalse
                     }
                     if (type != null) {
                         processedCriteria.add(ReviewCriterionTuple(type, content))
@@ -45,5 +46,6 @@ data class ReviewCriterionTuple(var type: ReviewCriterionType, var content: Stri
 enum class ReviewCriterionType {
     Point,      // 1 - 10
     Grade,      // A, B, C or "Sehr Gut", "Gut", "Befriedigend", ...
-    Percentage  // 0 - 100 %
+    Percentage,  // 0 - 100 %
+    TrueFalse,
 }

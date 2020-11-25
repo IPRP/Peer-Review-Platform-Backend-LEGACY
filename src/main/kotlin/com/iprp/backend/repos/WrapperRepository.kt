@@ -1,6 +1,11 @@
 package com.iprp.backend.repos
 
 import com.iprp.backend.data.Workshop
+import com.iprp.backend.data.grade.Grade
+import com.iprp.backend.data.grade.GradeCollection
+import com.iprp.backend.data.review.ReviewCriteria
+import com.iprp.backend.data.submission.Submission
+import com.iprp.backend.data.submission.SubmissionRound
 import com.iprp.backend.data.user.Person
 import com.iprp.backend.data.user.Student
 import com.iprp.backend.data.user.Teacher
@@ -33,9 +38,9 @@ class WrapperRepository {
     @Autowired
     lateinit var submissionRoundRepository: SubmissionRoundRepository
     @Autowired
-    lateinit var gradeRepository: GradeRepository
+    lateinit var gradeCollectionRepository: GradeCollectionRepository
     @Autowired
-    lateinit var gradeRoundRepository: GradeRoundRepository
+    lateinit var gradeRepository: GradeRepository
 
     /**
      * Person
@@ -62,9 +67,10 @@ class WrapperRepository {
      * Workshop
      */
 
-    fun addWorkshop(w: Workshop): Workshop {
+    fun saveWorkshop(w: Workshop): Workshop {
         return workshopRepository.save(w)
     }
+
 
     fun findAllWorkshops(personId: String): List<Workshop> {
         if (studentRepository.findById(personId).isPresent) {
@@ -73,6 +79,38 @@ class WrapperRepository {
         return workshopRepository.findByTeachersId(personId)
     }
 
+    /**
+     * Submission
+     */
+    fun saveSubmission(s: Submission): Submission {
+        return submissionRepository.save(s)
+    }
+
+    fun saveSubmissionRound(sr: SubmissionRound): SubmissionRound {
+        return submissionRoundRepository.save(sr)
+    }
+
+    /**
+     * Review
+     */
+    fun saveReviewCriteria(c: ReviewCriteria): ReviewCriteria {
+        return reviewCriteriaRepository.save(c)
+    }
+
+    /**
+     * Grade
+     */
+    fun saveGrade(g: Grade): Grade {
+        return gradeRepository.save(g)
+    }
+
+    fun saveGradeCollection(gr: GradeCollection): GradeCollection {
+        return gradeCollectionRepository.save(gr)
+    }
+
+    fun findGradeCollection(studentId: String, workshopId: String): GradeCollection {
+        return gradeCollectionRepository.findByStudentIdAndWorkshopId(studentId, workshopId)
+    }
 
     /**
      * Overall
@@ -86,7 +124,7 @@ class WrapperRepository {
         reviewRepository.deleteAll()
         workshopRepository.deleteAll()
         gradeRepository.deleteAll()
-        gradeRoundRepository.deleteAll()
+        gradeCollectionRepository.deleteAll()
         submissionRepository.deleteAll()
         submissionRoundRepository.deleteAll()
         reviewCriteriaRepository.deleteAll()

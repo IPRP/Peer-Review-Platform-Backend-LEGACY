@@ -82,15 +82,15 @@ class RepositoryTests {
         var student = Student("w", "Max", "Mustermann", "3A")
         personRepo.save(student)
         student = studentRepo.findAll()[0]
-        var workshop = Workshop("a", "a", LocalDateTime.now(), LocalDateTime.now(), true, mutableListOf(), mutableListOf(), mutableListOf(), mutableListOf())
+        var reviewCriteria = ReviewCriteria(mutableListOf(ReviewCriterionTuple(ReviewCriterionType.Grade, "a")))
+        reviewCriteriaRepo.save(reviewCriteria)
+        reviewCriteria = reviewCriteriaRepo.findAll()[0]
+        var workshop = Workshop("a", "a",  LocalDateTime.now(), LocalDateTime.now(), true, mutableListOf(), mutableListOf(), reviewCriteria, mutableListOf(), mutableListOf())
         workshopRepo.save(workshop)
         workshop = workshopRepo.findAll()[0]
         var submission = Submission(true, "a", "a", mutableListOf(), workshop, student, mutableListOf())
         submissionRepo.save(submission)
         submission = submissionRepo.findAll()[0]
-        var reviewCriteria = ReviewCriteria(mutableListOf(ReviewCriterionTuple(ReviewCriterionType.Grade, "a")))
-        reviewCriteriaRepo.save(reviewCriteria)
-        reviewCriteria = reviewCriteriaRepo.findAll()[0]
         val grades = mutableListOf(1)
         val review = Review(true, "a", grades, student, reviewCriteria, submission, workshop)
         reviewRepo.save(review)
@@ -107,7 +107,10 @@ class RepositoryTests {
         // See: https://docs.spring.io/spring-data/mongodb/docs/1.2.0.RELEASE/reference/pdf/spring-data-mongodb-parent-reference.pdf
         // --
         // Save something
-        val workShop = Workshop("a", "a",  LocalDateTime.now(), LocalDateTime.now(), true, mutableListOf(), mutableListOf(), mutableListOf(), mutableListOf())
+        var reviewCriteria = ReviewCriteria(mutableListOf(ReviewCriterionTuple(ReviewCriterionType.Grade, "a")))
+        reviewCriteriaRepo.save(reviewCriteria)
+        reviewCriteria = reviewCriteriaRepo.findAll()[0]
+        var workShop = Workshop("a", "a",  LocalDateTime.now(), LocalDateTime.now(), true, mutableListOf(), mutableListOf(), reviewCriteria, mutableListOf(), mutableListOf())
         val student = Student("w", "Max", "Mustermann", "3A")
         personRepo.save(student)
         workShop.addStudent(student)
@@ -130,15 +133,15 @@ class RepositoryTests {
         var student = Student("w", "Max", "Mustermann", "3A")
         personRepo.save(student)
         student = studentRepo.findAll()[0]
-        var workshop = Workshop("a", "a",  LocalDateTime.now(), LocalDateTime.now(), true, mutableListOf(), mutableListOf(), mutableListOf(), mutableListOf())
+        var reviewCriteria = ReviewCriteria(mutableListOf(ReviewCriterionTuple(ReviewCriterionType.Grade, "a")))
+        reviewCriteriaRepo.save(reviewCriteria)
+        reviewCriteria = reviewCriteriaRepo.findAll()[0]
+        var workshop = Workshop("a", "a",  LocalDateTime.now(), LocalDateTime.now(), true, mutableListOf(), mutableListOf(), reviewCriteria, mutableListOf(), mutableListOf())
         workshopRepo.save(workshop)
         workshop = workshopRepo.findAll()[0]
         var submission = Submission(true, "a", "a", mutableListOf(), workshop, student, mutableListOf())
         submissionRepo.save(submission)
         submission = submissionRepo.findAll()[0]
-        var reviewCriteria = ReviewCriteria(mutableListOf(ReviewCriterionTuple(ReviewCriterionType.Grade, "a")))
-        reviewCriteriaRepo.save(reviewCriteria)
-        reviewCriteria = reviewCriteriaRepo.findAll()[0]
         val grades = mutableListOf(1)
         val review = Review(true,"a", grades, student, reviewCriteria, submission, workshop)
         reviewRepo.save(review)

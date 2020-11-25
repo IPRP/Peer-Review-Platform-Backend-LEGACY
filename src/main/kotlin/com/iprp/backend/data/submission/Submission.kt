@@ -15,8 +15,8 @@ import org.springframework.data.mongodb.core.mapping.DBRef
  */
 class Submission(
     var done: Boolean,
-    var title: String,
-    var commment: String,
+    var title: String?,
+    var commment: String?,
     val attachments: List<Binary>,
     @DBRef val workshop: Workshop,
     @DBRef val student: Student,
