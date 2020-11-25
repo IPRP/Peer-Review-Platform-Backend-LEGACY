@@ -29,7 +29,10 @@ interface TeacherRepository : MongoRepository<Teacher, String>
 
 
 
-interface WorkshopRepository : MongoRepository<Workshop, String>
+interface WorkshopRepository : MongoRepository<Workshop, String> {
+    fun findByStudentsId(student_id: String): List<Workshop>
+    fun findByTeachersId(teacher_id: String): List<Workshop>
+}
 
 
 

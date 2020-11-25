@@ -1,5 +1,6 @@
 package com.iprp.backend.repos
 
+import com.iprp.backend.data.Workshop
 import com.iprp.backend.data.user.Person
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -36,11 +37,16 @@ class WrapperRepository {
 
 
 
-    fun findAllPersons(): List<Person>{
+    fun findAllPersons(): List<Person> {
         return personRepository.findAll()
     }
 
-
+    fun findAllWorkshops(personId: String): List<Workshop> {
+        if (studentRepository.findById(personId).isPresent) {
+            return workshopRepository.findByStudentsId(personId)
+        }
+        return workshopRepository.findByTeachersId(personId)
+    }
 
 
 

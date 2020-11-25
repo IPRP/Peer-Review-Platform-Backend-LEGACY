@@ -28,7 +28,9 @@ class AuthConfig : WebSecurityConfigurerAdapter() {
 
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
-        http.authorizeRequests().anyRequest().authenticated()
-                .and().httpBasic()
+        // TODO add authentication again later on
+        //http.authorizeRequests().anyRequest().authenticated()
+        //        .and().httpBasic()
+        http.authorizeRequests().anyRequest().permitAll()
     }
 }
