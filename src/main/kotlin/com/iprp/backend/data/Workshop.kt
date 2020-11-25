@@ -20,6 +20,7 @@ class Workshop(
     var content: String,
     var end: LocalDateTime,
     var roundEnd: LocalDateTime,
+    val anonymous: Boolean,
     @DBRef var students: MutableList<Student>,
     @DBRef var teachers: MutableList<Teacher>,
     @DBRef var rounds: MutableList<SubmissionRound>,

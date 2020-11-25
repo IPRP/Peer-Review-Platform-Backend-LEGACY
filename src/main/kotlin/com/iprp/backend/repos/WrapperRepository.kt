@@ -2,6 +2,8 @@ package com.iprp.backend.repos
 
 import com.iprp.backend.data.Workshop
 import com.iprp.backend.data.user.Person
+import com.iprp.backend.data.user.Student
+import com.iprp.backend.data.user.Teacher
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
@@ -35,10 +37,33 @@ class WrapperRepository {
     @Autowired
     lateinit var gradeRoundRepository: GradeRoundRepository
 
+    /**
+     * Person
+     */
 
+    fun addPerson(p: Person) {
+        personRepository.save(p)
+    }
 
     fun findAllPersons(): List<Person> {
         return personRepository.findAll()
+    }
+
+    fun findAllStudentsByIdIn(ids: List<String>): List<Student> {
+        return studentRepository.findByIdIn(ids)
+    }
+
+    fun findAllTeachersByIdIn(ids: List<String>): List<Teacher> {
+        return teacherRepository.findByIdIn(ids)
+    }
+
+
+    /**
+     * Workshop
+     */
+
+    fun addWorkshop(w: Workshop): Workshop {
+        return workshopRepository.save(w)
     }
 
     fun findAllWorkshops(personId: String): List<Workshop> {
@@ -49,6 +74,9 @@ class WrapperRepository {
     }
 
 
+    /**
+     * Overall
+     */
 
     /**
      * Deletes all documents from all repositories.
@@ -63,24 +91,5 @@ class WrapperRepository {
         submissionRoundRepository.deleteAll()
         reviewCriteriaRepository.deleteAll()
     }
-
-    /**
-     * Legacy code
-     *
-    private suspend fun findAllPersonsAsync(): List<Person>{
-        // Kotlin with async await
-        // See: https://stackoverflow.com/a/52372823/12347616
-        val studentJob = GlobalScope.async {
-        studentRepository.findAll() as MutableList<Person>
-        }
-        val teacherJob = GlobalScope.async {
-        teacherRepository.findAll() as List<Person>
-        }
-        val students = studentJob.await()
-        val teachers = teacherJob.await()
-        students.addAll(teachers)
-        return students
-    }
-     */
 
 }

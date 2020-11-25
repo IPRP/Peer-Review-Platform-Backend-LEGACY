@@ -23,7 +23,7 @@ import java.time.LocalDateTime
 // Needed to make setup non-static
 // See: https://stackoverflow.com/a/55720750/12347616
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class DataManagementTests {
+class RepositoryTests {
 
     @Autowired
     lateinit var repo: WrapperRepository
@@ -82,7 +82,7 @@ class DataManagementTests {
         var student = Student("w", "Max", "Mustermann", "3A")
         personRepo.save(student)
         student = studentRepo.findAll()[0]
-        var workshop = Workshop("a", "a", LocalDateTime.now(), LocalDateTime.now(), mutableListOf(), mutableListOf(), mutableListOf(), mutableListOf())
+        var workshop = Workshop("a", "a", LocalDateTime.now(), LocalDateTime.now(), true, mutableListOf(), mutableListOf(), mutableListOf(), mutableListOf())
         workshopRepo.save(workshop)
         workshop = workshopRepo.findAll()[0]
         var submission = Submission(true, "a", "a", mutableListOf(), workshop, student, mutableListOf())
@@ -107,7 +107,7 @@ class DataManagementTests {
         // See: https://docs.spring.io/spring-data/mongodb/docs/1.2.0.RELEASE/reference/pdf/spring-data-mongodb-parent-reference.pdf
         // --
         // Save something
-        val workShop = Workshop("a", "a",  LocalDateTime.now(), LocalDateTime.now(), mutableListOf(), mutableListOf(), mutableListOf(), mutableListOf())
+        val workShop = Workshop("a", "a",  LocalDateTime.now(), LocalDateTime.now(), true, mutableListOf(), mutableListOf(), mutableListOf(), mutableListOf())
         val student = Student("w", "Max", "Mustermann", "3A")
         personRepo.save(student)
         workShop.addStudent(student)
@@ -130,7 +130,7 @@ class DataManagementTests {
         var student = Student("w", "Max", "Mustermann", "3A")
         personRepo.save(student)
         student = studentRepo.findAll()[0]
-        var workshop = Workshop("a", "a",  LocalDateTime.now(), LocalDateTime.now(), mutableListOf(), mutableListOf(), mutableListOf(), mutableListOf())
+        var workshop = Workshop("a", "a",  LocalDateTime.now(), LocalDateTime.now(), true, mutableListOf(), mutableListOf(), mutableListOf(), mutableListOf())
         workshopRepo.save(workshop)
         workshop = workshopRepo.findAll()[0]
         var submission = Submission(true, "a", "a", mutableListOf(), workshop, student, mutableListOf())

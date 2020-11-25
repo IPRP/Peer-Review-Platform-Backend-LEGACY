@@ -20,11 +20,17 @@ import org.springframework.data.mongodb.repository.MongoRepository
  */
 
 
-interface PersonRepository : MongoRepository<Person, String>
+interface PersonRepository : MongoRepository<Person, String> {
+    fun findByIdIn(ids: List<String>): List<Person>
+}
 
-interface StudentRepository : MongoRepository<Student, String>
+interface StudentRepository : MongoRepository<Student, String> {
+    fun findByIdIn(ids: List<String>): List<Student>
+}
 
-interface TeacherRepository : MongoRepository<Teacher, String>
+interface TeacherRepository : MongoRepository<Teacher, String> {
+    fun findByIdIn(ids: List<String>): List<Teacher>
+}
 
 
 

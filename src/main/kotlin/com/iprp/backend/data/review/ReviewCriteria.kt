@@ -14,6 +14,30 @@ class ReviewCriteria(
     @Id
     lateinit var id: String
         private set
+
+    companion object {
+        fun fromList(criteria: List<Map<String, String>>): ReviewCriteria {
+            val processedCriteria = mutableListOf<ReviewCriterionTuple>()
+
+            for(criterion in criteria) {
+                if(criterion.containsKey("type") && criterion.containsKey("content")) {
+                    val content = criterion["content"] ?: error("")
+                    val check = (criterion["type"] ?: error("")).toLowerCase()
+                    var type: ReviewCriterionType? = null
+                    when(check) {
+                        "point"         -> type = ReviewCriterionType.Point
+                        "grade"         -> type = ReviewCriterionType.Grade
+                        "percentage"    -> type = ReviewCriterionType.Percentage
+                    }
+                    if (type != null) {
+                        processedCriteria.add(ReviewCriterionTuple(type, content))
+                    }
+                }
+            }
+
+            return ReviewCriteria(processedCriteria)
+        }
+    }
 }
 
 data class ReviewCriterionTuple(var type: ReviewCriterionType, var content: String)
