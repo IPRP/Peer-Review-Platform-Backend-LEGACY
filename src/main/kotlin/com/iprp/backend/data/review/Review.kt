@@ -8,12 +8,14 @@ import org.springframework.data.mongodb.core.mapping.DBRef
 
 /**
  * A review a students submits for a given submission.
+ * Grades List correspondents to the criteria of [ReviewCriteria].
  *
  * @author Kacper Urbaniec
  * @version 2020-10-29
  */
 class Review(
-    var title: String,
+    var done: Boolean,
+    var feedback: String,
     var grades: List<Int>,
     @DBRef val student: Student,
     @DBRef val criteria: ReviewCriteria,

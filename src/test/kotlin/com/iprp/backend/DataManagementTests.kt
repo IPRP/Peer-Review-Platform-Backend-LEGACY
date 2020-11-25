@@ -12,6 +12,7 @@ import com.iprp.backend.data.user.Teacher
 import org.junit.jupiter.api.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import java.time.LocalDateTime
 
 
 // Add custom properties
@@ -81,17 +82,17 @@ class DataManagementTests {
         var student = Student("w", "Max", "Mustermann", "3A")
         personRepo.save(student)
         student = studentRepo.findAll()[0]
-        var workshop = Workshop("a", "a", mutableListOf(), mutableListOf(), mutableListOf(), mutableListOf())
+        var workshop = Workshop("a", "a", LocalDateTime.now(), LocalDateTime.now(), mutableListOf(), mutableListOf(), mutableListOf(), mutableListOf())
         workshopRepo.save(workshop)
         workshop = workshopRepo.findAll()[0]
-        var submission = Submission("a", "a", mutableListOf(), workshop, student, mutableListOf())
+        var submission = Submission(true, "a", "a", mutableListOf(), workshop, student, mutableListOf())
         submissionRepo.save(submission)
         submission = submissionRepo.findAll()[0]
         var reviewCriteria = ReviewCriteria(mutableListOf(ReviewCriterionTuple(ReviewCriterionType.Grade, "a")))
         reviewCriteriaRepo.save(reviewCriteria)
         reviewCriteria = reviewCriteriaRepo.findAll()[0]
         val grades = mutableListOf(1)
-        val review = Review("a", grades, student, reviewCriteria, submission, workshop)
+        val review = Review(true, "a", grades, student, reviewCriteria, submission, workshop)
         reviewRepo.save(review)
 
         // Fetch all students
@@ -106,7 +107,7 @@ class DataManagementTests {
         // See: https://docs.spring.io/spring-data/mongodb/docs/1.2.0.RELEASE/reference/pdf/spring-data-mongodb-parent-reference.pdf
         // --
         // Save something
-        val workShop = Workshop("a", "a", mutableListOf(), mutableListOf(), mutableListOf(), mutableListOf())
+        val workShop = Workshop("a", "a",  LocalDateTime.now(), LocalDateTime.now(), mutableListOf(), mutableListOf(), mutableListOf(), mutableListOf())
         val student = Student("w", "Max", "Mustermann", "3A")
         personRepo.save(student)
         workShop.addStudent(student)
@@ -129,17 +130,17 @@ class DataManagementTests {
         var student = Student("w", "Max", "Mustermann", "3A")
         personRepo.save(student)
         student = studentRepo.findAll()[0]
-        var workshop = Workshop("a", "a", mutableListOf(), mutableListOf(), mutableListOf(), mutableListOf())
+        var workshop = Workshop("a", "a",  LocalDateTime.now(), LocalDateTime.now(), mutableListOf(), mutableListOf(), mutableListOf(), mutableListOf())
         workshopRepo.save(workshop)
         workshop = workshopRepo.findAll()[0]
-        var submission = Submission("a", "a", mutableListOf(), workshop, student, mutableListOf())
+        var submission = Submission(true, "a", "a", mutableListOf(), workshop, student, mutableListOf())
         submissionRepo.save(submission)
         submission = submissionRepo.findAll()[0]
         var reviewCriteria = ReviewCriteria(mutableListOf(ReviewCriterionTuple(ReviewCriterionType.Grade, "a")))
         reviewCriteriaRepo.save(reviewCriteria)
         reviewCriteria = reviewCriteriaRepo.findAll()[0]
         val grades = mutableListOf(1)
-        val review = Review("a", grades, student, reviewCriteria, submission, workshop)
+        val review = Review(true,"a", grades, student, reviewCriteria, submission, workshop)
         reviewRepo.save(review)
 
         val foundReviews = reviewRepo.findByStudentId(student.id)

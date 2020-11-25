@@ -6,6 +6,7 @@ import com.iprp.backend.data.user.Student
 import com.iprp.backend.data.user.Teacher
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.DBRef
+import java.time.LocalDateTime
 
 /**
  * Represents a Workshop.
@@ -17,6 +18,8 @@ import org.springframework.data.mongodb.core.mapping.DBRef
 class Workshop(
     var title: String,
     var content: String,
+    var end: LocalDateTime,
+    var roundEnd: LocalDateTime,
     @DBRef var students: MutableList<Student>,
     @DBRef var teachers: MutableList<Teacher>,
     @DBRef var rounds: MutableList<SubmissionRound>,

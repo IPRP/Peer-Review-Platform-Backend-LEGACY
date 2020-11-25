@@ -4,8 +4,10 @@ import com.iprp.backend.tools.MongoUtilities
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
+import org.springframework.scheduling.annotation.EnableScheduling
 
 @SpringBootApplication
+@EnableScheduling
 class BackendApplication : CommandLineRunner {
 
     companion object {

@@ -4,6 +4,7 @@ import com.iprp.backend.data.Workshop
 import com.iprp.backend.data.grade.GradeRound
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.DBRef
+import java.time.LocalDateTime
 
 /**
  * Represents a "round" or "wave" of submissions in a Workshop.
@@ -13,6 +14,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef
  * @version 2020-11-20
  */
 class SubmissionRound(
+    var end: LocalDateTime,
     @DBRef val workshop: Workshop,
     @DBRef val submissions: List<Submission>,
     @DBRef val grades: List<GradeRound>

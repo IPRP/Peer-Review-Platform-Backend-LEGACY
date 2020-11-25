@@ -34,6 +34,16 @@ class WrapperRepository {
     @Autowired
     lateinit var gradeRoundRepository: GradeRoundRepository
 
+
+
+    fun findAllPersons(): List<Person>{
+        return personRepository.findAll()
+    }
+
+
+
+
+
     /**
      * Deletes all documents from all repositories.
      */
@@ -46,10 +56,6 @@ class WrapperRepository {
         submissionRepository.deleteAll()
         submissionRoundRepository.deleteAll()
         reviewCriteriaRepository.deleteAll()
-    }
-
-    fun findAllPersons(): List<Person>{
-        return personRepository.findAll()
     }
 
     /**
