@@ -17,10 +17,11 @@ class Review(
     var done: Boolean,
     var feedback: String,
     var grades: List<Int>,
-    @DBRef val student: Student,
-    @DBRef val criteria: ReviewCriteria,
-    @DBRef val submission: Submission,
-    @DBRef val workshop: Workshop,
+
+    val student: String, // Student
+    val criteria: String, // ReviewCriteria
+    val submission: String, // Submission
+    val workshop: String, // Workshop
 ) {
     @Id
     lateinit var id: String

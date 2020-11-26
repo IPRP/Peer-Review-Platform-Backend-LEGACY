@@ -85,14 +85,17 @@ class RepositoryTests {
         var reviewCriteria = ReviewCriteria(mutableListOf(ReviewCriterionTuple(ReviewCriterionType.Grade, "a")))
         reviewCriteriaRepo.save(reviewCriteria)
         reviewCriteria = reviewCriteriaRepo.findAll()[0]
-        var workshop = Workshop("a", "a",  LocalDateTime.now(), LocalDateTime.now(), true, mutableListOf(), mutableListOf(), reviewCriteria, mutableListOf(), mutableListOf())
+        var workshop = Workshop(
+                "a", "a",  LocalDateTime.now(), LocalDateTime.now(), true, mutableListOf(),
+                mutableListOf(), reviewCriteria.id, mutableListOf(), mutableListOf()
+        )
         workshopRepo.save(workshop)
         workshop = workshopRepo.findAll()[0]
-        var submission = Submission(true, "a", "a", mutableListOf(), workshop, student, mutableListOf())
+        var submission = Submission(true, "a", "a", mutableListOf(), workshop.id, student.id, mutableListOf())
         submissionRepo.save(submission)
         submission = submissionRepo.findAll()[0]
         val grades = mutableListOf(1)
-        val review = Review(true, "a", grades, student, reviewCriteria, submission, workshop)
+        val review = Review(true, "a", grades, student.id, reviewCriteria.id, submission.id, workshop.id)
         reviewRepo.save(review)
 
         // Fetch all students
@@ -110,17 +113,20 @@ class RepositoryTests {
         var reviewCriteria = ReviewCriteria(mutableListOf(ReviewCriterionTuple(ReviewCriterionType.Grade, "a")))
         reviewCriteriaRepo.save(reviewCriteria)
         reviewCriteria = reviewCriteriaRepo.findAll()[0]
-        var workShop = Workshop("a", "a",  LocalDateTime.now(), LocalDateTime.now(), true, mutableListOf(), mutableListOf(), reviewCriteria, mutableListOf(), mutableListOf())
+        val workShop = Workshop(
+            "a", "a",  LocalDateTime.now(), LocalDateTime.now(), true, mutableListOf(),
+                mutableListOf(), reviewCriteria.id, mutableListOf(), mutableListOf()
+        )
         val student = Student("w", "Max", "Mustermann", "3A")
         personRepo.save(student)
-        workShop.addStudent(student)
+        workShop.students.add(student.id)
         workshopRepo.save(workShop)
         // Update student
         student.group = "3B"
         personRepo.save(student)
 
         val foundWorkshops = workshopRepo.findAll()
-        val studentsFromWorkshopRepo = foundWorkshops[0].students
+        val studentsFromWorkshopRepo = repo.studentRepository.findByIdIn(foundWorkshops[0].students)
         val studentsFromStudentRepo = studentRepo.findAll()
 
         // Check update
@@ -136,17 +142,20 @@ class RepositoryTests {
         var reviewCriteria = ReviewCriteria(mutableListOf(ReviewCriterionTuple(ReviewCriterionType.Grade, "a")))
         reviewCriteriaRepo.save(reviewCriteria)
         reviewCriteria = reviewCriteriaRepo.findAll()[0]
-        var workshop = Workshop("a", "a",  LocalDateTime.now(), LocalDateTime.now(), true, mutableListOf(), mutableListOf(), reviewCriteria, mutableListOf(), mutableListOf())
+        var workshop = Workshop(
+            "a", "a",  LocalDateTime.now(), LocalDateTime.now(), true, mutableListOf(),
+                mutableListOf(), reviewCriteria.id, mutableListOf(), mutableListOf()
+        )
         workshopRepo.save(workshop)
         workshop = workshopRepo.findAll()[0]
-        var submission = Submission(true, "a", "a", mutableListOf(), workshop, student, mutableListOf())
+        var submission = Submission(true, "a", "a", mutableListOf(), workshop.id, student.id, mutableListOf())
         submissionRepo.save(submission)
         submission = submissionRepo.findAll()[0]
         val grades = mutableListOf(1)
-        val review = Review(true,"a", grades, student, reviewCriteria, submission, workshop)
+        val review = Review(true,"a", grades, student.id, reviewCriteria.id, submission.id, workshop.id)
         reviewRepo.save(review)
 
-        val foundReviews = reviewRepo.findByStudentId(student.id)
+        val foundReviews = reviewRepo.findByStudent(student.id)
 
         Assertions.assertEquals(1, foundReviews.size)
     }

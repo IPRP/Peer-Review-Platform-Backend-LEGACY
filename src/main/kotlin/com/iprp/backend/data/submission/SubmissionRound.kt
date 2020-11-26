@@ -15,9 +15,10 @@ import java.time.LocalDateTime
  */
 class SubmissionRound(
     var end: LocalDateTime,
-    @DBRef val workshop: Workshop,
-    @DBRef val submissions: List<Submission>,
-    @DBRef val grades: List<Grade>
+
+    val workshop: String, // Workshop
+    val submissions: List<String>, // Submission
+    val grades: List<String> // Grade
 ) {
     @Id
     lateinit var id: String

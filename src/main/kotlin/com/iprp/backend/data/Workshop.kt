@@ -22,22 +22,24 @@ class Workshop(
     var end: LocalDateTime,
     var roundEnd: LocalDateTime,
     val anonymous: Boolean,
-    @DBRef var students: MutableList<Student>,
-    @DBRef var teachers: MutableList<Teacher>,
-    @DBRef var criteria: ReviewCriteria,
-    @DBRef var rounds: MutableList<SubmissionRound>,
-    @DBRef var grades: MutableList<GradeCollection>
+
+    val students: MutableList<String>, // Student
+    val teachers: MutableList<String>, // Teacher
+    var criteria: String, // ReviewCriteria
+    val rounds: MutableList<String>, // SubmissionRound
+    var grades: MutableList<String> // GradeCollection
 ) {
     @Id
     lateinit var id: String
         private set
 
 
-    fun addStudent(student: Student) {
-        students.add(student)
+    /**
+    fun addStudent(studentId: String) {
+        students.add(studentId)
     }
 
-    fun removeStudent(student: Student) {
-        students.remove(student)
-    }
+    fun removeStudent(studentId: String) {
+        students.remove(studentId)
+    }*/
 }

@@ -13,9 +13,10 @@ import org.springframework.data.mongodb.core.mapping.DBRef
  */
 class GradeCollection(
     var grade: Int?,
-    @DBRef val grades: MutableList<Grade>,
-    @DBRef val student: Student,
-    @DBRef val workshop: Workshop,
+
+    val grades: MutableList<String>, // Grade
+    val student: String, // Student
+    val workshop: String, // Workshop
 ) {
     @Id
     lateinit var id: String

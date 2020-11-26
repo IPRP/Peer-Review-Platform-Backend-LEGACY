@@ -45,8 +45,8 @@ interface TeacherRepository : MongoRepository<Teacher, String> {
 
 
 interface WorkshopRepository : MongoRepository<Workshop, String> {
-    fun findByStudentsId(student_id: String): List<Workshop>
-    fun findByTeachersId(teacher_id: String): List<Workshop>
+    fun findByStudents(student_id: String): List<Workshop>
+    fun findByTeachers(teacher_id: String): List<Workshop>
 }
 
 
@@ -60,13 +60,15 @@ interface SubmissionRoundRepository : MongoRepository<SubmissionRound, String>
 
 
 interface ReviewRepository : MongoRepository<Review, String> {
-    fun findByStudentId(student_id: String): List<Review>
+    fun findByStudent(student_id: String): List<Review>
 }
 
 interface ReviewCriteriaRepository : MongoRepository<ReviewCriteria, String>
 
 
 interface GradeCollectionRepository : MongoRepository<GradeCollection, String> {
+    fun findByStudentAndWorkshop(student_id: String, workshop_id: String): GradeCollection?
+
     //fun findByStudentIdAndWorkshopId(student_id: String, workshop_id: String): GradeCollection
 
     /**fun findByWorkshopId(workshop_id: String): GradeCollection? {

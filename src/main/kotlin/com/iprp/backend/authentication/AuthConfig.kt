@@ -16,6 +16,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
  */
 @Configuration
 @EnableWebSecurity
+@Suppress("RedundantModalityModifier")
 open class AuthConfig : WebSecurityConfigurerAdapter() {
 
     @Autowired

@@ -17,9 +17,10 @@ class Grade(
     var gradeSubmission: Int?,
     var gradeReview: Int?,
     var grade: Int?,
-    @DBRef val student: Student,
-    @DBRef val submission: Submission,
-    @DBRef val workshop: Workshop
+
+    val student: String,
+    val submission: String,
+    val workshop: String
 ) {
     @Id
     lateinit var id: String

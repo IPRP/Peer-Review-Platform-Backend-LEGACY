@@ -53,67 +53,57 @@ class DataManagement {
         end: LocalDateTime, criteria: List<Map<String, String>>
     ) {
         // Create workshop
-        val teachers = repo.findAllTeachersByIdIn(teacherIds) as MutableList<Teacher>
+        //val teachers = repo.findAllTeachersByIdIn(teacherIds) as MutableList<Teacher>
         val students = repo.findAllStudentsByIdIn(studentIds) as MutableList<Student>
         val roundEnd = LocalDateTime.now().plusWeeks(2)
-        val rounds = mutableListOf<SubmissionRound>()
-        val grades = mutableListOf<GradeCollection>()
+        val rounds = mutableListOf<String>()
+        val grades = mutableListOf<String>()
 
         var criteriaType = ReviewCriteria.fromList(criteria)
         criteriaType = repo.saveReviewCriteria(criteriaType)
 
         var workshop = Workshop(
-            title, content, end, roundEnd, anonymous, students,
-            teachers, criteriaType, rounds, grades
+            title, content, end, roundEnd, anonymous, studentIds as MutableList<String>,
+            teacherIds as MutableList<String>, criteriaType.id, rounds, grades
         )
         workshop = repo.saveWorkshop(workshop)
 
-        val kek = repo.workshopRepository.findAll()
-
         // Add grade structure for every student
         for(student in students) {
-            var grade = GradeCollection(null, mutableListOf(), student, workshop)
-            var kek0 = repo.gradeCollectionRepository.findAll()
+            var grade = GradeCollection(null, mutableListOf(), student.id, workshop.id)
             grade = repo.saveGradeCollection(grade)
-            kek0 = repo.gradeCollectionRepository.findAll()
-            grades.add(grade)
+            grades.add(grade.id)
         }
 
         // Update workshop in order to add grades
         workshop = repo.saveWorkshop(workshop)
 
-        val ww = repo.gradeCollectionRepository.findAll()
-
         // Add first submission round
-        startRound(workshop)
+        startRound(workshop, cachedStudents = students)
 
     }
 
-    private fun startRound(workshop: Workshop) {
-        val ww = repo.allWorkshops()
-        val submissions = mutableListOf<Submission>()
-        val grades = mutableListOf<Grade>()
-        for(student in workshop.students) {
-            var submission = Submission(false, null, null, listOf(), workshop, student, listOf())
+    private fun startRound(workshop: Workshop, cachedStudents: MutableList<Student>? = null) {
+        val students = cachedStudents ?: repo.findAllStudentsByIdIn(workshop.students)
+        val submissions = mutableListOf<String>()
+        val grades = mutableListOf<String>()
+
+        for(student in students) {
+            var submission = Submission(false, null, null, listOf(), workshop.id, student.id, listOf())
             submission = repo.saveSubmission(submission)
-            submissions.add(submission)
-            var grade = Grade(null, null, null, student, submission, workshop)
+            submissions.add(submission.id)
+            var grade = Grade(null, null, null, student.id, submission.id, workshop.id)
             grade = repo.saveGrade(grade)
-            grades.add(grade)
+            grades.add(grade.id)
 
-            //val kek2 = repo.gradeCollectionRepository.findByStudentId(ObjectId( student.id))
-           // val ww = repo.workshopRepository.findAll()
-            val ww = repo.allWorkshops()
+            val studentGradeCollection = repo.findGradeCollection(student.id, workshop.id)
+            if (studentGradeCollection != null) {
+                studentGradeCollection.grades.add(grade.id)
+                repo.saveGradeCollection(studentGradeCollection)
+            }
 
-            val ah = repo.gradeCollectionRepository.findAll()
-
-            //val kek = repo.gradeCollectionRepository.findByWorkshopId(workshop.id)
-
-            //val studentGradeCollection = repo.findGradeCollection(student.id, workshop.id)
-            //studentGradeCollection.grades.add(grade)
-            //repo.saveGradeCollection(studentGradeCollection)
         }
-        val submissionRound = SubmissionRound(workshop.roundEnd, workshop, submissions, grades)
+        val submissionRound = SubmissionRound(workshop.roundEnd, workshop.id, submissions, grades)
         repo.saveSubmissionRound(submissionRound)
     }
 

@@ -18,9 +18,11 @@ class Submission(
     var title: String?,
     var commment: String?,
     val attachments: List<Binary>,
-    @DBRef val workshop: Workshop,
-    @DBRef val student: Student,
-    @DBRef val assigned: List<Review>
+
+    val workshop: String, // Workshop
+    val student: String, // Student
+    // "assigned"
+    val reviews: List<String> // Review
 
 ) {
     @Id

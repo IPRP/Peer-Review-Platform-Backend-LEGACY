@@ -74,9 +74,9 @@ class WrapperRepository {
 
     fun findAllWorkshops(personId: String): List<Workshop> {
         if (studentRepository.findById(personId).isPresent) {
-            return workshopRepository.findByStudentsId(personId)
+            return workshopRepository.findByStudents(personId)
         }
-        return workshopRepository.findByTeachersId(personId)
+        return workshopRepository.findByTeachers(personId)
     }
 
     fun allWorkshops(): List<Workshop> {
@@ -112,10 +112,9 @@ class WrapperRepository {
         return gradeCollectionRepository.save(gr)
     }
 
-    /**
-    fun findGradeCollection(studentId: String, workshopId: String): GradeCollection {
-        return gradeCollectionRepository.findByStudentIdAndWorkshopId(studentId, workshopId)
-    }*/
+    fun findGradeCollection(studentId: String, workshopId: String): GradeCollection? {
+        return gradeCollectionRepository.findByStudentAndWorkshop(studentId, workshopId)
+    }
 
     /**
      * Overall

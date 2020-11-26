@@ -6,8 +6,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.scheduling.annotation.EnableScheduling
 
+
 @SpringBootApplication
 @EnableScheduling
+@Suppress("RedundantModalityModifier") // See: https://stackoverflow.com/a/48545043/12347616
 open class BackendApplication : CommandLineRunner {
 
     companion object {
