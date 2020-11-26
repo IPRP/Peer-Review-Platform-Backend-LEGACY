@@ -9,6 +9,7 @@ import com.iprp.backend.data.submission.SubmissionRound
 import com.iprp.backend.data.user.Student
 import com.iprp.backend.data.user.Teacher
 import com.iprp.backend.repos.WrapperRepository
+import org.bson.types.ObjectId
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
@@ -67,15 +68,21 @@ class DataManagement {
         )
         workshop = repo.saveWorkshop(workshop)
 
+        val kek = repo.workshopRepository.findAll()
+
         // Add grade structure for every student
         for(student in students) {
             var grade = GradeCollection(null, mutableListOf(), student, workshop)
+            var kek0 = repo.gradeCollectionRepository.findAll()
             grade = repo.saveGradeCollection(grade)
+            kek0 = repo.gradeCollectionRepository.findAll()
             grades.add(grade)
         }
 
         // Update workshop in order to add grades
         workshop = repo.saveWorkshop(workshop)
+
+        val ww = repo.gradeCollectionRepository.findAll()
 
         // Add first submission round
         startRound(workshop)
@@ -83,6 +90,7 @@ class DataManagement {
     }
 
     private fun startRound(workshop: Workshop) {
+        val ww = repo.allWorkshops()
         val submissions = mutableListOf<Submission>()
         val grades = mutableListOf<Grade>()
         for(student in workshop.students) {
@@ -92,9 +100,18 @@ class DataManagement {
             var grade = Grade(null, null, null, student, submission, workshop)
             grade = repo.saveGrade(grade)
             grades.add(grade)
-            val studentGradeCollection = repo.findGradeCollection(student.id, workshop.id)
-            studentGradeCollection.grades.add(grade)
-            repo.saveGradeCollection(studentGradeCollection)
+
+            //val kek2 = repo.gradeCollectionRepository.findByStudentId(ObjectId( student.id))
+           // val ww = repo.workshopRepository.findAll()
+            val ww = repo.allWorkshops()
+
+            val ah = repo.gradeCollectionRepository.findAll()
+
+            //val kek = repo.gradeCollectionRepository.findByWorkshopId(workshop.id)
+
+            //val studentGradeCollection = repo.findGradeCollection(student.id, workshop.id)
+            //studentGradeCollection.grades.add(grade)
+            //repo.saveGradeCollection(studentGradeCollection)
         }
         val submissionRound = SubmissionRound(workshop.roundEnd, workshop, submissions, grades)
         repo.saveSubmissionRound(submissionRound)
@@ -128,10 +145,10 @@ class DataManagement {
      */
 
     fun addStudent(id: String, firstname: String, lastname: String, group: String) {
-        repo.addPerson(Student(id, firstname, lastname, group))
+        repo.savePerson(Student(id, firstname, lastname, group))
     }
 
     fun addTeacher(id: String, firstname: String, lastname: String) {
-        repo.addPerson(Teacher(id, firstname, lastname))
+        repo.savePerson(Teacher(id, firstname, lastname))
     }
 }

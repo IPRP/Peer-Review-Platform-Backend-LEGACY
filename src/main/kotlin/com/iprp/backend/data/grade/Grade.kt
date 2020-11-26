@@ -14,9 +14,9 @@ import org.springframework.data.mongodb.core.mapping.DBRef
  * @version 2020-11-20
  */
 class Grade(
-    gradeSubmission: Int?,
-    gradeReview: Int?,
-    grade: Int?,
+    var gradeSubmission: Int?,
+    var gradeReview: Int?,
+    var grade: Int?,
     @DBRef val student: Student,
     @DBRef val submission: Submission,
     @DBRef val workshop: Workshop

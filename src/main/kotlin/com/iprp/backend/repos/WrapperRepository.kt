@@ -46,7 +46,7 @@ class WrapperRepository {
      * Person
      */
 
-    fun addPerson(p: Person) {
+    fun savePerson(p: Person) {
         personRepository.save(p)
     }
 
@@ -79,6 +79,10 @@ class WrapperRepository {
         return workshopRepository.findByTeachersId(personId)
     }
 
+    fun allWorkshops(): List<Workshop> {
+        return workshopRepository.findAll()
+    }
+
     /**
      * Submission
      */
@@ -108,9 +112,10 @@ class WrapperRepository {
         return gradeCollectionRepository.save(gr)
     }
 
+    /**
     fun findGradeCollection(studentId: String, workshopId: String): GradeCollection {
         return gradeCollectionRepository.findByStudentIdAndWorkshopId(studentId, workshopId)
-    }
+    }*/
 
     /**
      * Overall

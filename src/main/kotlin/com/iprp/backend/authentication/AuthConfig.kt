@@ -16,7 +16,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
  */
 @Configuration
 @EnableWebSecurity
-class AuthConfig : WebSecurityConfigurerAdapter() {
+open class AuthConfig : WebSecurityConfigurerAdapter() {
 
     @Autowired
     private lateinit var authProvider: AuthProvider

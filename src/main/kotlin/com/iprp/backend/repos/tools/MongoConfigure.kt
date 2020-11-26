@@ -9,4 +9,4 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 // See: https://stackoverflow.com/a/48315823/12347616
 @Configuration
 @EnableMongoRepositories(basePackageClasses = [PersonRepository::class], repositoryBaseClass = InheritanceAwareSimpleMongoRepository::class, repositoryFactoryBeanClass = InheritanceAwareMongoRepositoryFactoryBean::class)
-class MongoConfigure
+open class MongoConfigure
