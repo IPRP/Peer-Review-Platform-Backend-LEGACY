@@ -16,7 +16,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
  */
 @Configuration
 @EnableWebSecurity
-class AuthConfig : WebSecurityConfigurerAdapter() {
+@Suppress("RedundantModalityModifier")
+open class AuthConfig : WebSecurityConfigurerAdapter() {
 
     @Autowired
     private lateinit var authProvider: AuthProvider
@@ -28,7 +29,10 @@ class AuthConfig : WebSecurityConfigurerAdapter() {
 
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
+
         http.cors().and().csrf().disable().authorizeRequests().anyRequest().authenticated()
                 .and().httpBasic()
+
+        http.authorizeRequests().anyRequest().permitAll()
     }
 }
