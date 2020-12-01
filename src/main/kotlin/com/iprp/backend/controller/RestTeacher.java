@@ -1,10 +1,14 @@
 package com.iprp.backend.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.iprp.backend.helper.JsonHelper;
-import com.iprp.backend.user.Student;
-import com.iprp.backend.user.Teacher;
+import com.iprp.backend.user.*;
 import com.iprp.backend.workshop.Workshop;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class RestTeacher {
@@ -27,6 +31,40 @@ public class RestTeacher {
 
     }
     /* Testdaten END */
+
+
+    /*Neue Testdaten für newTeacher */
+    private ArrayList<String> members = new ArrayList<String>();
+    private ArrayList<DoneOpenSubmissions> submissions = new ArrayList<DoneOpenSubmissions>();
+    private ArrayList<DoneOpenReviews> reviews = new ArrayList<DoneOpenReviews>();
+    private ArrayList<SubmissionID> subDone = new ArrayList<SubmissionID>();
+    private ArrayList<SubmissionID> subOpen = new ArrayList<SubmissionID>();
+    private ArrayList<ReviewID> revDone = new ArrayList<ReviewID>();
+    private ArrayList<ReviewID> revOpen = new ArrayList<ReviewID>();
+    private NewWorkshop newWorkshop;
+    private ArrayList<NewWorkshop> workshops = new ArrayList<NewWorkshop>();;
+    private void initNewTestData(){
+        this.members = new ArrayList<String>();
+        this.submissions = new ArrayList<DoneOpenSubmissions>();
+        this.reviews = new ArrayList<DoneOpenReviews>();
+        this.subOpen = new ArrayList<SubmissionID>();
+        this.revOpen = new ArrayList<ReviewID>();
+        this.revDone = new ArrayList<ReviewID>();
+        this.subDone = new ArrayList<SubmissionID>();
+        this.workshops = new ArrayList<NewWorkshop>();;
+        this.members.add("Lukas");
+        this.members.add("Georg");
+        this.subOpen.add(new SubmissionID(1, "Georg open", true));
+        this.revOpen.add(new ReviewID(2, "Lukas open", "Georg"));
+        this.subDone.add(new SubmissionID(3, "Georg done", true));
+        this.revDone.add(new ReviewID(4, "Lukas done", "Georg"));
+        this.submissions.add(new DoneOpenSubmissions(subDone, subOpen));
+        this.reviews.add(new DoneOpenReviews(revDone, revOpen));
+        this.newWorkshop = new NewWorkshop(5, "Workshop name", this.members, this.submissions, this.reviews);
+        this.workshops.add(this.newWorkshop);
+        this.workshops.add(new NewWorkshop(6, "Workshop name2", this.members, this.submissions, this.reviews));
+    }
+    /* Neue Testdaten END */
 
     /**
      * Leherer Dashboard
@@ -53,7 +91,19 @@ public class RestTeacher {
      * Editiert einen Workshop
      */
     @PutMapping("/teacher/workshop")
-    public void putteacherworkshop(@RequestBody String payload){
+    public String putteacherworkshop(@RequestBody String payload){
+        initTestdata();
+        List<Workshop> listWorkshop;
+        try {
+            listWorkshop = new JsonHelper(payload).generateWorkshopList();
+            System.out.println(listWorkshop.toString());
+            this.teacher.editWorkshop(listWorkshop.get(0), listWorkshop.get(1));
+            return new JsonHelper("erfolgreich").generateJson();
+        } catch (JsonProcessingException e) {
+            System.out.println("Error " + e.getMessage());
+            return new JsonHelper("JSON error -> " + e.getMessage()).generateJson();
+        }
+
     }
 
     /**
@@ -68,18 +118,22 @@ public class RestTeacher {
      * @return id des erstellten workshops
      */
     @PostMapping("/teacher/workshop")
-    public int postteacherworkshop(@RequestBody String payload){
-        return 0;
+    public String postteacherworkshop(@RequestBody String payload){
+        initTestdata();
+        return "";
     }
 
     /**
      * Alle workshops des aktuellen Lehrers
      * @return JSON mit allen Workshops des Lehrers
      */
-    @GetMapping("/teacher/workshops")
+    @CrossOrigin(origins = "http://localhost:8081")
+    @GetMapping(value="/teacher/workshops", produces = MediaType.APPLICATION_JSON_VALUE)
     public String teacherworkshops(){
-        initTestdata();
-        return new JsonHelper(this.teacher.getWorkshops()).generateJson();
+        //initTestdata();
+        initNewTestData();
+        System.out.println("GET workshops");
+        return new JsonHelper(this.workshops).generateJson();
     }
 
     /**

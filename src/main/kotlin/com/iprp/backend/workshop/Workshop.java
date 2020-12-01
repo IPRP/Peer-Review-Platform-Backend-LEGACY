@@ -1,33 +1,50 @@
 package com.iprp.backend.workshop;
 
+import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.iprp.backend.abgabe.Abgabe;
 import com.iprp.backend.review.Review;
 import com.iprp.backend.user.Student;
 
 import java.util.ArrayList;
 
+@JsonAutoDetect
 public class Workshop {
+
+    @JsonProperty
     private String name, id;
-    //private ArrayList<Teacher> lehrer;
+    @JsonDeserialize(as = ArrayList.class, contentAs = Student.class)
     private ArrayList<Student> teilnehmer;
+    @JsonDeserialize(as = ArrayList.class, contentAs = Abgabe.class)
     private ArrayList<Abgabe> abgaben;
+    @JsonDeserialize(as = ArrayList.class, contentAs = Review.class)
     private ArrayList<Review> reviews;
+
 
     public Workshop(String name) {
         this.name = name;
         this.id = name;
-       /* this.lehrer = new ArrayList<Teacher>();
-        this.lehrer.add(teacher);
-        System.out.println("Techer ist da");*/
         this.teilnehmer = new ArrayList<Student>();
         this.abgaben = new ArrayList<Abgabe>();
         this.reviews = new ArrayList<Review>();
     }
 
+    @JsonCreator
+    public Workshop(@JsonProperty("name") String name,@JsonProperty("id") String id,@JsonProperty("teilnehmer") ArrayList<Student> teilnehmer,@JsonProperty("abgaben") ArrayList<Abgabe> abgaben,@JsonProperty("reviews") ArrayList<Review> reviews){
+        this.name = name;
+        this.id = id;
+        this.teilnehmer = teilnehmer;
+        this.abgaben = abgaben;
+        this.reviews = reviews;
+    }
+
+
+    @JsonGetter("id")
     public String getId() {
         return id;
     }
 
+    @JsonSetter("id")
     public void setId(String id) {
         this.id = id;
     }
@@ -44,20 +61,6 @@ public class Workshop {
         this.delTeilnehmer(teilnehmerOld);
         this.addTeilnehmer(teilnehmerNeu);
     }
-
-    /*public void addLehrer(Teacher lehrer){
-        this.lehrer.add(lehrer);
-    }
-
-    public void delLehrer(Teacher lehrer){
-        this.lehrer.remove(lehrer);
-    }
-
-    public void editLehrer(Teacher lehrerOld, Teacher lehrerNeu){
-        this.delLehrer(lehrerOld);
-        this.addLehrer(lehrerNeu);
-    }
-*/
     public void addAbgabe(Abgabe abgabe){
         this.abgaben.add(abgabe);
     }
@@ -84,10 +87,12 @@ public class Workshop {
         this.addReview(reviewNeu);
     }
 
+    @JsonGetter("name")
     public String getName() {
         return name;
     }
 
+    @JsonSetter("name")
     public void setName(String name) {
         this.name = name;
     }
@@ -102,27 +107,32 @@ public class Workshop {
     }
     */
 
-
+    @JsonGetter("teilnehmer")
     public ArrayList<Student> getTeilnehmer() {
         return teilnehmer;
     }
 
+    @JsonSetter("teilnehmer")
     public void setTeilnehmer(ArrayList<Student> teilnehmer) {
         this.teilnehmer = teilnehmer;
     }
 
+    @JsonGetter("abgaben")
     public ArrayList<Abgabe> getAbgaben() {
         return abgaben;
     }
 
+    @JsonSetter("abgaben")
     public void setAbgaben(ArrayList<Abgabe> abgaben) {
         this.abgaben = abgaben;
     }
 
+    @JsonGetter("reviews")
     public ArrayList<Review> getReviews() {
         return reviews;
     }
 
+    @JsonSetter("reviews")
     public void setReviews(ArrayList<Review> reviews) {
         this.reviews = reviews;
     }

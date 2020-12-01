@@ -53,6 +53,7 @@ abstract public class Person {
     }
 
     public void editWorkshop(Workshop workshopOld, Workshop workshopNeu){
+        System.out.println(this.workshops.toString());
         this.delWorkshop(workshopOld);
         this.addWorkshop(workshopNeu);
     }

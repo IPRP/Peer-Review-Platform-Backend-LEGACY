@@ -10,6 +10,7 @@ public class Review {
     private Student abgeber, reviewer;
     private int gesamtBewertung;
     private String gesamtBewertungsText;
+    private int id;
 
     public Review(ArrayList<Kriterium> kriteriums, Student abgeber, Student reviewer, String gesamtBewertungsText) {
         this.kriteriums = kriteriums;
