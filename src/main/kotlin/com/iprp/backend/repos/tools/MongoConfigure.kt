@@ -2,6 +2,7 @@ package com.iprp.backend.repos.tools
 
 import com.iprp.backend.repos.PersonRepository
 import org.springframework.context.annotation.Configuration
+import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories
 
 
@@ -10,4 +11,13 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @Configuration
 @EnableMongoRepositories(basePackageClasses = [PersonRepository::class], repositoryBaseClass = InheritanceAwareSimpleMongoRepository::class, repositoryFactoryBeanClass = InheritanceAwareMongoRepositoryFactoryBean::class)
 @Suppress("RedundantModalityModifier")
-open class MongoConfigure
+open class MongoConfigure : AbstractMongoClientConfiguration() {
+
+
+
+    override fun getDatabaseName(): String {
+        TODO("Not yet implemented")
+    }
+
+
+}

@@ -35,6 +35,7 @@ interface PersonRepository : MongoRepository<Person, String> {
 
 interface StudentRepository : MongoRepository<Student, String> {
     fun findByIdIn(ids: List<String>): List<Student>
+    fun findFirstById(id: String): Student?
 }
 
 interface TeacherRepository : MongoRepository<Teacher, String> {
@@ -47,20 +48,28 @@ interface TeacherRepository : MongoRepository<Teacher, String> {
 interface WorkshopRepository : MongoRepository<Workshop, String> {
     fun findByStudents(student_id: String): List<Workshop>
     fun findByTeachers(teacher_id: String): List<Workshop>
+    fun findFirstById(id: String): Workshop?
 }
 
 
 
 
-interface SubmissionRepository : MongoRepository<Submission, String>
+interface SubmissionRepository : MongoRepository<Submission, String> {
+    fun deleteByWorkshop(workshop_id: String)
+    fun findFirstById(id: String): Submission?
+    fun findByIdIn(ids: List<String>): List<Submission>
+}
 
-interface SubmissionRoundRepository : MongoRepository<SubmissionRound, String>
-
+interface SubmissionRoundRepository : MongoRepository<SubmissionRound, String> {
+    fun deleteByWorkshop(workshop_id: String)
+    fun findByIdIn(ids: List<String>): List<SubmissionRound>
+}
 
 
 
 interface ReviewRepository : MongoRepository<Review, String> {
     fun findByStudent(student_id: String): List<Review>
+    fun deleteByWorkshop(workshop_id: String)
 }
 
 interface ReviewCriteriaRepository : MongoRepository<ReviewCriteria, String>
@@ -68,6 +77,7 @@ interface ReviewCriteriaRepository : MongoRepository<ReviewCriteria, String>
 
 interface GradeCollectionRepository : MongoRepository<GradeCollection, String> {
     fun findByStudentAndWorkshop(student_id: String, workshop_id: String): GradeCollection?
+    fun deleteByWorkshop(workshop_id: String)
 
     //fun findByStudentIdAndWorkshopId(student_id: String, workshop_id: String): GradeCollection
 
@@ -78,5 +88,7 @@ interface GradeCollectionRepository : MongoRepository<GradeCollection, String> {
     fun findByStudentId(student_id: ObjectId): GradeCollection*/
 }
 
-interface GradeRepository : MongoRepository<Grade, String>
+interface GradeRepository : MongoRepository<Grade, String> {
+    fun deleteByWorkshop(workshop_id: String)
+}
 

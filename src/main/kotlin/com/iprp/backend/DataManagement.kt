@@ -9,12 +9,10 @@ import com.iprp.backend.data.submission.SubmissionRound
 import com.iprp.backend.data.user.Student
 import com.iprp.backend.data.user.Teacher
 import com.iprp.backend.repos.WrapperRepository
-import org.bson.types.ObjectId
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
-import java.util.*
 
 /**
  *
@@ -27,7 +25,7 @@ class DataManagement {
     @Autowired
     lateinit var repo: WrapperRepository
 
-    // TODO read write lock ReentrantReadWriteLock
+    // TODO read write lock ReentrantReadWriteLock or MongoDB transaction
 
     // Scheduled task
     // See: https://spring.io/guides/gs/scheduling-tasks/
@@ -40,7 +38,10 @@ class DataManagement {
      * Workshop
      */
 
-    fun findAllWorkshops(personId: String): Map<String, Any> {
+    /**
+     * Get all workshops of a person (student or teacher).
+     */
+    fun getAllWorkshops(personId: String): Map<String, List<Map<String, String>>> {
         val workshops = repo.findAllWorkshops(personId)
         val workshopList = mutableListOf<Map<String, String>>()
         for (workshop in workshops) {
@@ -49,6 +50,48 @@ class DataManagement {
         return mapOf("workshops" to workshopList)
     }
 
+    /**
+     * Get a specific workshop from a teacher's perspective.
+     */
+    fun getWorkshopTeacher(workshopId: String): Map<String, Any> {
+        val workshop = repo.findWorkshop(workshopId)
+        if (workshop != null) {
+            val teachers = mutableListOf<Map<String, String>>()
+            repo.findAllTeachersByIdIn(workshop.teachers).forEach { teacher ->
+                teachers.add(
+                    mapOf("id" to teacher.id, "firstname" to teacher.firstname, "lastname" to teacher.lastname))
+            }
+            val students = mutableListOf<Map<String, String>>()
+            repo.findAllStudentsByIdIn(workshop.students).forEach { student ->
+                students.add(
+                    mapOf("id" to student.id, "firstname" to student.firstname, "lastname" to student.lastname))
+            }
+            val rounds = mutableListOf<Map<String, Any>>()
+            repo.findAllSubmissionRounds(workshop.rounds).forEach { submissionRound ->
+                val round = mutableMapOf<String, Any>("id" to submissionRound.id)
+                val submissions = mutableListOf<Map<String, String>>()
+                repo.findAllSubmissions(submissionRound.submissions).forEach { submission ->
+                    val student = repo.findStudent(submission.student)
+                    if (student != null) {
+                        submissions.add(mapOf(
+                            "id" to submission.id, "title" to (submission.title?:""),
+                            "firstname" to student.firstname, "lastname" to student.lastname))
+                    }
+                }
+                round["submissions"] = submissions
+                rounds.add(round)
+            }
+            return mapOf("ok" to true, "workshop" to mapOf(
+                "title" to workshop.title, "content" to workshop.content, "anonymous" to workshop.anonymous,
+                "end" to workshop.end, "roundEnd" to workshop.roundEnd, "teachers" to teachers,
+                "students" to students, "rounds" to rounds))
+        }
+        return mapOf("ok" to false)
+    }
+
+    /**
+     * Add new Workshop. Should be only used by teachers.
+     */
     fun addWorkshop(
         teacherIds: List<String>, studentIds: List<String>,
         title: String, content: String, anonymous: Boolean,
@@ -115,6 +158,9 @@ class DataManagement {
         repo.saveWorkshop(workshop)
     }
 
+    /**
+     * Update existing Workshop. Should only be used by teachers.
+     */
     fun updateWorkshop(
         workshopId: String, teacherIds: List<String>, studentIds: List<String>,
         title: String, content: String, anonymous: Boolean,
@@ -139,7 +185,12 @@ class DataManagement {
     }
 
     fun deleteWorkshop(workshopId: String): Map<String, Any> {
-        throw NotImplementedError()
+        return try {
+            repo.deleteWorkshop(workshopId)
+            mapOf("ok" to true)
+        } catch (ex: Exception) {
+            mapOf("ok" to false)
+        }
     }
 
 

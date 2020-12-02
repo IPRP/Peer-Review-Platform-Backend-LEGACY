@@ -59,4 +59,21 @@ class DataManagementTests {
 
         Assertions.assertEquals(1, foundWorkshops.size)
     }
+
+    @Test
+    fun deleteWorkshop() {
+        // Add workshop
+        dm.addStudent("s1", "Max", "Mustermann", "3A")
+        dm.addTeacher("t1", "John", "Doe")
+        dm.addWorkshop(
+            listOf("t1"), listOf("s1"), "workshop", "my workshop",
+            true, LocalDateTime.now(), listOf(mapOf("type" to "point", "content" to "abc"))
+        )
+        val workshop = repo.workshopRepository.findAll().first()!!
+        dm.deleteWorkshop(workshop.id)
+
+        val foundWorkshops = repo.workshopRepository.findAll()
+
+        Assertions.assertEquals(0, foundWorkshops.size)
+    }
 }

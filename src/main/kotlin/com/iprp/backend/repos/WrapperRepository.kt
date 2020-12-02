@@ -21,6 +21,8 @@ import org.springframework.stereotype.Component
 @Component
 class WrapperRepository {
 
+    // TODO make props private - Tests will need reflection to access them...
+
     @Autowired
     lateinit var personRepository: PersonRepository
     @Autowired
@@ -62,6 +64,10 @@ class WrapperRepository {
         return teacherRepository.findByIdIn(ids)
     }
 
+    fun findStudent(id: String): Student? {
+        return studentRepository.findFirstById(id)
+    }
+
 
     /**
      * Workshop
@@ -71,6 +77,18 @@ class WrapperRepository {
         return workshopRepository.save(w)
     }
 
+    fun deleteWorkshop(workshopId: String) {
+        workshopRepository.deleteById(workshopId)
+        reviewRepository.deleteByWorkshop(workshopId)
+        submissionRepository.deleteByWorkshop(workshopId)
+        submissionRoundRepository.deleteByWorkshop(workshopId)
+        gradeCollectionRepository.deleteByWorkshop(workshopId)
+        gradeRepository.deleteByWorkshop(workshopId)
+    }
+
+    fun findWorkshop(workshopId: String): Workshop? {
+        return workshopRepository.findFirstById(workshopId)
+    }
 
     fun findAllWorkshops(personId: String): List<Workshop> {
         if (studentRepository.findById(personId).isPresent) {
@@ -92,6 +110,18 @@ class WrapperRepository {
 
     fun saveSubmissionRound(sr: SubmissionRound): SubmissionRound {
         return submissionRoundRepository.save(sr)
+    }
+
+    fun findSubmission(id: String): Submission? {
+        return submissionRepository.findFirstById(id)
+    }
+
+    fun findAllSubmissions(ids: List<String>): List<Submission> {
+        return submissionRepository.findByIdIn(ids)
+    }
+
+    fun findAllSubmissionRounds(ids: List<String>): List<SubmissionRound> {
+        return submissionRoundRepository.findByIdIn(ids)
     }
 
     /**
