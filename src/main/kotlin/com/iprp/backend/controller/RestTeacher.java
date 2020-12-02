@@ -3,8 +3,11 @@ package com.iprp.backend.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.iprp.backend.helper.JsonHelper;
 import com.iprp.backend.user.*;
-import com.iprp.backend.workshop.Workshop;
+//import com.iprp.backend.workshop.Workshop;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -13,7 +16,7 @@ import java.util.List;
 @RestController
 public class RestTeacher {
 
-    /* Testdaten */
+    /* Testdaten
     private Teacher teacher = new Teacher("1", "Max", "Muster");
     private Student student = new Student("2", "Schuller", "Schuh");
     private Workshop workshop1 = new Workshop("Workshop1");
@@ -30,7 +33,7 @@ public class RestTeacher {
         this.teacher.addWorkshop(this.workshop2);
 
     }
-    /* Testdaten END */
+    Testdaten END */
 
 
     /*Neue Testdaten für newTeacher */
@@ -64,12 +67,12 @@ public class RestTeacher {
         this.workshops.add(this.newWorkshop);
         this.workshops.add(new NewWorkshop(6, "Workshop name2", this.members, this.submissions, this.reviews));
     }
-    /* Neue Testdaten END */
+    /* Neue Testdaten END
 
     /**
      * Leherer Dashboard
      * @return JSON mit den Dashboard Daten
-     */
+     *
     @GetMapping("/teacher")
     public String teacher(){
         initTestdata();
@@ -80,7 +83,7 @@ public class RestTeacher {
      * Workshop auswählen
      * @param payload Json Payload -> Workshop id
      * @return JSON mit den Daten des Workshops
-     */
+     *
     @GetMapping("/teacher/workshop")
     public String getteacherworkshop(@RequestBody String payload){
         initTestdata();
@@ -89,7 +92,7 @@ public class RestTeacher {
 
     /**
      * Editiert einen Workshop
-     */
+     *
     @PutMapping("/teacher/workshop")
     public String putteacherworkshop(@RequestBody String payload){
         initTestdata();
@@ -108,7 +111,7 @@ public class RestTeacher {
 
     /**
      * Löscht einen Workshop
-     */
+     *
     @DeleteMapping("/teacher/workshop")
     public void delteacherworkshop(@RequestBody String payload){
     }
@@ -116,12 +119,24 @@ public class RestTeacher {
     /**
      * Erstellt einen Workshop
      * @return id des erstellten workshops
-     */
+     *
     @PostMapping("/teacher/workshop")
     public String postteacherworkshop(@RequestBody String payload){
         initTestdata();
         return "";
     }
+    */
+
+    @CrossOrigin(origins = "http://localhost:8081")
+    @DeleteMapping(value="/teacher/workshop/{id}")
+    public String techerdelworkshop(@PathVariable String id){
+        initNewTestData();
+        System.out.println("DEL workshops");
+        System.out.println(id);
+        this.workshops.removeIf(work -> work.getId() == Integer.parseInt(id));
+        return new JsonHelper(this.workshops).generateJson();
+    }
+
 
     /**
      * Alle workshops des aktuellen Lehrers
@@ -196,3 +211,11 @@ public class RestTeacher {
     }
 }
 
+class Util {
+
+    public static ResponseEntity<String> createResponseEntity(String message, HttpStatus statusCode) {
+        return new ResponseEntity<>(message, statusCode);
+    }
+
+
+}

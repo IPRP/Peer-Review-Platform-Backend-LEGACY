@@ -1,12 +1,10 @@
 package com.iprp.backend.helper;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import com.iprp.backend.workshop.Workshop;
+//import com.iprp.backend.workshop.Workshop;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +40,7 @@ public class JsonHelper {
         return json;
     }
 
+    /*
     public List<Workshop> generateWorkshopList() throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         List<Workshop> returnList = new ArrayList<Workshop>();
@@ -50,4 +49,5 @@ public class JsonHelper {
         }
         return returnList;
     }
+     */
 }

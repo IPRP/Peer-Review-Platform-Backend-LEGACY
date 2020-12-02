@@ -26,7 +26,7 @@ public class NewWorkshop {
         this.members = members;
         this.submissions = submissions;
         this.reviews = reviews;
-
+        this.id = id;
     }
 
 
