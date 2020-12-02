@@ -108,8 +108,8 @@ class DataManagement {
             criteriaType = repo.saveReviewCriteria(criteriaType)
 
             var workshop = Workshop(
-                    title, content, end, roundEnd, anonymous, studentIds as MutableList<String>,
-                    teacherIds as MutableList<String>, criteriaType.id, rounds, grades
+                title, content, end, roundEnd, anonymous, studentIds as MutableList<String>,
+                teacherIds as MutableList<String>, criteriaType.id, rounds, grades
             )
             workshop = repo.saveWorkshop(workshop)
 
@@ -163,25 +163,60 @@ class DataManagement {
      */
     fun updateWorkshop(
         workshopId: String, teacherIds: List<String>, studentIds: List<String>,
-        title: String, content: String, anonymous: Boolean,
-        end: LocalDateTime, criteria: List<Map<String, String>>
+        title: String, content: String, end: LocalDateTime, roundEnd: LocalDateTime,
+        criteria: List<Map<String, String>>
     ): Map<String, Any> {
-        // TODO do not kick out teacher out of course
-
+        // TODO
         // Lock process for this id
         // See: https://stackoverflow.com/a/13957003/12347616
         /**synchronized(studentId.intern()) {
-
         }*/
 
-        // TODO
-        // remove student from workshop
-
-        // remove student from submission round
-
-        //remove student from grades
-
-        throw NotImplementedError()
+        val workshop = repo.findWorkshop(workshopId)
+        if (workshop != null) {
+            workshop.end = end
+            workshop.roundEnd = roundEnd
+            var criteriaType = ReviewCriteria.fromList(criteria)
+            criteriaType = repo.saveReviewCriteria(criteriaType)
+            workshop.criteria = criteriaType.id
+            // If the teacherIds are empty, no teacher update will be made,
+            // because a course needs a minimum of one teacher
+            if (teacherIds.isNotEmpty()) {
+                workshop.teachers.clear()
+                workshop.teachers.addAll(teacherIds)
+            }
+            val check = studentIds + workshop.students
+            check.forEach { student ->
+                if (studentIds.contains(student)) {
+                    if (!workshop.students.contains(student)) {
+                        // New student
+                        if (workshop.rounds.isNotEmpty()) {
+                            val round = repo.findSubmissionRound(workshop.rounds.last())
+                            if (round != null) {
+                                var submission = Submission(
+                                    false, null, null, listOf(), workshopId, student, listOf())
+                                submission = repo.saveSubmission(submission)
+                                var grade = Grade(
+                                    null, null, null, student, submission.id, workshopId)
+                                grade = repo.saveGrade(grade)
+                                round.submissions.add(submission.id)
+                                round.grades.add(grade.id)
+                            }
+                        }
+                        workshop.students.add(student)
+                    }
+                } else {
+                    // Student should be removed
+                    // TODO remove submissions from submissionRound.submission + grades
+                        // and GradeCollection
+                    repo.deleteStudentSubmissionsAndGradesInWorkshop(student, workshopId)
+                    workshop.students.remove(student)
+                }
+            }
+            repo.saveWorkshop(workshop)
+            return mapOf("ok" to true)
+        }
+        return mapOf("ok" to false)
     }
 
     fun deleteWorkshop(workshopId: String): Map<String, Any> {

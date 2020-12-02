@@ -20,7 +20,7 @@ import org.springframework.data.mongodb.repository.MongoRepository
 
 
 /**
- * File that defines all [MongoRepository] for CRUD operations.
+ * File that defines all MongoRepository for CRUD operations.
  *
  * @author Kacper Urbaniec
  * @version 2020-11-20
@@ -58,11 +58,13 @@ interface SubmissionRepository : MongoRepository<Submission, String> {
     fun deleteByWorkshop(workshop_id: String)
     fun findFirstById(id: String): Submission?
     fun findByIdIn(ids: List<String>): List<Submission>
+    fun deleteByStudentAndWorkshop(student_id: String, workshop_id: String)
 }
 
 interface SubmissionRoundRepository : MongoRepository<SubmissionRound, String> {
     fun deleteByWorkshop(workshop_id: String)
     fun findByIdIn(ids: List<String>): List<SubmissionRound>
+    fun findFirstById(id: String): SubmissionRound?
 }
 
 
@@ -78,6 +80,7 @@ interface ReviewCriteriaRepository : MongoRepository<ReviewCriteria, String>
 interface GradeCollectionRepository : MongoRepository<GradeCollection, String> {
     fun findByStudentAndWorkshop(student_id: String, workshop_id: String): GradeCollection?
     fun deleteByWorkshop(workshop_id: String)
+    fun deleteByStudentAndWorkshop(student_id: String, workshop_id: String)
 
     //fun findByStudentIdAndWorkshopId(student_id: String, workshop_id: String): GradeCollection
 
@@ -90,5 +93,6 @@ interface GradeCollectionRepository : MongoRepository<GradeCollection, String> {
 
 interface GradeRepository : MongoRepository<Grade, String> {
     fun deleteByWorkshop(workshop_id: String)
+    fun deleteByStudentAndWorkshop(student_id: String, workshop_id: String)
 }
 

@@ -17,8 +17,8 @@ class SubmissionRound(
     var end: LocalDateTime,
 
     val workshop: String, // Workshop
-    val submissions: List<String>, // Submission
-    val grades: List<String> // Grade
+    val submissions: MutableList<String>, // Submission
+    val grades: MutableList<String> // Grade
 ) {
     @Id
     lateinit var id: String

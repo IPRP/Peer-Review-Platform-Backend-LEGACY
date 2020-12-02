@@ -101,6 +101,12 @@ class WrapperRepository {
         return workshopRepository.findAll()
     }
 
+    fun deleteStudentSubmissionsAndGradesInWorkshop(studentId: String, workshopId: String) {
+        submissionRepository.deleteByStudentAndWorkshop(studentId, workshopId)
+        gradeCollectionRepository.deleteByStudentAndWorkshop(studentId, workshopId)
+        gradeRepository.deleteByStudentAndWorkshop(studentId, workshopId)
+    }
+
     /**
      * Submission
      */
@@ -122,6 +128,10 @@ class WrapperRepository {
 
     fun findAllSubmissionRounds(ids: List<String>): List<SubmissionRound> {
         return submissionRoundRepository.findByIdIn(ids)
+    }
+
+    fun findSubmissionRound(id: String): SubmissionRound? {
+        return submissionRoundRepository.findFirstById(id)
     }
 
     /**
