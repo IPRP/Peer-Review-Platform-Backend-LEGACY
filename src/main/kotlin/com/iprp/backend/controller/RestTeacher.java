@@ -4,10 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.iprp.backend.helper.JsonHelper;
 import com.iprp.backend.user.*;
 //import com.iprp.backend.workshop.Workshop;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -44,8 +41,9 @@ public class RestTeacher {
     private ArrayList<SubmissionID> subOpen = new ArrayList<SubmissionID>();
     private ArrayList<ReviewID> revDone = new ArrayList<ReviewID>();
     private ArrayList<ReviewID> revOpen = new ArrayList<ReviewID>();
-    private NewWorkshop newWorkshop;
-    private ArrayList<NewWorkshop> workshops = new ArrayList<NewWorkshop>();;
+    private ArrayList<Kriterium> kriterien = new ArrayList<Kriterium>();
+    private Workshop workshop;
+    private ArrayList<Workshop> workshops = new ArrayList<Workshop>();;
     private void initNewTestData(){
         this.members = new ArrayList<String>();
         this.submissions = new ArrayList<DoneOpenSubmissions>();
@@ -54,7 +52,11 @@ public class RestTeacher {
         this.revOpen = new ArrayList<ReviewID>();
         this.revDone = new ArrayList<ReviewID>();
         this.subDone = new ArrayList<SubmissionID>();
-        this.workshops = new ArrayList<NewWorkshop>();;
+        this.workshops = new ArrayList<Workshop>();
+        this.kriterien = new ArrayList<Kriterium>();
+        this.kriterien.add(new Kriterium(1, "Kriterium 1 Ja Nein", "Beschreibung 1", 0, 0, true));
+        this.kriterien.add(new Kriterium(2, "Kriterium 2 Punkte", "Beschreibung 2", 100, 0, false));
+        this.kriterien.add(new Kriterium(3, "Kriterium 3 Prozent", "Beschreibung 3", 0, 100, false));
         this.members.add("Lukas");
         this.members.add("Georg");
         this.subOpen.add(new SubmissionID(1, "Georg open", true));
@@ -63,9 +65,9 @@ public class RestTeacher {
         this.revDone.add(new ReviewID(4, "Lukas done", "Georg"));
         this.submissions.add(new DoneOpenSubmissions(subDone, subOpen));
         this.reviews.add(new DoneOpenReviews(revDone, revOpen));
-        this.newWorkshop = new NewWorkshop(5, "Workshop name", this.members, this.submissions, this.reviews);
-        this.workshops.add(this.newWorkshop);
-        this.workshops.add(new NewWorkshop(6, "Workshop name2", this.members, this.submissions, this.reviews));
+        this.workshop = new Workshop(1,"Workshop Name 1", "Beschreibung 1", "11-11-2020 11:11", false, this.members, this.submissions, this.reviews, this.kriterien);
+        this.workshops.add(this.workshop);
+        this.workshops.add(new Workshop(2,"Workshop Name 2", "Beschreibung 2", "12-12-2020 12:12", false, this.members, this.submissions, this.reviews, this.kriterien));
     }
     /* Neue Testdaten END
 
@@ -115,17 +117,21 @@ public class RestTeacher {
     @DeleteMapping("/teacher/workshop")
     public void delteacherworkshop(@RequestBody String payload){
     }
-
+*/
     /**
      * Erstellt einen Workshop
      * @return id des erstellten workshops
      *
+     */
     @PostMapping("/teacher/workshop")
-    public String postteacherworkshop(@RequestBody String payload){
-        initTestdata();
-        return "";
+    public String postteacherworkshop(@RequestBody String json){
+        initNewTestData();
+        Workshop workshop = null;
+        workshop = new JsonHelper(json).generateWorkshop();
+        this.workshops.add(workshop);
+        return new JsonHelper(this.workshops).generateJson();
     }
-    */
+
 
     @CrossOrigin(origins = "http://localhost:8081")
     @DeleteMapping(value="/teacher/workshop/{id}")
@@ -209,13 +215,4 @@ public class RestTeacher {
     public String getteacherdelivery(@RequestBody String payload){
         return "{inhalt: inhalt}";
     }
-}
-
-class Util {
-
-    public static ResponseEntity<String> createResponseEntity(String message, HttpStatus statusCode) {
-        return new ResponseEntity<>(message, statusCode);
-    }
-
-
 }

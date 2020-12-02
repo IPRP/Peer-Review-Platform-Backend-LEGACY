@@ -3,6 +3,7 @@ package com.iprp.backend.helper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.iprp.backend.user.Workshop;
 //import com.iprp.backend.workshop.Workshop;
 
 import java.util.ArrayList;
@@ -40,14 +41,27 @@ public class JsonHelper {
         return json;
     }
 
-    /*
+    public Workshop generateWorkshop(){
+        ObjectMapper objectMapper = new ObjectMapper();
+        Workshop workshop = null;
+        if (!this.json.isEmpty()) {
+            try {
+                workshop = objectMapper.readValue(this.json, Workshop.class);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+        }
+        return workshop;
+    }
+
+
     public List<Workshop> generateWorkshopList() throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         List<Workshop> returnList = new ArrayList<Workshop>();
-        if (this.json != ""){
+        if (!this.json.isEmpty()){
             returnList = objectMapper.readValue(this.json, TypeFactory.defaultInstance().constructCollectionType(ArrayList.class, Workshop.class));
         }
         return returnList;
     }
-     */
+
 }
