@@ -122,8 +122,12 @@ class WrapperRepository {
         return submissionRepository.findFirstById(id)
     }
 
-    fun findAllSubmissions(ids: List<String>): List<Submission> {
+    fun findAllSubmissionsIn(ids: List<String>): List<Submission> {
         return submissionRepository.findByIdIn(ids)
+    }
+
+    fun findAllStudentSubmissionsInWorkshop(studentId: String, workshopId: String): List<Submission> {
+        return submissionRepository.findByStudentAndWorkshop(studentId, workshopId)
     }
 
     fun findAllSubmissionRounds(ids: List<String>): List<SubmissionRound> {
@@ -133,6 +137,11 @@ class WrapperRepository {
     fun findSubmissionRound(id: String): SubmissionRound? {
         return submissionRoundRepository.findFirstById(id)
     }
+
+    fun findSubmissionRoundBySubmissionInWorkshop(submissionId: String, workshopId: String): SubmissionRound? {
+        return submissionRoundRepository.findFirstBySubmissionsContainsAndWorkshop(submissionId, workshopId)
+    }
+
 
     /**
      * Review
@@ -148,12 +157,16 @@ class WrapperRepository {
         return gradeRepository.save(g)
     }
 
-    fun saveGradeCollection(gr: GradeCollection): GradeCollection {
-        return gradeCollectionRepository.save(gr)
+    fun saveGradeCollection(gc: GradeCollection): GradeCollection {
+        return gradeCollectionRepository.save(gc)
     }
 
-    fun findGradeCollection(studentId: String, workshopId: String): GradeCollection? {
+    fun findGradeCollectionInWorkshop(studentId: String, workshopId: String): GradeCollection? {
         return gradeCollectionRepository.findByStudentAndWorkshop(studentId, workshopId)
+    }
+
+    fun deleteGradeCollection(gcId: String) {
+        return gradeCollectionRepository.deleteById(gcId)
     }
 
     /**

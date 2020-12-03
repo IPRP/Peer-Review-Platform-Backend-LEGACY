@@ -59,12 +59,14 @@ interface SubmissionRepository : MongoRepository<Submission, String> {
     fun findFirstById(id: String): Submission?
     fun findByIdIn(ids: List<String>): List<Submission>
     fun deleteByStudentAndWorkshop(student_id: String, workshop_id: String)
+    fun findByStudentAndWorkshop(student_id: String, workshop_id: String): List<Submission>
 }
 
 interface SubmissionRoundRepository : MongoRepository<SubmissionRound, String> {
     fun deleteByWorkshop(workshop_id: String)
     fun findByIdIn(ids: List<String>): List<SubmissionRound>
     fun findFirstById(id: String): SubmissionRound?
+    fun findFirstBySubmissionsContainsAndWorkshop(submission_id: String, workshop_id: String): SubmissionRound?
 }
 
 
