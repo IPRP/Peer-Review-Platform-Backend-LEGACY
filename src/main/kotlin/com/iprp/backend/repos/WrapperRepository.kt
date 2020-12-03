@@ -165,6 +165,10 @@ class WrapperRepository {
         return gradeRepository.save(g)
     }
 
+    fun findAllGradesFromStudentInWorkshop(studentId: String, workshopId: String): List<Grade> {
+        return gradeRepository.findByStudentAndWorkshop(studentId, workshopId)
+    }
+
     fun saveGradeCollection(gc: GradeCollection): GradeCollection {
         return gradeCollectionRepository.save(gc)
     }
@@ -175,6 +179,10 @@ class WrapperRepository {
 
     fun deleteGradeCollection(gcId: String) {
         return gradeCollectionRepository.deleteById(gcId)
+    }
+
+    fun findAllGradeCollectionsInWorkhop(ids: List<String>, workshopId: String): List<GradeCollection> {
+        return gradeCollectionRepository.findByIdInAndWorkshop(ids, workshopId)
     }
 
     /**

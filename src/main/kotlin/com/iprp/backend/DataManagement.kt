@@ -271,6 +271,60 @@ class DataManagement {
     //================================================================================
 
 
+    fun getGradesTeacher(workshopId: String): Map<String, Any> {
+        try {
+            val workshop = repo.findWorkshop(workshopId)
+            if (workshop != null) {
+                val gradeCollections = repo.findAllGradeCollectionsInWorkhop(workshop.grades, workshop.id)
+                val students = mutableListOf<Map<String, Any>>()
+                gradeCollections.forEach { gc ->
+                    val student = repo.findStudent(gc.student)
+                    if (student != null) {
+                        val studentData = mutableMapOf<String, Any>()
+                        studentData["id"] = student.id
+                        studentData["firstname"] = student.firstname
+                        studentData["lastname"] = student.lastname
+                        studentData["grade"] = gc.grade?:0
+                        val submissions = mutableListOf<Map<String, Any>>()
+                        repo.findAllGradesFromStudentInWorkshop(student.id, workshop.id).forEach { grade ->
+                            val submission = mutableMapOf<String, Any>()
+                            submission["id"] = grade.submission
+                            submission["gradeSubmission"] = grade.gradeSubmission?:0
+                            submission["gradeReview"] = grade.gradeReview?:0
+                            submission["grade"] = grade.grade?:0
+                            submissions.add(submission)
+                        }
+                        studentData["submissions"] = submissions
+                        students.add(studentData)
+                    }
+                }
+                return mapOf("students" to students)
+            }
+        } catch (ex: Exception) {}
+        return mapOf("students" to listOf<String>())
+    }
+
+    fun getGradesStudent(studentId: String, workshopId: String): Map<String, Any> {
+        try {
+            val workshop = repo.findWorkshop(workshopId)
+            if (workshop != null) {
+                val gradeCollection = repo.findGradeCollectionInWorkshop(studentId, workshop.id)
+                if (gradeCollection != null) {
+                    val submissions = mutableListOf<Map<String, Any>>()
+                    repo.findAllGradesFromStudentInWorkshop(studentId, workshop.id).forEach { grade ->
+                        val submission = mutableMapOf<String, Any>()
+                        submission["id"] = grade.submission
+                        submission["gradeSubmission"] = grade.gradeSubmission?:0
+                        submission["gradeReview"] = grade.gradeReview?:0
+                        submission["grade"] = grade.grade?:0
+                        submissions.add(submission)
+                    }
+                    return mapOf("ok" to true, "grade" to (gradeCollection.grade?:0), "submissions" to submissions)
+                }
+            }
+        } catch (ex: Exception) {}
+        return mapOf("ok" to false)
+    }
 
     //================================================================================
     //

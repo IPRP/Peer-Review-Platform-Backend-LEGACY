@@ -83,19 +83,13 @@ interface ReviewCriteriaRepository : MongoRepository<ReviewCriteria, String>
 
 interface GradeCollectionRepository : MongoRepository<GradeCollection, String> {
     fun findByStudentAndWorkshop(student_id: String, workshop_id: String): GradeCollection?
+    fun findByIdInAndWorkshop(ids: List<String>, workshop_id: String): List<GradeCollection>
     fun deleteByWorkshop(workshop_id: String)
     fun deleteByStudentAndWorkshop(student_id: String, workshop_id: String)
-
-    //fun findByStudentIdAndWorkshopId(student_id: String, workshop_id: String): GradeCollection
-
-    /**fun findByWorkshopId(workshop_id: String): GradeCollection? {
-        val query = Query.query(Criteria.where("workshop._id").`is`(ObjectId(workshop_id)))
-        return mongoTemplate.findOne(query, GradeCollection::class.java)
-    }
-    fun findByStudentId(student_id: ObjectId): GradeCollection*/
 }
 
 interface GradeRepository : MongoRepository<Grade, String> {
+    fun findByStudentAndWorkshop(student_id: String, workshop_id: String): List<Grade>
     fun deleteByWorkshop(workshop_id: String)
     fun deleteByStudentAndWorkshop(student_id: String, workshop_id: String)
 }
