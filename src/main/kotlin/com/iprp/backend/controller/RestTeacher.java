@@ -1,36 +1,14 @@
 package com.iprp.backend.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.iprp.backend.helper.JsonHelper;
 import com.iprp.backend.user.*;
-//import com.iprp.backend.workshop.Workshop;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 public class RestTeacher {
-
-    /* Testdaten
-    private Teacher teacher = new Teacher("1", "Max", "Muster");
-    private Student student = new Student("2", "Schuller", "Schuh");
-    private Workshop workshop1 = new Workshop("Workshop1");
-    private Workshop workshop2 = new Workshop("Workshop2");
-
-    private void initTestdata(){
-        this.teacher = new Teacher("1", "Max", "Muster");
-        this.student = new Student("2", "Schuller", "Schuh");
-        this.workshop1 = new Workshop("Workshop1");
-        this.workshop2 = new Workshop("Workshop2");
-        this.workshop1.addTeilnehmer(student);
-        this.workshop2.addTeilnehmer(student);
-        this.teacher.addWorkshop(this.workshop1);
-        this.teacher.addWorkshop(this.workshop2);
-
-    }
-    Testdaten END */
 
 
     /*Neue Testdaten für newTeacher */
@@ -70,17 +48,6 @@ public class RestTeacher {
         this.workshops.add(new Workshop(2,"Workshop Name 2", "Beschreibung 2", "12-12-2020 12:12", false, this.members, this.submissions, this.reviews, this.kriterien));
     }
     /* Neue Testdaten END
-
-    /**
-     * Leherer Dashboard
-     * @return JSON mit den Dashboard Daten
-     *
-    @GetMapping("/teacher")
-    public String teacher(){
-        initTestdata();
-        return new JsonHelper(this.teacher).generateJson();
-    }
-
     /**
      * Workshop auswählen
      * @param payload Json Payload -> Workshop id
@@ -110,25 +77,22 @@ public class RestTeacher {
         }
 
     }
-
-    /**
-     * Löscht einen Workshop
-     *
-    @DeleteMapping("/teacher/workshop")
-    public void delteacherworkshop(@RequestBody String payload){
-    }
 */
     /**
      * Erstellt einen Workshop
      * @return id des erstellten workshops
      *
      */
+    @CrossOrigin(origins = "http://localhost:8081")
     @PostMapping("/teacher/workshop")
     public String postteacherworkshop(@RequestBody String json){
         initNewTestData();
         Workshop workshop = null;
+        System.out.println("POST");
+        System.out.println(json);
         workshop = new JsonHelper(json).generateWorkshop();
         this.workshops.add(workshop);
+         //return "true";
         return new JsonHelper(this.workshops).generateJson();
     }
 
@@ -152,7 +116,7 @@ public class RestTeacher {
     @GetMapping(value="/teacher/workshops", produces = MediaType.APPLICATION_JSON_VALUE)
     public String teacherworkshops(){
         //initTestdata();
-        initNewTestData();
+        //initNewTestData();
         System.out.println("GET workshops");
         return new JsonHelper(this.workshops).generateJson();
     }
