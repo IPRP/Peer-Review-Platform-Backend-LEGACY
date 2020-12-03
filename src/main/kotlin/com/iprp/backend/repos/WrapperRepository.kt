@@ -24,25 +24,25 @@ class WrapperRepository {
     // TODO make props private - Tests will need reflection to access them...
 
     @Autowired
-    lateinit var personRepository: PersonRepository
+    private lateinit var personRepository: PersonRepository
     @Autowired
-    lateinit var studentRepository: StudentRepository
+    private lateinit var studentRepository: StudentRepository
     @Autowired
-    lateinit var teacherRepository: TeacherRepository
+    private lateinit var teacherRepository: TeacherRepository
     @Autowired
-    lateinit var reviewRepository: ReviewRepository
+    private lateinit var reviewRepository: ReviewRepository
     @Autowired
-    lateinit var reviewCriteriaRepository: ReviewCriteriaRepository
+    private lateinit var reviewCriteriaRepository: ReviewCriteriaRepository
     @Autowired
-    lateinit var workshopRepository: WorkshopRepository
+    private lateinit var workshopRepository: WorkshopRepository
     @Autowired
-    lateinit var submissionRepository: SubmissionRepository
+    private lateinit var submissionRepository: SubmissionRepository
     @Autowired
-    lateinit var submissionRoundRepository: SubmissionRoundRepository
+    private lateinit var submissionRoundRepository: SubmissionRoundRepository
     @Autowired
-    lateinit var gradeCollectionRepository: GradeCollectionRepository
+    private lateinit var gradeCollectionRepository: GradeCollectionRepository
     @Autowired
-    lateinit var gradeRepository: GradeRepository
+    private lateinit var gradeRepository: GradeRepository
 
     /**
      * Person

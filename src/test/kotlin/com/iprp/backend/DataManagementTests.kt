@@ -2,14 +2,12 @@ package com.iprp.backend
 
 import com.iprp.backend.data.user.Student
 import com.iprp.backend.data.user.Teacher
-import com.iprp.backend.repos.WrapperRepository
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
+import com.iprp.backend.repos.*
+import org.junit.jupiter.api.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import java.time.LocalDateTime
+import kotlin.reflect.full.memberProperties
 
 /**
  *
@@ -27,6 +25,24 @@ class DataManagementTests {
 
     @Autowired
     lateinit var repo: WrapperRepository
+    lateinit var personRepo: PersonRepository
+    lateinit var studentRepo: StudentRepository
+    lateinit var teacherRepo: TeacherRepository
+    lateinit var reviewRepo: ReviewRepository
+    lateinit var reviewCriteriaRepo: ReviewCriteriaRepository
+    lateinit var workshopRepo: WorkshopRepository
+    lateinit var submissionRepo: SubmissionRepository
+
+    @BeforeAll
+    fun setup() {
+        personRepo = Helper.readInstanceProperty(repo, "personRepository")
+        studentRepo = Helper.readInstanceProperty(repo, "studentRepository")
+        teacherRepo = Helper.readInstanceProperty(repo, "teacherRepository")
+        reviewRepo = Helper.readInstanceProperty(repo, "reviewRepository")
+        reviewCriteriaRepo = Helper.readInstanceProperty(repo, "reviewCriteriaRepository")
+        workshopRepo = Helper.readInstanceProperty(repo, "workshopRepository")
+        submissionRepo = Helper.readInstanceProperty(repo, "submissionRepository")
+    }
 
     @BeforeEach
     fun setupEach() {
@@ -40,7 +56,7 @@ class DataManagementTests {
         dm.addTeacher("t1", "John", "Doe")
 
         // Fetch all
-        val foundPersons = repo.personRepository.findAll()
+        val foundPersons = personRepo.findAll()
 
         Assertions.assertEquals(2, foundPersons.size)
     }
@@ -55,7 +71,7 @@ class DataManagementTests {
             true, LocalDateTime.now(), listOf(mapOf("type" to "point", "content" to "abc"))
         )
 
-        val foundWorkshops = repo.workshopRepository.findAll()
+        val foundWorkshops = workshopRepo.findAll()
 
         Assertions.assertEquals(1, foundWorkshops.size)
     }
@@ -69,10 +85,10 @@ class DataManagementTests {
             listOf("t1"), listOf("s1"), "workshop", "my workshop",
             true, LocalDateTime.now(), listOf(mapOf("type" to "point", "content" to "abc"))
         )
-        val workshop = repo.workshopRepository.findAll().first()!!
+        val workshop = workshopRepo.findAll().first()!!
         dm.deleteWorkshop(workshop.id)
 
-        val foundWorkshops = repo.workshopRepository.findAll()
+        val foundWorkshops = workshopRepo.findAll()
 
         Assertions.assertEquals(0, foundWorkshops.size)
     }

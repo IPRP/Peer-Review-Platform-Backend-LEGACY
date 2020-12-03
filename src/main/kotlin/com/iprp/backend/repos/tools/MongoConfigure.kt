@@ -11,8 +11,9 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @Configuration
 @EnableMongoRepositories(basePackageClasses = [PersonRepository::class], repositoryBaseClass = InheritanceAwareSimpleMongoRepository::class, repositoryFactoryBeanClass = InheritanceAwareMongoRepositoryFactoryBean::class)
 @Suppress("RedundantModalityModifier")
-open class MongoConfigure : AbstractMongoClientConfiguration() {
-
+open class MongoConfigure
+/**open class MongoConfigure : AbstractMongoClientConfiguration() {
+    TODO Transaction support
 
 
     override fun getDatabaseName(): String {
@@ -20,4 +21,4 @@ open class MongoConfigure : AbstractMongoClientConfiguration() {
     }
 
 
-}
+}*/

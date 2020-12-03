@@ -13,6 +13,7 @@ import org.junit.jupiter.api.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import java.time.LocalDateTime
+import kotlin.reflect.full.memberProperties
 
 
 // Add custom properties
@@ -38,13 +39,13 @@ class RepositoryTests {
 
     @BeforeAll
     fun setup() {
-        personRepo = repo.personRepository
-        studentRepo = repo.studentRepository
-        teacherRepo = repo.teacherRepository
-        reviewRepo = repo.reviewRepository
-        reviewCriteriaRepo = repo.reviewCriteriaRepository
-        workshopRepo = repo.workshopRepository
-        submissionRepo = repo.submissionRepository
+        personRepo = Helper.readInstanceProperty(repo, "personRepository")
+        studentRepo = Helper.readInstanceProperty(repo, "studentRepository")
+        teacherRepo = Helper.readInstanceProperty(repo, "teacherRepository")
+        reviewRepo = Helper.readInstanceProperty(repo, "reviewRepository")
+        reviewCriteriaRepo = Helper.readInstanceProperty(repo, "reviewCriteriaRepository")
+        workshopRepo = Helper.readInstanceProperty(repo, "workshopRepository")
+        submissionRepo = Helper.readInstanceProperty(repo, "submissionRepository")
     }
 
     @BeforeEach
@@ -126,7 +127,7 @@ class RepositoryTests {
         personRepo.save(student)
 
         val foundWorkshops = workshopRepo.findAll()
-        val studentsFromWorkshopRepo = repo.studentRepository.findByIdIn(foundWorkshops[0].students)
+        val studentsFromWorkshopRepo = studentRepo.findByIdIn(foundWorkshops[0].students)
         val studentsFromStudentRepo = studentRepo.findAll()
 
         // Check update
