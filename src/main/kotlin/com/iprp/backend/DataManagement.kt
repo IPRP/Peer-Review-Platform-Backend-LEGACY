@@ -25,18 +25,19 @@ class DataManagement {
     @Autowired
     lateinit var repo: WrapperRepository
 
-    // TODO read write lock ReentrantReadWriteLock or MongoDB transaction
+    // TODO implement MongoDB transactions
 
-    // Scheduled task
-    // See: https://spring.io/guides/gs/scheduling-tasks/
-    @Scheduled(fixedRate = 50000)
-    fun reportCurrentTime() {
-        println("hi!")
-    }
+    // TODO fileService
 
-    /**
-     * Workshop
-     */
+    //================================================================================
+    //
+    // WORKSHOP
+    //
+    //================================================================================
+
+    //================================================================================
+    // Student/Teacher
+    //================================================================================
 
     /**
      * Get all workshops of a person (student or teacher).
@@ -49,6 +50,10 @@ class DataManagement {
         }
         return mapOf("workshops" to workshopList)
     }
+
+    //================================================================================
+    // Teacher
+    //================================================================================
 
     /**
      * Get a specific workshop from a teacher's perspective.
@@ -130,32 +135,6 @@ class DataManagement {
         } catch (ex: Exception) {
             return mapOf("ok" to false)
         }
-    }
-
-    private fun startRound(workshop: Workshop, cachedStudents: MutableList<Student>? = null) {
-        val students = cachedStudents ?: repo.findAllStudentsByIdIn(workshop.students)
-        val submissions = mutableListOf<String>()
-        val grades = mutableListOf<String>()
-
-        for(student in students) {
-            var submission = Submission(false, null, null, listOf(), workshop.id, student.id, listOf())
-            submission = repo.saveSubmission(submission)
-            submissions.add(submission.id)
-            var grade = Grade(null, null, null, student.id, submission.id, workshop.id)
-            grade = repo.saveGrade(grade)
-            grades.add(grade.id)
-
-            val studentGradeCollection = repo.findGradeCollectionInWorkshop(student.id, workshop.id)
-            if (studentGradeCollection != null) {
-                studentGradeCollection.grades.add(grade.id)
-                repo.saveGradeCollection(studentGradeCollection)
-            }
-
-        }
-        var submissionRound = SubmissionRound(workshop.roundEnd, workshop.id, submissions, grades)
-        submissionRound = repo.saveSubmissionRound(submissionRound)
-        workshop.rounds.add(submissionRound.id)
-        repo.saveWorkshop(workshop)
     }
 
     /**
@@ -241,6 +220,85 @@ class DataManagement {
         }
     }
 
+    //================================================================================
+    // Student
+    //================================================================================
+
+
+
+    //================================================================================
+    // Logic
+    //================================================================================
+
+    // Scheduled task
+    // See: https://spring.io/guides/gs/scheduling-tasks/
+    @Scheduled(fixedRate = 50000)
+    private fun schedule() {
+        println("hi!")
+    }
+
+    private fun startRound(workshop: Workshop, cachedStudents: MutableList<Student>? = null) {
+        val students = cachedStudents ?: repo.findAllStudentsByIdIn(workshop.students)
+        val submissions = mutableListOf<String>()
+        val grades = mutableListOf<String>()
+
+        for(student in students) {
+            var submission = Submission(false, null, null, listOf(), workshop.id, student.id, listOf())
+            submission = repo.saveSubmission(submission)
+            submissions.add(submission.id)
+            var grade = Grade(null, null, null, student.id, submission.id, workshop.id)
+            grade = repo.saveGrade(grade)
+            grades.add(grade.id)
+
+            val studentGradeCollection = repo.findGradeCollectionInWorkshop(student.id, workshop.id)
+            if (studentGradeCollection != null) {
+                studentGradeCollection.grades.add(grade.id)
+                repo.saveGradeCollection(studentGradeCollection)
+            }
+
+        }
+        var submissionRound = SubmissionRound(workshop.roundEnd, workshop.id, submissions, grades)
+        submissionRound = repo.saveSubmissionRound(submissionRound)
+        workshop.rounds.add(submissionRound.id)
+        repo.saveWorkshop(workshop)
+    }
+
+
+    //================================================================================
+    //
+    // GRADES
+    //
+    //================================================================================
+
+
+
+    //================================================================================
+    //
+    // SEARCH
+    //
+    //================================================================================
+
+    fun searchStudent(firstname: String, lastname: String): Map<String, Any> {
+        val firstNameCap = firstname.capitalize()
+        val lastNameCap = lastname.capitalize()
+        try {
+            val student = repo.findStudent(firstNameCap, lastNameCap)
+            if (student != null) return mapOf("ok" to true, "id" to student.id)
+        } catch (ex: Exception) {}
+        return mapOf("ok" to false)
+    }
+
+    fun searchStudents(group: String): Map<String, Any> {
+        try {
+            val students = repo.findStudents(group)
+            if (students.isNotEmpty()) {
+                val studentIds = mutableListOf<String>()
+                students.forEach { student ->  studentIds.add(student.id)}
+                return mapOf("ok" to true, "ids" to studentIds)
+            }
+        } catch (ex: Exception) {}
+        return mapOf("ok" to false)
+    }
 
 
 

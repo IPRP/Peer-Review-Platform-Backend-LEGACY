@@ -68,6 +68,14 @@ class WrapperRepository {
         return studentRepository.findFirstById(id)
     }
 
+    fun findStudent(firstname: String, lastname: String): Student? {
+        return studentRepository.findFirstByFirstnameAndLastname(firstname, lastname)
+    }
+
+    fun findStudents(group: String): List<Student> {
+        return studentRepository.findByGroup(group)
+    }
+
 
     /**
      * Workshop
