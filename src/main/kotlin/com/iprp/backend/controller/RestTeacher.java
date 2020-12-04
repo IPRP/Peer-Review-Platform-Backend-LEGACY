@@ -116,7 +116,7 @@ public class RestTeacher {
     @GetMapping(value="/teacher/workshops", produces = MediaType.APPLICATION_JSON_VALUE)
     public String teacherworkshops(){
         //initTestdata();
-        //initNewTestData();
+        initNewTestData();
         System.out.println("GET workshops");
         return new JsonHelper(this.workshops).generateJson();
     }
