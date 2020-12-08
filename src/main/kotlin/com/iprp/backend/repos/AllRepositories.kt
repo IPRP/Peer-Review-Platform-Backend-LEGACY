@@ -17,6 +17,7 @@ import org.springframework.data.mongodb.core.find
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.data.mongodb.repository.MongoRepository
+import java.time.LocalDateTime
 
 
 /**
@@ -62,6 +63,8 @@ interface SubmissionRepository : MongoRepository<Submission, String> {
     fun findByIdIn(ids: List<String>): List<Submission>
     fun deleteByStudentAndWorkshop(student_id: String, workshop_id: String)
     fun findByStudentAndWorkshop(student_id: String, workshop_id: String): List<Submission>
+    fun findFirstByIdAndStudentAndWorkshop(id: String, student: String, workshop: String): Submission?
+    fun countByStudentAndWorkshop(student: String, workshop: String): Long
 }
 
 interface SubmissionRoundRepository : MongoRepository<SubmissionRound, String> {
@@ -76,6 +79,7 @@ interface SubmissionRoundRepository : MongoRepository<SubmissionRound, String> {
 interface ReviewRepository : MongoRepository<Review, String> {
     fun findByStudent(student_id: String): List<Review>
     fun deleteByWorkshop(workshop_id: String)
+    fun findByWorkshopAndStudentAndDeadlineGreaterThan(workshop: String, student: String, deadline: LocalDateTime): List<Review>
 }
 
 interface ReviewCriteriaRepository : MongoRepository<ReviewCriteria, String>

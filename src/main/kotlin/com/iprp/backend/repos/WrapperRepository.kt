@@ -3,6 +3,7 @@ package com.iprp.backend.repos
 import com.iprp.backend.data.Workshop
 import com.iprp.backend.data.grade.Grade
 import com.iprp.backend.data.grade.GradeCollection
+import com.iprp.backend.data.review.Review
 import com.iprp.backend.data.review.ReviewCriteria
 import com.iprp.backend.data.submission.Submission
 import com.iprp.backend.data.submission.SubmissionRound
@@ -11,6 +12,7 @@ import com.iprp.backend.data.user.Student
 import com.iprp.backend.data.user.Teacher
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import java.time.LocalDateTime
 
 /**
  *
@@ -154,12 +156,24 @@ class WrapperRepository {
         return submissionRoundRepository.findFirstBySubmissionsContainsAndWorkshop(submissionId, workshopId)
     }
 
+    fun findSubmissionByIdAndStudentInWorkship(submissionId: String, studentId: String, workshopId: String): Submission? {
+        return submissionRepository.findFirstByIdAndStudentAndWorkshop(submissionId, studentId, workshopId)
+    }
+
+    fun countStudentSubmissionsInWorkshop(studentId: String, workshopId: String): Long {
+        return submissionRepository.countByStudentAndWorkshop(studentId, workshopId)
+    }
+
 
     /**
      * Review
      */
     fun saveReviewCriteria(c: ReviewCriteria): ReviewCriteria {
         return reviewCriteriaRepository.save(c)
+    }
+
+    fun findAllStudentReviewsInWorkshop(studentId: String, workshopId: String): List<Review> {
+        return reviewRepository.findByWorkshopAndStudentAndDeadlineGreaterThan(studentId, workshopId, LocalDateTime.now())
     }
 
     /**
