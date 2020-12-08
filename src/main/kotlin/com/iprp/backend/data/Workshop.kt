@@ -20,14 +20,11 @@ class Workshop(
     var title: String,
     var content: String,
     var end: LocalDateTime,
-    var roundEnd: LocalDateTime,
     val anonymous: Boolean,
 
     val students: MutableList<String>, // Student
     val teachers: MutableList<String>, // Teacher
     var criteria: String, // ReviewCriteria
-    val rounds: MutableList<String>, // SubmissionRound
-    var grades: MutableList<String> // GradeCollection
 ) {
     @Id
     lateinit var id: String

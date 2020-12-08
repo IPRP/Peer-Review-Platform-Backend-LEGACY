@@ -1,10 +1,6 @@
 package com.iprp.backend.data.review
 
-import com.iprp.backend.data.Workshop
-import com.iprp.backend.data.submission.Submission
-import com.iprp.backend.data.user.Student
 import org.springframework.data.annotation.Id
-import org.springframework.data.mongodb.core.mapping.DBRef
 
 /**
  * A review a students submits for a given submission.
@@ -16,10 +12,11 @@ import org.springframework.data.mongodb.core.mapping.DBRef
 class Review(
     var done: Boolean,
     var feedback: String,
-    var grades: List<Int>,
-
-    val student: String, // Student
+    var points: List<Int>,
+    val maxPoints: Int,
     val criteria: String, // ReviewCriteria
+
+    val student: String, // Student, "The Reviewer"
     val submission: String, // Submission
     val workshop: String, // Workshop
 ) {

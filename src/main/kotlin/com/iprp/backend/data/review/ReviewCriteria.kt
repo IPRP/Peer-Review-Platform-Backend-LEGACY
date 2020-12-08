@@ -20,9 +20,12 @@ class ReviewCriteria(
             val processedCriteria = mutableListOf<ReviewCriterionTuple>()
 
             for(criterion in criteria) {
-                if(criterion.containsKey("type") && criterion.containsKey("content")) {
-                    val content = criterion["content"] ?: error("")
-                    val check = (criterion["type"] ?: error("")).toLowerCase()
+                if (criterion.containsKey("type") && criterion.containsKey("title")
+                    && criterion.containsKey("content") && criterion.containsKey("weight")) {
+                    val title = criterion["title"] ?: ""
+                    val content = criterion["content"] ?: ""
+                    val check = (criterion["type"] ?: "").toLowerCase()
+                    val weigth = (criterion["weigth"] ?: "").toIntOrNull() ?: continue
                     var type: ReviewCriterionType? = null
                     when(check) {
                         "point"         -> type = ReviewCriterionType.Point
@@ -31,7 +34,7 @@ class ReviewCriteria(
                         "truefalse"     -> type = ReviewCriterionType.TrueFalse
                     }
                     if (type != null) {
-                        processedCriteria.add(ReviewCriterionTuple(type, content))
+                        processedCriteria.add(ReviewCriterionTuple(type, title, content, weigth))
                     }
                 }
             }
@@ -41,7 +44,9 @@ class ReviewCriteria(
     }
 }
 
-data class ReviewCriterionTuple(var type: ReviewCriterionType, var content: String)
+// "weight" is in fact a float, but for consistency it is stored as a integer
+// to get the "true" value divide through 10.0
+data class ReviewCriterionTuple(var type: ReviewCriterionType, var title: String, var content: String, var weight: Int)
 
 enum class ReviewCriterionType {
     Point,      // 1 - 10
