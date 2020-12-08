@@ -17,8 +17,8 @@ import java.time.LocalDateTime
 class Submission(
     var locked: Boolean,
     var date: LocalDateTime,
-    var title: String?,
-    var commment: String?,
+    var title: String,
+    var commment: String,
     val attachments: MutableList<String>, // Doc
 
     val workshop: String, // Workshop

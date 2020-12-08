@@ -1,11 +1,7 @@
 package com.iprp.backend
 
 import com.iprp.backend.data.Workshop
-import com.iprp.backend.data.grade.Grade
-import com.iprp.backend.data.grade.GradeCollection
 import com.iprp.backend.data.review.ReviewCriteria
-import com.iprp.backend.data.submission.Submission
-import com.iprp.backend.data.submission.SubmissionRound
 import com.iprp.backend.data.user.Student
 import com.iprp.backend.data.user.Teacher
 import com.iprp.backend.repos.WrapperRepository
@@ -43,12 +39,15 @@ class DataManagement {
      * Get all workshops of a person (student or teacher).
      */
     fun getAllWorkshops(personId: String): Map<String, List<Map<String, String>>> {
-        val workshops = repo.findAllWorkshops(personId)
-        val workshopList = mutableListOf<Map<String, String>>()
-        for (workshop in workshops) {
-            workshopList.add(mapOf("id" to workshop.id, "title" to workshop.title))
-        }
-        return mapOf("workshops" to workshopList)
+        try {
+            val workshops = repo.findAllWorkshops(personId)
+            val workshopList = mutableListOf<Map<String, String>>()
+            for (workshop in workshops) {
+                workshopList.add(mapOf("id" to workshop.id, "title" to workshop.title))
+            }
+            return mapOf("workshops" to workshopList)
+        } catch (ex: Exception) {}
+        return mapOf("workshops" to listOf())
     }
 
     //================================================================================
@@ -59,38 +58,44 @@ class DataManagement {
      * Get a specific workshop from a teacher's perspective.
      */
     fun getWorkshopTeacher(workshopId: String): Map<String, Any> {
-        val workshop = repo.findWorkshop(workshopId)
-        if (workshop != null) {
-            val teachers = mutableListOf<Map<String, String>>()
-            repo.findAllTeachersByIdIn(workshop.teachers).forEach { teacher ->
-                teachers.add(
-                    mapOf("id" to teacher.id, "firstname" to teacher.firstname, "lastname" to teacher.lastname))
-            }
-            val students = mutableListOf<Map<String, String>>()
-            repo.findAllStudentsByIdIn(workshop.students).forEach { student ->
-                students.add(
-                    mapOf("id" to student.id, "firstname" to student.firstname, "lastname" to student.lastname))
-            }
-            val rounds = mutableListOf<Map<String, Any>>()
-            repo.findAllSubmissionRounds(workshop.rounds).forEach { submissionRound ->
-                val round = mutableMapOf<String, Any>("id" to submissionRound.id)
-                val submissions = mutableListOf<Map<String, String>>()
-                repo.findAllSubmissionsIn(submissionRound.submissions).forEach { submission ->
-                    val student = repo.findStudent(submission.student)
-                    if (student != null) {
-                        submissions.add(mapOf(
-                            "id" to submission.id, "title" to (submission.title?:""),
-                            "firstname" to student.firstname, "lastname" to student.lastname))
-                    }
+        try {
+            val workshop = repo.findWorkshop(workshopId)
+            if (workshop != null) {
+                val teachers = mutableListOf<Map<String, String>>()
+                repo.findAllTeachersByIdIn(workshop.teachers).forEach { teacher ->
+                    teachers.add(
+                        mapOf("id" to teacher.id, "firstname" to teacher.firstname, "lastname" to teacher.lastname)
+                    )
                 }
-                round["submissions"] = submissions
-                rounds.add(round)
+
+                val students = mutableListOf<Map<String, Any>>()
+                repo.findAllStudentsByIdIn(workshop.students).forEach { student ->
+                    val submissions = mutableListOf<Map<String, Any>>()
+                    repo.findAllStudentSubmissionsInWorkshop(student.id, workshopId).forEach { submission ->
+                        val s = mutableMapOf<String, Any>("id" to submission.id,
+                            "date" to submission.date, "title" to submission.title, "reviewsDone" to submission.reviewsDone)
+                        if (submission.reviewsDone) {
+                            s["points"] = submission.pointsMean ?: 0
+                            s["maxPoints"] = submission.maxPoints ?: 0
+                        }
+                        submissions.add(s)
+                    }
+                    students.add(
+                        mapOf(
+                            "id" to student.id, "firstname" to student.firstname, "lastname" to student.lastname,
+                            "group" to student.group, "submissions" to submissions
+                        )
+                    )
+                }
+
+                return mapOf(
+                    "ok" to true, "workshop" to mapOf(
+                        "title" to workshop.title, "content" to workshop.content, "anonymous" to workshop.anonymous,
+                        "end" to workshop.end, "teachers" to teachers, "students" to students
+                    )
+                )
             }
-            return mapOf("ok" to true, "workshop" to mapOf(
-                "title" to workshop.title, "content" to workshop.content, "anonymous" to workshop.anonymous,
-                "end" to workshop.end, "roundEnd" to workshop.roundEnd, "teachers" to teachers,
-                "students" to students, "rounds" to rounds))
-        }
+        } catch (ex: Exception) {}
         return mapOf("ok" to false)
     }
 
@@ -179,6 +184,50 @@ class DataManagement {
     // Student
     //================================================================================
 
+    /**
+     * Get a specific workshop from a student's perspective.
+     */
+    fun getWorkshopStudent(workshopId: String): Map<String, Any> {
+        try {
+            val workshop = repo.findWorkshop(workshopId)
+            if (workshop != null) {
+                val teachers = mutableListOf<Map<String, String>>()
+                repo.findAllTeachersByIdIn(workshop.teachers).forEach { teacher ->
+                    teachers.add(
+                        mapOf("id" to teacher.id, "firstname" to teacher.firstname, "lastname" to teacher.lastname)
+                    )
+                }
+
+                val students = mutableListOf<Map<String, Any>>()
+                repo.findAllStudentsByIdIn(workshop.students).forEach { student ->
+                    val submissions = mutableListOf<Map<String, Any>>()
+                    repo.findAllStudentSubmissionsInWorkshop(student.id, workshopId).forEach { submission ->
+                        val s = mutableMapOf<String, Any>("id" to submission.id,
+                            "date" to submission.date, "title" to submission.title, "reviewsDone" to submission.reviewsDone)
+                        if (submission.reviewsDone) {
+                            s["points"] = submission.pointsMean ?: 0
+                            s["maxPoints"] = submission.maxPoints ?: 0
+                        }
+                        submissions.add(s)
+                    }
+                    students.add(
+                        mapOf(
+                            "id" to student.id, "firstname" to student.firstname, "lastname" to student.lastname,
+                            "group" to student.group, "submissions" to submissions
+                        )
+                    )
+                }
+
+                return mapOf(
+                    "ok" to true, "workshop" to mapOf(
+                        "title" to workshop.title, "content" to workshop.content, "anonymous" to workshop.anonymous,
+                        "end" to workshop.end, "teachers" to teachers, "students" to students
+                    )
+                )
+            }
+        } catch (ex: Exception) {}
+        return mapOf("ok" to false)
+    }
 
 
     //================================================================================
@@ -226,61 +275,7 @@ class DataManagement {
     //
     //================================================================================
 
-
-    fun getGradesTeacher(workshopId: String): Map<String, Any> {
-        try {
-            val workshop = repo.findWorkshop(workshopId)
-            if (workshop != null) {
-                val gradeCollections = repo.findAllGradeCollectionsInWorkhop(workshop.grades, workshop.id)
-                val students = mutableListOf<Map<String, Any>>()
-                gradeCollections.forEach { gc ->
-                    val student = repo.findStudent(gc.student)
-                    if (student != null) {
-                        val studentData = mutableMapOf<String, Any>()
-                        studentData["id"] = student.id
-                        studentData["firstname"] = student.firstname
-                        studentData["lastname"] = student.lastname
-                        studentData["grade"] = gc.grade?:0
-                        val submissions = mutableListOf<Map<String, Any>>()
-                        repo.findAllGradesFromStudentInWorkshop(student.id, workshop.id).forEach { grade ->
-                            val submission = mutableMapOf<String, Any>()
-                            submission["id"] = grade.submission
-                            submission["gradeSubmission"] = grade.gradeSubmission?:0
-                            submission["gradeReview"] = grade.gradeReview?:0
-                            submission["grade"] = grade.grade?:0
-                            submissions.add(submission)
-                        }
-                        studentData["submissions"] = submissions
-                        students.add(studentData)
-                    }
-                }
-                return mapOf("students" to students)
-            }
-        } catch (ex: Exception) {}
-        return mapOf("students" to listOf<String>())
-    }
-
-    fun getGradesStudent(studentId: String, workshopId: String): Map<String, Any> {
-        try {
-            val workshop = repo.findWorkshop(workshopId)
-            if (workshop != null) {
-                val gradeCollection = repo.findGradeCollectionInWorkshop(studentId, workshop.id)
-                if (gradeCollection != null) {
-                    val submissions = mutableListOf<Map<String, Any>>()
-                    repo.findAllGradesFromStudentInWorkshop(studentId, workshop.id).forEach { grade ->
-                        val submission = mutableMapOf<String, Any>()
-                        submission["id"] = grade.submission
-                        submission["gradeSubmission"] = grade.gradeSubmission?:0
-                        submission["gradeReview"] = grade.gradeReview?:0
-                        submission["grade"] = grade.grade?:0
-                        submissions.add(submission)
-                    }
-                    return mapOf("ok" to true, "grade" to (gradeCollection.grade?:0), "submissions" to submissions)
-                }
-            }
-        } catch (ex: Exception) {}
-        return mapOf("ok" to false)
-    }
+    // TODO delete category?
 
     //================================================================================
     //
