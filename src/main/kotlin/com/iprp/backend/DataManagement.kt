@@ -105,32 +105,16 @@ class DataManagement {
         try {
             // Create workshop
             val students = repo.findAllStudentsByIdIn(studentIds) as MutableList<Student>
-            val roundEnd = LocalDateTime.now().plusWeeks(2)
-            val rounds = mutableListOf<String>()
-            val grades = mutableListOf<String>()
 
             var criteriaType = ReviewCriteria.fromList(criteria)
             criteriaType = repo.saveReviewCriteria(criteriaType)
 
-            var workshop = Workshop(
-                title, content, end, roundEnd, anonymous, studentIds as MutableList<String>,
-                teacherIds as MutableList<String>, criteriaType.id, rounds, grades
+            val workshop = Workshop(
+                title, content, end, anonymous, studentIds as MutableList<String>,
+                teacherIds as MutableList<String>, criteriaType.id
             )
-            workshop = repo.saveWorkshop(workshop)
 
-            // Add grade structure for every student
-            for (student in students) {
-                var grade = GradeCollection(null, mutableListOf(), student.id, workshop.id)
-                grade = repo.saveGradeCollection(grade)
-                grades.add(grade.id)
-            }
-
-            // Update workshop in order to add grades
-            workshop = repo.saveWorkshop(workshop)
-
-            // Add first submission round
-            startRound(workshop, cachedStudents = students)
-
+            repo.saveWorkshop(workshop)
             return mapOf("ok" to true)
         } catch (ex: Exception) {
             return mapOf("ok" to false)
@@ -142,8 +126,7 @@ class DataManagement {
      */
     fun updateWorkshop(
         workshopId: String, teacherIds: List<String>, studentIds: List<String>,
-        title: String, content: String, end: LocalDateTime, roundEnd: LocalDateTime,
-        criteria: List<Map<String, String>>
+        title: String, content: String, end: LocalDateTime, criteria: List<Map<String, String>>
     ): Map<String, Any> {
         try {
             // Lock process for this id ?
@@ -153,7 +136,6 @@ class DataManagement {
             val workshop = repo.findWorkshop(workshopId)
             if (workshop != null) {
                 workshop.end = end
-                workshop.roundEnd = roundEnd
                 var criteriaType = ReviewCriteria.fromList(criteria)
                 criteriaType = repo.saveReviewCriteria(criteriaType)
                 workshop.criteria = criteriaType.id
@@ -168,39 +150,12 @@ class DataManagement {
                     if (studentIds.contains(student)) {
                         if (!workshop.students.contains(student)) {
                             // New student
-                            if (workshop.rounds.isNotEmpty()) {
-                                val round = repo.findSubmissionRound(workshop.rounds.last())
-                                if (round != null) {
-                                    var submission = Submission(
-                                        false, null, null, listOf(), workshopId, student, listOf()
-                                    )
-                                    submission = repo.saveSubmission(submission)
-                                    var grade = Grade(
-                                        null, null, null, student, submission.id, workshopId
-                                    )
-                                    grade = repo.saveGrade(grade)
-                                    round.submissions.add(submission.id)
-                                    round.grades.add(grade.id)
-                                }
-                            }
                             workshop.students.add(student)
                         }
                     } else {
-                        // Remove student from SubmissionsRounds and delete its GradeCollection
-                        // Also remove all Submission and Grades
-                        val submissions = repo.findAllStudentSubmissionsInWorkshop(student, workshopId)
-                        submissions.forEach { submission ->
-                            val round = repo.findSubmissionRoundBySubmissionInWorkshop(submission.id, workshopId)
-                            if (round != null) {
-                                round.submissions.remove(submission.id)
-                                repo.saveSubmissionRound(round)
-                            }
-                        }
-                        val gradeCollection = repo.findGradeCollectionInWorkshop(student, workshopId)
-                        if (gradeCollection != null) {
-                            repo.deleteGradeCollection(gradeCollection.id)
-                        }
-                        repo.deleteStudentSubmissionsAndGradesInWorkshop(student, workshopId)
+                        // Student that should be removed
+                        // First, remove all linked submissions, then remove it from workshop
+                        repo.deleteStudentSubmissionsInWorkshop(student, workshopId)
                         workshop.students.remove(student)
                     }
                 }
@@ -237,6 +192,7 @@ class DataManagement {
         println("hi!")
     }
 
+    /**
     private fun startRound(workshop: Workshop, cachedStudents: MutableList<Student>? = null) {
         val students = cachedStudents ?: repo.findAllStudentsByIdIn(workshop.students)
         val submissions = mutableListOf<String>()
@@ -261,7 +217,7 @@ class DataManagement {
         submissionRound = repo.saveSubmissionRound(submissionRound)
         workshop.rounds.add(submissionRound.id)
         repo.saveWorkshop(workshop)
-    }
+    }*/
 
 
     //================================================================================

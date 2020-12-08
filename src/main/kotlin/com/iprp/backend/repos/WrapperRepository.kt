@@ -115,6 +115,10 @@ class WrapperRepository {
         gradeRepository.deleteByStudentAndWorkshop(studentId, workshopId)
     }
 
+    fun deleteStudentSubmissionsInWorkshop(studentId: String, workshopId: String) {
+        submissionRepository.deleteByStudentAndWorkshop(studentId, workshopId)
+    }
+
     /**
      * Submission
      */

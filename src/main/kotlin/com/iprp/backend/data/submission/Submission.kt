@@ -24,8 +24,10 @@ class Submission(
     val workshop: String, // Workshop
     val student: String, // Student
     // "assigned"
-    val reviews: MutableList<String> // Review
-
+    val reviews: MutableList<String>, // Review
+    val reviewsDone: Boolean,
+    val pointsMean: Int?,
+    val maxPoints: Int?,
 ) {
     @Id
     lateinit var id: String

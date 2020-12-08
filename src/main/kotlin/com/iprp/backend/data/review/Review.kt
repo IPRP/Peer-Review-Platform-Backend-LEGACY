@@ -1,6 +1,7 @@
 package com.iprp.backend.data.review
 
 import org.springframework.data.annotation.Id
+import java.time.LocalDateTime
 
 /**
  * A review a students submits for a given submission.
@@ -11,6 +12,7 @@ import org.springframework.data.annotation.Id
  */
 class Review(
     var done: Boolean,
+    val deadline: LocalDateTime,
     var feedback: String,
     var points: List<Int>,
     val maxPoints: Int,
