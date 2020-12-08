@@ -1,9 +1,6 @@
 package com.iprp.backend.data.submission
 
-import com.iprp.backend.data.Workshop
-import com.iprp.backend.data.grade.Grade
 import org.springframework.data.annotation.Id
-import org.springframework.data.mongodb.core.mapping.DBRef
 import java.time.LocalDateTime
 
 /**

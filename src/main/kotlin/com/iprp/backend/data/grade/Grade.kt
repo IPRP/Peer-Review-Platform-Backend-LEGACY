@@ -1,11 +1,7 @@
 package com.iprp.backend.data.grade
 
-import com.iprp.backend.data.Workshop
-import com.iprp.backend.data.submission.Submission
 import com.iprp.backend.data.submission.SubmissionRound
-import com.iprp.backend.data.user.Student
 import org.springframework.data.annotation.Id
-import org.springframework.data.mongodb.core.mapping.DBRef
 
 /**
  * Stores the grades a student got in a [SubmissionRound]. Hence the name.

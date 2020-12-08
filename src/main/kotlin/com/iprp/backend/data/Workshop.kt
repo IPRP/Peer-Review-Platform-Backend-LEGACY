@@ -1,12 +1,7 @@
 package com.iprp.backend.data
 
-import com.iprp.backend.data.grade.GradeCollection
-import com.iprp.backend.data.review.ReviewCriteria
 import com.iprp.backend.data.submission.SubmissionRound
-import com.iprp.backend.data.user.Student
-import com.iprp.backend.data.user.Teacher
 import org.springframework.data.annotation.Id
-import org.springframework.data.mongodb.core.mapping.DBRef
 import java.time.LocalDateTime
 
 /**

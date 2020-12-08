@@ -1,7 +1,10 @@
 package com.iprp.backend
 
+import com.iprp.backend.attachments.Attachment
 import com.iprp.backend.data.Workshop
+import com.iprp.backend.data.review.Review
 import com.iprp.backend.data.review.ReviewCriteria
+import com.iprp.backend.data.submission.Submission
 import com.iprp.backend.data.user.Student
 import com.iprp.backend.data.user.Teacher
 import com.iprp.backend.repos.WrapperRepository
@@ -273,9 +276,67 @@ class DataManagement {
         }
     }
 
+    //================================================================================
+    // 
+    // Submission
+    //
+    //================================================================================
+    
+    fun addSubmissionToWorkshop(
+        studentId: String, workshopId: String,
+        title: String, comment: String, attachments: List<Map<String, String>>
+    ): Map<String, Any> {
+        try {
+            val workshop = repo.findWorkshop(workshopId)
+            if (workshop != null) {
+                if (!workshop.students.contains(studentId)) return mapOf("ok" to false)
+                if (repo.findAllStudentSubmissionsInWorkshop(studentId, workshopId).any { !it.locked })
+                    return mapOf("ok" to false)
+                val attachmentsParsed = mutableListOf<Attachment>()
+                for (attachment in attachments) {
+                    if (attachment.containsKey("id") && attachment.containsKey("title")) {
+                        val id = attachment["id"].toString()
+                        val attachmentTitle = attachment["title"].toString()
+                        attachmentsParsed.add(Attachment(id, attachmentTitle))
+                    }
+                }
+
+                // TODO !! assign reviews
+                val reviews = mutableListOf<String>()
+
+                var submission = Submission(
+                    false, LocalDateTime.now(), title, comment, attachmentsParsed, workshopId, studentId,
+                    reviews, false, null, null
+                )
+                submission = repo.saveSubmission(submission)
+                return mapOf("ok" to true, "id" to submission.id)
+            }
+        }
+        catch (ex: Exception) { }
+        return mapOf("ok" to false)
+    }
+
+    fun getStudentSubmissionColleague(studentId: String, submissionId: String): Map<String, Any> {
+        throw NotImplementedError()
+    }
+    
+    fun getStudentSubmissionOwn(studentId: String, submissionId: String): Map<String, Any> {
+        throw NotImplementedError()
+    }
+
+    fun getSubmission(teacherId: String, submissionId: String): Map<String, Any> {
+        throw NotImplementedError()
+    }
+
+    private fun getSubmissionInternal(submissionId: String): Map<String, Any> {
+        throw NotImplementedError()
+    }
+
 
     //================================================================================
+    // 
     // Logic
+    //
     //================================================================================
 
     // Scheduled task
