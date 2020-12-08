@@ -1,5 +1,6 @@
 package com.iprp.backend.data.submission
 
+import com.iprp.backend.attachments.Attachment
 import com.iprp.backend.data.review.Review
 import com.iprp.backend.data.Workshop
 import com.iprp.backend.data.user.Student
@@ -19,7 +20,7 @@ class Submission(
     var date: LocalDateTime,
     var title: String,
     var commment: String,
-    val attachments: MutableList<String>, // Doc
+    val attachments: MutableList<Attachment>, // Doc
 
     val workshop: String, // Workshop
     val student: String, // Student
