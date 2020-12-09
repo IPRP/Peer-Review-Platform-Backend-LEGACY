@@ -15,6 +15,12 @@ class ReviewCriteria(
     lateinit var id: String
         private set
 
+    fun maxPoints(): Int {
+        var maxPoints = 0
+        criteria.forEach { criterion -> maxPoints += criterion.weight }
+        return maxPoints
+    }
+
     companion object {
         fun fromList(criteria: List<Map<String, String>>): ReviewCriteria {
             val processedCriteria = mutableListOf<ReviewCriterionTuple>()

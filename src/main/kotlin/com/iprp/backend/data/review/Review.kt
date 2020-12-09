@@ -14,7 +14,7 @@ class Review(
     var done: Boolean,
     val deadline: LocalDateTime,
     var feedback: String,
-    var points: List<Int>,
+    val points: MutableList<Int>,
     val maxPoints: Int,
     val criteria: String, // ReviewCriteria
 

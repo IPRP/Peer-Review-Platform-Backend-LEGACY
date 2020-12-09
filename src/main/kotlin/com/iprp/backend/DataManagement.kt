@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
+import java.time.LocalTime
 
 /**
  *
@@ -300,15 +301,18 @@ class DataManagement {
                         attachmentsParsed.add(Attachment(id, attachmentTitle))
                     }
                 }
-
-                // TODO !! assign reviews
-                val reviews = mutableListOf<String>()
-
                 var submission = Submission(
                     false, LocalDateTime.now(), title, comment, attachmentsParsed, workshopId, studentId,
-                    reviews, false, null, null
+                    mutableListOf(), false, null, null
                 )
                 submission = repo.saveSubmission(submission)
+                // Assign reviews, submission id is needed for this
+                val reviewHandler = assignReviews(submission)
+                if (!reviewHandler.first) return mapOf("ok" to false)
+                submission.reviews.addAll(reviewHandler.second)
+                // Apply review change
+                repo.saveSubmission(submission)
+
                 return mapOf("ok" to true, "id" to submission.id)
             }
         }
@@ -341,37 +345,59 @@ class DataManagement {
 
     // Scheduled task
     // See: https://spring.io/guides/gs/scheduling-tasks/
-    @Scheduled(fixedRate = 50000)
+    /**@Scheduled(fixedRate = 50000)
     private fun schedule() {
         println("hi!")
+    }*/
+
+    private fun calculateReviewDeadline(submissionDate: LocalDateTime): LocalDateTime {
+        // Get Midnight of given submission
+        // See: https://stackoverflow.com/a/6850919/12347616
+        val midnight = LocalTime.MIDNIGHT
+        val todayMidnight = LocalDateTime.of(submissionDate.toLocalDate(), midnight)
+        // Reviews ends at midnight in seven days
+        return todayMidnight.plusDays(7)
     }
 
-    /**
-    private fun startRound(workshop: Workshop, cachedStudents: MutableList<Student>? = null) {
-        val students = cachedStudents ?: repo.findAllStudentsByIdIn(workshop.students)
-        val submissions = mutableListOf<String>()
-        val grades = mutableListOf<String>()
+    private fun assignReviews(submission: Submission): Pair<Boolean, List<String>> {
+        try {
+            val workshop = repo.findWorkshop(submission.workshop)
+            if (workshop != null) {
+                // Copy student list
+                // See: https://stackoverflow.com/a/46846074/12347616
+                val students = workshop.students.toMutableList()
+                // No students, no reviews
+                if (students.size == 0) return Pair(false, listOf())
+                // Remove student who added submission
+                students.remove(submission.student)
+                // Calculate deadline
+                val deadline = calculateReviewDeadline(submission.date)
+                // Get review criteria
+                val criteria = repo.findReviewCriteria(workshop.criteria) ?: return Pair(false, listOf())
+                val maxPoints = criteria.maxPoints()
 
-        for(student in students) {
-            var submission = Submission(false, null, null, listOf(), workshop.id, student.id, listOf())
-            submission = repo.saveSubmission(submission)
-            submissions.add(submission.id)
-            var grade = Grade(null, null, null, student.id, submission.id, workshop.id)
-            grade = repo.saveGrade(grade)
-            grades.add(grade.id)
-
-            val studentGradeCollection = repo.findGradeCollectionInWorkshop(student.id, workshop.id)
-            if (studentGradeCollection != null) {
-                studentGradeCollection.grades.add(grade.id)
-                repo.saveGradeCollection(studentGradeCollection)
+                // Get three reviews at max
+                val reviews = mutableListOf<String>()
+                val reviewCount = if (students.size >= 3) 3 else students.size
+                for (i in 0..reviewCount) {
+                    // Get random student
+                    // See: https://stackoverflow.com/a/45687695/12347616
+                    val reviewer = students.random()
+                    students.remove(reviewer)
+                    // Save review
+                    var review = Review(
+                        false, deadline, "", mutableListOf(), maxPoints,
+                        criteria.id, reviewer, submission.id, workshop.id
+                    )
+                    review = repo.saveReview(review)
+                    reviews.add(review.id)
+                }
+                return Pair(true, reviews.toList())
             }
 
-        }
-        var submissionRound = SubmissionRound(workshop.roundEnd, workshop.id, submissions, grades)
-        submissionRound = repo.saveSubmissionRound(submissionRound)
-        workshop.rounds.add(submissionRound.id)
-        repo.saveWorkshop(workshop)
-    }*/
+        } catch (ex: Exception) {}
+        return Pair(false, listOf())
+    }
 
 
     //================================================================================

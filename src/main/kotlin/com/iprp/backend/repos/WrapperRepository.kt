@@ -172,6 +172,14 @@ class WrapperRepository {
         return reviewCriteriaRepository.save(c)
     }
 
+    fun saveReview(r: Review): Review {
+        return reviewRepository.save(r)
+    }
+
+    fun findReviewCriteria(criteriaId: String): ReviewCriteria? {
+        return reviewCriteriaRepository.findFirstById(criteriaId)
+    }
+
     fun findAllStudentReviewsInWorkshop(studentId: String, workshopId: String): List<Review> {
         return reviewRepository.findByWorkshopAndStudentAndDeadlineGreaterThan(studentId, workshopId, LocalDateTime.now())
     }
@@ -202,6 +210,7 @@ class WrapperRepository {
     fun findAllGradeCollectionsInWorkhop(ids: List<String>, workshopId: String): List<GradeCollection> {
         return gradeCollectionRepository.findByIdInAndWorkshop(ids, workshopId)
     }
+
 
     /**
      * Overall
