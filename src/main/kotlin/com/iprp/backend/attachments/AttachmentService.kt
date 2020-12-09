@@ -38,7 +38,7 @@ class AttachmentService {
         }
     }
 
-    fun getAttachment(id: String): AttachmentHandler {
+    fun downloadAttachment(id: String): AttachmentHandler {
         return try {
             val file = gridFsTemplate.findOne(Query(Criteria.where("_id").`is`(id)))
             AttachmentHandler(

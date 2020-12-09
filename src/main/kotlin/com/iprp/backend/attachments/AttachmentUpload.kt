@@ -1,5 +1,7 @@
 package com.iprp.backend.attachments
 
+import org.springframework.jmx.access.InvalidInvocationException
+
 /**
  *
  *
@@ -9,4 +11,8 @@ package com.iprp.backend.attachments
 data class AttachmentUpload(
     val ok: Boolean,
     val attachment: Attachment?
-)
+) {
+    fun ok(): Boolean {
+        return ok && attachment is Attachment
+    }
+}

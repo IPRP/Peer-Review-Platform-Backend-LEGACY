@@ -1,6 +1,7 @@
 package com.iprp.backend
 
 import com.iprp.backend.attachments.Attachment
+import com.iprp.backend.attachments.AttachmentService
 import com.iprp.backend.data.Workshop
 import com.iprp.backend.data.review.Review
 import com.iprp.backend.data.review.ReviewCriteria
@@ -11,6 +12,8 @@ import com.iprp.backend.repos.WrapperRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
+import org.springframework.web.multipart.MultipartFile
+import java.io.InputStream
 import java.time.LocalDateTime
 import java.time.LocalTime
 
@@ -24,6 +27,9 @@ import java.time.LocalTime
 class DataManagement {
     @Autowired
     lateinit var repo: WrapperRepository
+
+    @Autowired
+    lateinit var attService: AttachmentService
 
     // TODO implement MongoDB transactions
 
@@ -336,6 +342,22 @@ class DataManagement {
         throw NotImplementedError()
     }
 
+    //================================================================================
+    // Attachments
+    //================================================================================
+
+    fun uploadAttachment(title: String, file: MultipartFile): Map<String, Any> {
+        val attachmentUpload = attService.uploadAttachment(title, file)
+        if (attachmentUpload.ok && attachmentUpload.attachment is Attachment) {
+            val attachment = attachmentUpload.attachment
+            return mapOf("ok" to true, "attachment" to mapOf("id" to attachment.id, "title" to attachment.title))
+        }
+        return mapOf("ok" to false)
+    }
+
+    fun downloadAttachment(attachmentId: String): InputStream {
+        throw NotImplementedError()
+    }
 
     //================================================================================
     // 
