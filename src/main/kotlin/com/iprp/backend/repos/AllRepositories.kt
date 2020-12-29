@@ -1,5 +1,6 @@
 package com.iprp.backend.repos
 
+import com.iprp.backend.attachments.Attachment
 import com.iprp.backend.data.Workshop
 import com.iprp.backend.data.grade.Grade
 import com.iprp.backend.data.grade.GradeCollection
@@ -64,6 +65,7 @@ interface SubmissionRepository : MongoRepository<Submission, String> {
     fun findByStudentAndWorkshop(student_id: String, workshop_id: String): List<Submission>
     fun findFirstByIdAndStudentAndWorkshop(id: String, student: String, workshop: String): Submission?
     fun countByStudentAndWorkshop(student: String, workshop: String): Long
+    fun findFirstByAttachmentsContaining(attachments: MutableList<Attachment>): Submission?
 }
 
 interface SubmissionRoundRepository : MongoRepository<SubmissionRound, String> {

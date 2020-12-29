@@ -50,4 +50,8 @@ class AttachmentService {
             )
         }
     }
+
+    fun removeAttachment(id: String) {
+        gridFsTemplate.delete(Query(Criteria.where("_id").`is`(id)))
+    }
 }

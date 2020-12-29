@@ -10,7 +10,6 @@ import com.iprp.backend.data.user.Student
 import com.iprp.backend.data.user.Teacher
 import com.iprp.backend.repos.WrapperRepository
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
 import java.io.InputStream
@@ -231,7 +230,7 @@ class DataManagement {
 
                 val reviews = mutableListOf<Map<String, Any>>()
                 repo.findAllStudentReviewsInWorkshop(studentId, workshopId).forEach { review ->
-                    val submission = repo.findSubmissionByIdAndStudentInWorkship(
+                    val submission = repo.findSubmissionByIdAndStudentInWorkshop(
                         review.submission, review.student, workshopId)
                     val student = repo.findStudent(review.student)
                     if (submission != null && student != null) {
@@ -262,7 +261,7 @@ class DataManagement {
 
             for (workshop in workshops) {
                 repo.findAllStudentReviewsInWorkshop(studentId, workshop.id).forEach { review ->
-                    val submission = repo.findSubmissionByIdAndStudentInWorkship(
+                    val submission = repo.findSubmissionByIdAndStudentInWorkshop(
                         review.submission, review.student, workshop.id)
                     val student = repo.findStudent(review.student)
                     if (submission != null && student != null) {
@@ -428,6 +427,22 @@ class DataManagement {
             return handler.stream
         }
         return null
+    }
+
+    fun removeAttachment(attachmentId: String) {
+        // Update a submission if this attachment was part of it
+        val handler = attService.downloadAttachment(attachmentId)
+        if (handler.ok) {
+            val attachment = Attachment(attachmentId, handler.title())
+            val submission = repo.findSubmissionByAttachment(attachment)
+            if (submission != null) {
+                submission.attachments = submission.attachments.filter { it.id == attachmentId } as MutableList<Attachment>
+                repo.saveSubmission(submission)
+            }
+            handler.stream?.close()
+        }
+        // Remove attachment
+        attService.removeAttachment(attachmentId)
     }
 
     //================================================================================

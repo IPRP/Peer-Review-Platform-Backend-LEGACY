@@ -1,5 +1,6 @@
 package com.iprp.backend.repos
 
+import com.iprp.backend.attachments.Attachment
 import com.iprp.backend.data.Workshop
 import com.iprp.backend.data.grade.Grade
 import com.iprp.backend.data.grade.GradeCollection
@@ -156,13 +157,18 @@ class WrapperRepository {
         return submissionRoundRepository.findFirstBySubmissionsContainsAndWorkshop(submissionId, workshopId)
     }
 
-    fun findSubmissionByIdAndStudentInWorkship(submissionId: String, studentId: String, workshopId: String): Submission? {
+    fun findSubmissionByIdAndStudentInWorkshop(submissionId: String, studentId: String, workshopId: String): Submission? {
         return submissionRepository.findFirstByIdAndStudentAndWorkshop(submissionId, studentId, workshopId)
+    }
+
+    fun findSubmissionByAttachment(attachment: Attachment): Submission? {
+        return submissionRepository.findFirstByAttachmentsContaining(listOf(attachment) as MutableList<Attachment>)
     }
 
     fun countStudentSubmissionsInWorkshop(studentId: String, workshopId: String): Long {
         return submissionRepository.countByStudentAndWorkshop(studentId, workshopId)
     }
+
 
 
     /**

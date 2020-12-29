@@ -15,7 +15,7 @@ class Submission(
     var date: LocalDateTime,
     var title: String,
     var commment: String,
-    val attachments: MutableList<Attachment>, // Doc
+    var attachments: MutableList<Attachment>, // Doc
 
     val workshop: String, // Workshop
     val student: String, // Student
