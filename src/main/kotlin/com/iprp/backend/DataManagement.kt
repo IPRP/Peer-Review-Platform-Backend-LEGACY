@@ -429,6 +429,23 @@ class DataManagement {
     }
 
     //================================================================================
+    // Reviews
+    //================================================================================
+
+    fun updateReview(
+        studentId: String, reviewId: String, feedback: String, points: List<Int>
+    ): Map<String, Any> {
+        val review = repo.findReview(reviewId)
+        if (review == null || review.student != studentId) return mapOf("ok" to false)
+        if (!review.done) review.done = true
+        review.feedback = feedback
+        review.points.clear()
+        review.points.addAll(points)
+        repo.saveReview(review)
+        return mapOf("ok" to true)
+    }
+
+    //================================================================================
     // Attachments
     //================================================================================
 
@@ -556,6 +573,11 @@ class DataManagement {
     }
 
 
+    //================================================================================
+    //
+    // ETC
+    //
+    //================================================================================
 
     /**
      * Methods to fill database

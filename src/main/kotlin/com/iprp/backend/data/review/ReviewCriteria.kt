@@ -31,7 +31,7 @@ class ReviewCriteria(
                     val title = criterion["title"] ?: ""
                     val content = criterion["content"] ?: ""
                     val check = (criterion["type"] ?: "").toLowerCase()
-                    val weigth = (criterion["weigth"] ?: "").toIntOrNull() ?: continue
+                    val weight = (criterion["weight"] ?: "").toIntOrNull() ?: continue
                     var type: ReviewCriterionType? = null
                     when(check) {
                         "point"         -> type = ReviewCriterionType.Point
@@ -40,7 +40,7 @@ class ReviewCriteria(
                         "truefalse"     -> type = ReviewCriterionType.TrueFalse
                     }
                     if (type != null) {
-                        processedCriteria.add(ReviewCriterionTuple(type, title, content, weigth))
+                        processedCriteria.add(ReviewCriterionTuple(type, title, content, weight))
                     }
                 }
             }
