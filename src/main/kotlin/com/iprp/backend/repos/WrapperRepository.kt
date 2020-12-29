@@ -176,6 +176,10 @@ class WrapperRepository {
         return reviewRepository.save(r)
     }
 
+    fun findReview(reviewId: String): Review? {
+        return reviewRepository.findFirstById(reviewId)
+    }
+
     fun findReviewCriteria(criteriaId: String): ReviewCriteria? {
         return reviewCriteriaRepository.findFirstById(criteriaId)
     }

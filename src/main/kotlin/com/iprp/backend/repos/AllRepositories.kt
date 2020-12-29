@@ -76,6 +76,7 @@ interface SubmissionRoundRepository : MongoRepository<SubmissionRound, String> {
 
 
 interface ReviewRepository : MongoRepository<Review, String> {
+    fun findFirstById(review_id: String): Review?
     fun findByStudent(student_id: String): List<Review>
     fun deleteByWorkshop(workshop_id: String)
     fun findByWorkshopAndStudentAndDeadlineGreaterThan(workshop: String, student: String, deadline: LocalDateTime): List<Review>

@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile
 import java.io.InputStream
 import java.time.LocalDateTime
 import java.time.LocalTime
+import java.util.*
 
 /**
  *
@@ -326,20 +327,78 @@ class DataManagement {
         return mapOf("ok" to false)
     }
 
-    fun getStudentSubmissionColleague(studentId: String, submissionId: String): Map<String, Any> {
-        throw NotImplementedError()
-    }
-    
-    fun getStudentSubmissionOwn(studentId: String, submissionId: String): Map<String, Any> {
-        throw NotImplementedError()
+    fun getSubmissionStudent(studentId: String, submissionId: String): Map<String, Any> {
+        val submission = repo.findSubmission(submissionId) ?: return mapOf("ok" to false)
+        return if (submission.student == studentId) {
+            // Own submission
+            getSubmissionInternal(submission, studentMode = true)
+        } else {
+            // Submission of colleague
+            val attachments = mutableListOf<Map<String, String>>()
+            for (attachment in submission.attachments) {
+                attachments.add(mapOf("id" to attachment.id, "title" to attachment.title))
+            }
+            mapOf(
+                "ok" to true, "title" to submission.title, "attachments" to attachments
+            )
+        }
     }
 
-    fun getSubmission(teacherId: String, submissionId: String): Map<String, Any> {
-        throw NotImplementedError()
+    fun getSubmissionTeacher(teacherId: String, submissionId: String): Map<String, Any> {
+        val submission = repo.findSubmission(submissionId) ?: return mapOf("ok" to false)
+        return getSubmissionInternal(submission, studentMode = false)
     }
 
-    private fun getSubmissionInternal(submissionId: String): Map<String, Any> {
-        throw NotImplementedError()
+    private fun getSubmissionInternal(submission: Submission, studentMode: Boolean = true): Map<String, Any> {
+        val attachments = mutableListOf<Map<String, String>>()
+        for (attachment in submission.attachments) {
+            attachments.add(mapOf("id" to attachment.id, "title" to attachment.title))
+        }
+
+        val response = mutableMapOf(
+            "ok" to true, "title" to submission.title, "attachments" to attachments,
+            "locked" to submission.locked, "date" to submission.date, "reviewsDone" to submission.reviewsDone
+        )
+
+        if (submission.reviewsDone) {
+            // Check if workshop is anonymous
+            val workshop = repo.findWorkshop(submission.workshop)
+            val anonymous = workshop != null && workshop.anonymous
+            // Get reviews
+            val reviews = mutableListOf<Map<String, Any>>()
+            for (reviewId in submission.reviews) {
+                val review = repo.findReview(reviewId)
+                if (review != null) {
+                    val student = repo.findStudent(review.student)
+                    val criteria = repo.findReviewCriteria(review.criteria)
+                    if (student != null && criteria != null) {
+                        val points = mutableListOf<Map<String, Any>>()
+                        for (i in review.points.indices) {
+                            points.add(mapOf(
+                                "type" to criteria.criteria[i].type.name, "title" to criteria.criteria[i].title,
+                                "content" to criteria.criteria[i].content, "title" to criteria.criteria[i].weight,
+                                "points" to review.points[i]
+                            ))
+                        }
+                        // Add review with reviewer info or not
+                        if (!studentMode || !anonymous) {
+                            reviews.add(mapOf(
+                                "id" to review.id, "firstname" to student.firstname, "lastname" to student.lastname,
+                                "feedback" to review.feedback, "points" to points
+                            ))
+                        } else {
+                            reviews.add(mapOf("id" to review.id, "feedback" to review.feedback, "points" to points))
+                        }
+                    }
+                }
+            }
+            // Add review info
+            response["points"] = submission.pointsMean ?: 0
+            response["maxPoints"] = submission.maxPoints ?: 0
+            response["reviews"] = reviews
+        }
+
+        return response
     }
 
     //================================================================================
@@ -355,8 +414,12 @@ class DataManagement {
         return mapOf("ok" to false)
     }
 
-    fun downloadAttachment(attachmentId: String): InputStream {
-        throw NotImplementedError()
+    fun downloadAttachment(attachmentId: String): InputStream? {
+        val handler = attService.downloadAttachment(attachmentId)
+        if (handler.ok) {
+            return handler.stream
+        }
+        return null
     }
 
     //================================================================================
