@@ -331,9 +331,16 @@ class DataManagement {
         val submission = repo.findSubmission(submissionId) ?: return mapOf("ok" to false)
         return if (submission.student == studentId) {
             // Own submission
+            // Return response through helper method
             getSubmissionInternal(submission, studentMode = true)
         } else {
             // Submission of colleague
+            // First, lock submission (if not already done)
+            if (!submission.locked) {
+                submission.locked = true
+                repo.saveSubmission(submission)
+            }
+            // Return response
             val attachments = mutableListOf<Map<String, String>>()
             for (attachment in submission.attachments) {
                 attachments.add(mapOf("id" to attachment.id, "title" to attachment.title))
@@ -346,6 +353,7 @@ class DataManagement {
 
     fun getSubmissionTeacher(teacherId: String, submissionId: String): Map<String, Any> {
         val submission = repo.findSubmission(submissionId) ?: return mapOf("ok" to false)
+        // Return response through helper method
         return getSubmissionInternal(submission, studentMode = false)
     }
 
