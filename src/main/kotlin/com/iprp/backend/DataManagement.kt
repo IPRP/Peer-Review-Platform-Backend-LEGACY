@@ -33,7 +33,7 @@ class DataManagement {
 
     // TODO implement MongoDB transactions
 
-    // TODO fileService
+    // TODO lock reviews every midnight
 
     //================================================================================
     //
@@ -408,6 +408,26 @@ class DataManagement {
         return response
     }
 
+    fun updateSubmission(
+        studentId: String, submissionId: String,
+        title: String, comment: String, attachments: List<Map<String, String>>
+    ): Map<String, Any> {
+        val submission = repo.findSubmission(submissionId)
+        if (submission == null || submission.student != studentId || submission.locked)
+            return mapOf("ok" to false)
+        submission.title = title
+        submission.commment = comment
+        val parsedAttachments = mutableListOf<Attachment>()
+        for (attachment in attachments) {
+            if (attachment.containsKey("id") && attachment.containsKey("title")) {
+                parsedAttachments.add(Attachment(attachment["id"]!!, attachment["title"]!!))
+            }
+        }
+        submission.attachments = parsedAttachments
+        repo.saveSubmission(submission)
+        return mapOf("ok" to true)
+    }
+
     //================================================================================
     // Attachments
     //================================================================================
@@ -506,15 +526,6 @@ class DataManagement {
         } catch (ex: Exception) {}
         return Pair(false, listOf())
     }
-
-
-    //================================================================================
-    //
-    // GRADES
-    //
-    //================================================================================
-
-    // TODO delete category?
 
     //================================================================================
     //
