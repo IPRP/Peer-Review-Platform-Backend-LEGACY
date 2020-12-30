@@ -5,6 +5,7 @@ import com.iprp.backend.repos.*
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.within
 import org.junit.jupiter.api.*
+import org.junit.jupiter.api.Assertions.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import java.time.LocalDateTime
@@ -17,7 +18,7 @@ import java.time.temporal.ChronoUnit
  * @version 2020-11-26
  */
 @SpringBootTest(
-        properties = ["spring.data.mongodb.database=test_db"]
+    properties = ["spring.data.mongodb.database=test_db"]
 )
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class DataManagementTests {
@@ -59,7 +60,7 @@ class DataManagementTests {
         // Fetch all
         val foundPersons = personRepo.findAll()
 
-        Assertions.assertEquals(2, foundPersons.size)
+        assertEquals(2, foundPersons.size)
     }
 
     @Test
@@ -73,13 +74,13 @@ class DataManagementTests {
         val s2 = dm.searchStudent("s2")
         val ids = dm.searchStudents("3A")
 
-        Assertions.assertEquals("s1", s1Id["id"])
-        Assertions.assertEquals("Max", s1["firstname"])
-        Assertions.assertEquals("Mustermann", s1["lastname"])
-        Assertions.assertEquals("s2", s2Id["id"])
-        Assertions.assertEquals("John", s2["firstname"])
-        Assertions.assertEquals("Doe", s2["lastname"])
-        Assertions.assertEquals(listOf("s1", "s2"), ids["ids"])
+        assertEquals("s1", s1Id["id"])
+        assertEquals("Max", s1["firstname"])
+        assertEquals("Mustermann", s1["lastname"])
+        assertEquals("s2", s2Id["id"])
+        assertEquals("John", s2["firstname"])
+        assertEquals("Doe", s2["lastname"])
+        assertEquals(listOf("s1", "s2"), ids["ids"])
     }
 
     @Test
@@ -94,7 +95,7 @@ class DataManagementTests {
 
         val foundWorkshops = workshopRepo.findAll()
 
-        Assertions.assertEquals(1, foundWorkshops.size)
+        assertEquals(1, foundWorkshops.size)
     }
 
     @Test
@@ -116,17 +117,17 @@ class DataManagementTests {
         val updatedWorkshop = workshopRepo.findByTeachers("t1").first()
         val updatedCriteria = reviewCriteriaRepo.findFirstById(updatedWorkshop.criteria)!!
 
-        Assertions.assertEquals(listOf("t1", "t2"), updatedWorkshop.teachers)
-        Assertions.assertEquals(listOf("s1", "s2"), updatedWorkshop.students)
-        Assertions.assertEquals("Workshop", updatedWorkshop.title)
-        Assertions.assertEquals("My Workshop", updatedWorkshop.content)
+        assertEquals(listOf("t1", "t2"), updatedWorkshop.teachers)
+        assertEquals(listOf("s1", "s2"), updatedWorkshop.students)
+        assertEquals("Workshop", updatedWorkshop.title)
+        assertEquals("My Workshop", updatedWorkshop.content)
         // Compare time with AssertJ
         // See: https://stackoverflow.com/a/1698926/12347616
         assertThat(end).isCloseTo(updatedWorkshop.end, within(1, ChronoUnit.MINUTES))
-        Assertions.assertTrue(updatedCriteria.criteria.first().title == "Criterion")
-        Assertions.assertTrue(updatedCriteria.criteria.first().type == ReviewCriterionType.TrueFalse)
-        Assertions.assertTrue(updatedCriteria.criteria.first().content == "abc2")
-        Assertions.assertTrue(updatedCriteria.criteria.first().weight == 20)
+        assertTrue(updatedCriteria.criteria.first().title == "Criterion")
+        assertTrue(updatedCriteria.criteria.first().type == ReviewCriterionType.TrueFalse)
+        assertTrue(updatedCriteria.criteria.first().content == "abc2")
+        assertTrue(updatedCriteria.criteria.first().weight == 20)
     }
 
     @Test
@@ -134,15 +135,109 @@ class DataManagementTests {
         // Add workshop
         dm.addStudent("s1", "Max", "Mustermann", "3A")
         dm.addTeacher("t1", "John", "Doe")
-        dm.addWorkshop(
+        val id = dm.addWorkshop(
             listOf("t1"), listOf("s1"), "workshop", "my workshop",
             true, LocalDateTime.now(), listOf(mapOf("type" to "point", "content" to "abc"))
-        )
-        val workshop = workshopRepo.findAll().first()!!
-        dm.deleteWorkshop(workshop.id)
+        )["id"] as String
+
+        dm.deleteWorkshop(id)
 
         val foundWorkshops = workshopRepo.findAll()
 
-        Assertions.assertEquals(0, foundWorkshops.size)
+        assertEquals(0, foundWorkshops.size)
     }
+
+    @Test
+    fun getAllWorkshopsTeacher() {
+        dm.addStudent("s1", "Max", "Mustermann", "3A")
+        dm.addTeacher("t1", "John", "Doe")
+        dm.addWorkshop(
+            listOf("t1"), listOf("s1"), "workshop", "my workshop", true, LocalDateTime.now(),
+            listOf(mapOf("name" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
+        )
+
+        val workshops = dm.getAllWorkshops("t1")["workshops"]!!
+
+        assertEquals(1, workshops.size)
+        assertEquals("workshop", workshops.first()["title"])
+        assertNotNull(workshops.first()["id"])
+    }
+
+    @Test
+    fun getAllWorkshopsStudent() {
+        dm.addStudent("s1", "Max", "Mustermann", "3A")
+        dm.addTeacher("t1", "John", "Doe")
+        dm.addWorkshop(
+            listOf("t1"), listOf("s1"), "workshop", "my workshop", true, LocalDateTime.now(),
+            listOf(mapOf("name" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
+        )
+
+        val workshops = dm.getAllWorkshops("s1")["workshops"]!!
+
+        assertEquals(1, workshops.size)
+        assertEquals("workshop", workshops.first()["title"])
+        assertNotNull(workshops.first()["id"])
+    }
+
+    @Test
+    fun getWorkshopTeacher() {
+        dm.addStudent("s1", "Max", "Mustermann", "3A")
+        dm.addTeacher("t1", "John", "Doe")
+        val id = dm.addWorkshop(
+            listOf("t1"), listOf("s1"), "workshop", "my workshop", true, LocalDateTime.now(),
+            listOf(mapOf("name" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
+        )["id"] as String
+
+        val response = dm.getTeacherWorkshop(id)
+        val workshop = response["workshop"] as Map<*, *>
+
+        assertNotNull(workshop)
+        assertEquals("workshop", workshop["title"])
+        assertEquals("my workshop", workshop["content"])
+        assertEquals(true, workshop["anonymous"])
+        assertNotNull(workshop["end"])
+        assertEquals(1, (workshop["students"] as List<*>).size)
+        assertEquals(1, (workshop["teachers"] as List<*>).size)
+    }
+
+    @Test
+    fun getWorkshopStudent() {
+        dm.addStudent("s1", "Max", "Mustermann", "3A")
+        dm.addTeacher("t1", "John", "Doe")
+        val id = dm.addWorkshop(
+            listOf("t1"), listOf("s1"), "workshop", "my workshop", true, LocalDateTime.now(),
+            listOf(mapOf("name" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
+        )["id"] as String
+
+        val response = dm.getStudentWorkshop("s1", id)
+        val workshop = response["workshop"] as Map<*, *>
+
+        assertNotNull(workshop)
+        assertEquals("workshop", workshop["title"])
+        assertEquals("my workshop", workshop["content"])
+        assertNotNull(workshop["end"])
+        assertEquals(1, (workshop["students"] as List<*>).size)
+        assertEquals(1, (workshop["teachers"] as List<*>).size)
+        assertEquals(0, (workshop["submissions"] as List<*>).size)
+        assertEquals(0, (workshop["reviews"] as List<*>).size)
+    }
+
+    @Test
+    fun getStudentTODOs() {
+        dm.addStudent("s1", "Max", "Mustermann", "3A")
+        dm.addTeacher("t1", "John", "Doe")
+        dm.addWorkshop(
+            listOf("t1"), listOf("s1"), "workshop", "my workshop", true, LocalDateTime.now(),
+            listOf(mapOf("name" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
+        )
+
+        val response = dm.getStudentTodos("s1")
+
+        assertNotNull(response)
+        assertEquals(0, (response["reviews"] as List<*>).size)
+        assertEquals(1, (response["submissions"] as List<*>).size)
+        assertEquals("workshop", ((response["submissions"] as List<*>).first() as Map<*, *>)["workshopName"])
+    }
+
+
 }

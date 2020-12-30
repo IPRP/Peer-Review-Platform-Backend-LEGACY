@@ -129,8 +129,8 @@ class DataManagement {
                 teacherIds as MutableList<String>, criteriaType.id
             )
 
-            repo.saveWorkshop(workshop)
-            return mapOf("ok" to true)
+            val id = repo.saveWorkshop(workshop).id
+            return mapOf("ok" to true, "id" to id)
         } catch (ex: Exception) {
             return mapOf("ok" to false)
         }

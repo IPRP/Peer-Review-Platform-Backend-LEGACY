@@ -102,7 +102,7 @@ class WrapperRepository {
     }
 
     fun findAllWorkshops(personId: String): List<Workshop> {
-        if (studentRepository.findById(personId).isPresent) {
+        if (studentRepository.findFirstById(personId) != null) {
             return workshopRepository.findByStudents(personId)
         }
         return workshopRepository.findByTeachers(personId)
