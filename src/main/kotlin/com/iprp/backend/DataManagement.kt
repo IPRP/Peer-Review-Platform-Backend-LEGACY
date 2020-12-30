@@ -150,6 +150,8 @@ class DataManagement {
             }*/
             val workshop = repo.findWorkshop(workshopId)
             if (workshop != null) {
+                workshop.title = title
+                workshop.content = content
                 workshop.end = end
                 var criteriaType = ReviewCriteria.fromList(criteria)
                 criteriaType = repo.saveReviewCriteria(criteriaType)
@@ -558,6 +560,11 @@ class DataManagement {
             if (student != null) return mapOf("ok" to true, "id" to student.id)
         } catch (ex: Exception) {}
         return mapOf("ok" to false)
+    }
+
+    fun searchStudent(studentId: String): Map<String, Any> {
+        val student = repo.findStudent(studentId) ?: return mapOf("ok" to false)
+        return mapOf("ok" to true, "id" to student.id, "firstname" to student.firstname, "lastname" to student.lastname)
     }
 
     fun searchStudents(group: String): Map<String, Any> {

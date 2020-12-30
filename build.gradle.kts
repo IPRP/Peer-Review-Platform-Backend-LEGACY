@@ -31,6 +31,7 @@ dependencies {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
     }
     testImplementation("org.springframework.security:spring-security-test")
+    testImplementation("org.assertj:assertj-core:3.18.1")
 }
 
 
