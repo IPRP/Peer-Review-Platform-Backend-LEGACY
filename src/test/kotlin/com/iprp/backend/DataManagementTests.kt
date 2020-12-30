@@ -111,7 +111,7 @@ class DataManagementTests {
         dm.addTeacher("t1", "John", "Doe")
         dm.addWorkshop(
             listOf("t1"), listOf("s1"), "workshop", "my workshop", true, LocalDateTime.now(),
-            listOf(mapOf("name" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
+            listOf(mapOf("title" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
         )
 
         val foundWorkshops = workshopRepo.findAll()
@@ -174,7 +174,7 @@ class DataManagementTests {
         dm.addTeacher("t1", "John", "Doe")
         dm.addWorkshop(
             listOf("t1"), listOf("s1"), "workshop", "my workshop", true, LocalDateTime.now(),
-            listOf(mapOf("name" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
+            listOf(mapOf("title" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
         )
 
         val workshops = dm.getAllWorkshops("t1")["workshops"]!!
@@ -190,7 +190,7 @@ class DataManagementTests {
         dm.addTeacher("t1", "John", "Doe")
         dm.addWorkshop(
             listOf("t1"), listOf("s1"), "workshop", "my workshop", true, LocalDateTime.now(),
-            listOf(mapOf("name" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
+            listOf(mapOf("title" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
         )
 
         val workshops = dm.getAllWorkshops("s1")["workshops"]!!
@@ -206,7 +206,7 @@ class DataManagementTests {
         dm.addTeacher("t1", "John", "Doe")
         val id = dm.addWorkshop(
             listOf("t1"), listOf("s1"), "workshop", "my workshop", true, LocalDateTime.now(),
-            listOf(mapOf("name" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
+            listOf(mapOf("title" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
         )["id"] as String
 
         val response = dm.getTeacherWorkshop(id)
@@ -227,7 +227,7 @@ class DataManagementTests {
         dm.addTeacher("t1", "John", "Doe")
         val id = dm.addWorkshop(
             listOf("t1"), listOf("s1"), "workshop", "my workshop", true, LocalDateTime.now(),
-            listOf(mapOf("name" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
+            listOf(mapOf("title" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
         )["id"] as String
 
         val response = dm.getStudentWorkshop("s1", id)
@@ -249,7 +249,7 @@ class DataManagementTests {
         dm.addTeacher("t1", "John", "Doe")
         dm.addWorkshop(
             listOf("t1"), listOf("s1"), "workshop", "my workshop", true, LocalDateTime.now(),
-            listOf(mapOf("name" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
+            listOf(mapOf("title" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
         )
 
         val response = dm.getStudentTodos("s1")
@@ -267,7 +267,7 @@ class DataManagementTests {
         dm.addTeacher("t1", "John", "Doe")
         val id = dm.addWorkshop(
             listOf("t1"), listOf("s1", "s2"), "workshop", "my workshop", true, LocalDateTime.now(),
-            listOf(mapOf("name" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
+            listOf(mapOf("title" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
         )["id"] as String
 
         dm.addSubmissionToWorkshop("s1", id, "S1 submission", "Very Good", listOf())
@@ -285,7 +285,7 @@ class DataManagementTests {
         dm.addTeacher("t1", "John", "Doe")
         val id = dm.addWorkshop(
             listOf("t1"), listOf("s1", "s2"), "workshop", "my workshop", true, LocalDateTime.now(),
-            listOf(mapOf("name" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
+            listOf(mapOf("title" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
         )["id"] as String
 
         dm.addSubmissionToWorkshop("s1", id, "S1 submission", "Very Good", listOf())
@@ -324,7 +324,7 @@ class DataManagementTests {
         dm.addTeacher("t1", "John", "Doe")
         val workshopId = dm.addWorkshop(
             listOf("t1"), listOf("s1", "s2"), "workshop", "my workshop", true, LocalDateTime.now(),
-            listOf(mapOf("name" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
+            listOf(mapOf("title" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
         )["id"] as String
         val submissionId = dm.addSubmissionToWorkshop(
             "s1", workshopId, "S1 submission", "Very Good", listOf()
@@ -348,7 +348,7 @@ class DataManagementTests {
         dm.addTeacher("t1", "John", "Doe")
         val workshopId = dm.addWorkshop(
             listOf("t1"), listOf("s1", "s2"), "workshop", "my workshop", true, LocalDateTime.now(),
-            listOf(mapOf("name" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
+            listOf(mapOf("title" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
         )["id"] as String
         val submissionId = dm.addSubmissionToWorkshop(
             "s1", workshopId, "S1 submission", "Very Good", listOf()
@@ -371,7 +371,7 @@ class DataManagementTests {
         dm.addTeacher("t1", "John", "Doe")
         val workshopId = dm.addWorkshop(
             listOf("t1"), listOf("s1", "s2"), "workshop", "my workshop", true, LocalDateTime.now(),
-            listOf(mapOf("name" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
+            listOf(mapOf("title" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
         )["id"] as String
         val submissionId = dm.addSubmissionToWorkshop(
             "s1", workshopId, "S1 submission", "Very Good", listOf()
@@ -391,7 +391,7 @@ class DataManagementTests {
         dm.addTeacher("t1", "John", "Doe")
         val workshopId = dm.addWorkshop(
             listOf("t1"), listOf("s1", "s2"), "workshop", "my workshop", true, LocalDateTime.now(),
-            listOf(mapOf("name" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
+            listOf(mapOf("title" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
         )["id"] as String
         val submissionId = dm.addSubmissionToWorkshop(
             "s1", workshopId, "S1 submission", "Very Good", listOf()
@@ -417,7 +417,7 @@ class DataManagementTests {
         dm.addTeacher("t1", "John", "Doe")
         val workshopId = dm.addWorkshop(
             listOf("t1"), listOf("s1", "s2"), "workshop", "my workshop", true, LocalDateTime.now(),
-            listOf(mapOf("name" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
+            listOf(mapOf("title" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
         )["id"] as String
         dm.addSubmissionToWorkshop(
             "s1", workshopId, "S1 submission", "Very Good", listOf()
@@ -441,7 +441,7 @@ class DataManagementTests {
         dm.addTeacher("t1", "John", "Doe")
         val workshopId = dm.addWorkshop(
             listOf("t1"), listOf("s1", "s2"), "workshop", "my workshop", true, LocalDateTime.now(),
-            listOf(mapOf("name" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
+            listOf(mapOf("title" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
         )["id"] as String
         dm.addSubmissionToWorkshop(
             "s1", workshopId, "S1 submission", "Very Good", listOf()
@@ -457,6 +457,106 @@ class DataManagementTests {
         assertEquals(1, (response["reviews"] as List<*>).size)
         assertTrue(((response["reviews"] as List<*>).first() as Map<*, *>)["done"] as Boolean)
     }
+
+    @Test
+    fun closeReviews() {
+        dm.addStudent("s1", "Max", "Mustermann", "3A")
+        dm.addStudent("s2", "Max", "Mustermann", "3A")
+        dm.addTeacher("t1", "John", "Doe")
+        val workshopId = dm.addWorkshop(
+            listOf("t1"), listOf("s1", "s2"), "workshop", "my workshop", true, LocalDateTime.now(),
+            listOf(mapOf("title" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
+        )["id"] as String
+        val submissionId = dm.addSubmissionToWorkshop(
+            "s1", workshopId, "S1 submission", "Very Good", listOf()
+        )["id"] as String
+        val reviewId
+            = ((dm.getStudentTodos("s2")["reviews"] as List<*>).first() as Map<*,*>)["id"] as String
+        dm.updateReview("s2", reviewId, "Great!", listOf(1))
+
+        dm.closeReviews(LocalDateTime.now().plusMonths(1))
+        val submission = submissionRepo.findFirstById(submissionId)!!
+        val review = reviewRepo.findFirstById(reviewId)!!
+
+
+        assertTrue(submission.reviewsDone)
+        assertTrue(review.done)
+        // TODO is this valid?
+        assertEquals(100, submission.maxPoints)
+        assertEquals(10, submission.pointsMean)
+    }
+
+    @Test
+    fun closeReviewsAndGetWorkshopTeacher() {
+        dm.addStudent("s1", "Max", "Mustermann", "3A")
+        dm.addStudent("s2", "Max", "Mustermann", "3A")
+        dm.addTeacher("t1", "John", "Doe")
+        val workshopId = dm.addWorkshop(
+            listOf("t1"), listOf("s1", "s2"), "workshop", "my workshop", true, LocalDateTime.now(),
+            listOf(mapOf("title" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
+        )["id"] as String
+        val submissionId = dm.addSubmissionToWorkshop(
+            "s1", workshopId, "S1 submission", "Very Good", listOf()
+        )["id"] as String
+        val reviewId
+                = ((dm.getStudentTodos("s2")["reviews"] as List<*>).first() as Map<*,*>)["id"] as String
+        dm.updateReview("s2", reviewId, "Great!", listOf(1))
+
+        dm.closeReviews(LocalDateTime.now().plusMonths(1))
+        val response = dm.getTeacherWorkshop(workshopId)
+        val workshop = response["workshop"] as Map<*, *>
+        val submission
+            = (((workshop["students"] as List<*>).first() as Map<*, *>)["submissions"] as List<*>).first() as Map<*, *>
+
+        assertNotNull(workshop)
+        assertEquals("workshop", workshop["title"])
+        assertEquals("my workshop", workshop["content"])
+        assertEquals(true, workshop["anonymous"])
+        assertNotNull(workshop["end"])
+        assertEquals(2, (workshop["students"] as List<*>).size)
+        assertEquals(1, (workshop["teachers"] as List<*>).size)
+        assertEquals("S1 submission", submission["title"])
+        assertTrue(submission["reviewsDone"] as Boolean)
+        assertEquals(100, submission["maxPoints"])
+        assertEquals(10, submission["points"])
+    }
+
+    @Test
+    fun closeReviewsAndGetWorkshopStudentOwn() {
+        dm.addStudent("s1", "Max", "Mustermann", "3A")
+        dm.addStudent("s2", "Max", "Mustermann", "3A")
+        dm.addTeacher("t1", "John", "Doe")
+        val workshopId = dm.addWorkshop(
+            listOf("t1"), listOf("s1", "s2"), "workshop", "my workshop", true, LocalDateTime.now(),
+            listOf(mapOf("title" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
+        )["id"] as String
+        val submissionId = dm.addSubmissionToWorkshop(
+            "s1", workshopId, "S1 submission", "Very Good", listOf()
+        )["id"] as String
+        val reviewId
+                = ((dm.getStudentTodos("s2")["reviews"] as List<*>).first() as Map<*,*>)["id"] as String
+        dm.updateReview("s2", reviewId, "Great!", listOf(1))
+
+        dm.closeReviews(LocalDateTime.now().plusMonths(1))
+        val response = dm.getStudentWorkshop("s1", workshopId)
+        val workshop = response["workshop"] as Map<*, *>
+        val submission = (workshop["submissions"] as List<*>).first() as Map<*, *>
+
+        assertNotNull(workshop)
+        assertEquals("workshop", workshop["title"])
+        assertEquals("my workshop", workshop["content"])
+        assertNotNull(workshop["end"])
+        assertEquals(2, (workshop["students"] as List<*>).size)
+        assertEquals(1, (workshop["teachers"] as List<*>).size)
+        assertEquals(1, (workshop["submissions"] as List<*>).size)
+        assertEquals(0, (workshop["reviews"] as List<*>).size)
+        assertEquals("S1 submission", submission["title"])
+        assertTrue(submission["reviewsDone"] as Boolean)
+        assertEquals(100, submission["maxPoints"])
+        assertEquals(10, submission["points"])
+    }
+
+
 
 
 

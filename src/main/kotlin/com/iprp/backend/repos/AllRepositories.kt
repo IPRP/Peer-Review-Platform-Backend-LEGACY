@@ -70,6 +70,9 @@ interface ReviewRepository : MongoRepository<Review, String> {
     fun deleteByWorkshop(workshop_id: String)
     fun findByWorkshopAndStudentAndDeadlineGreaterThanEqual(workshop: String, student: String, deadline: LocalDateTime): List<Review>
     fun findByWorkshopAndStudentAndDeadlineLessThanEqual(workshop: String, student: String, deadline: LocalDateTime): List<Review>
+    fun findByDeadlineLessThanEqual(deadline: LocalDateTime): List<Review>
+    fun findFirstByIdAndWorkshop(review_id: String, workshop_id: String): Review?
+    fun findAllById(ids: List<String>): List<Review>
 }
 
 interface ReviewCriteriaRepository : MongoRepository<ReviewCriteria, String> {

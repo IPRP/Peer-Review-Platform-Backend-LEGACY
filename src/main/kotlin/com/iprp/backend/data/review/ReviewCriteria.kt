@@ -17,7 +17,7 @@ class ReviewCriteria(
 
     fun maxPoints(): Int {
         var maxPoints = 0
-        criteria.forEach { criterion -> maxPoints += criterion.weight }
+        criteria.forEach { criterion -> maxPoints += criterion.weight * 10 }
         return maxPoints
     }
 

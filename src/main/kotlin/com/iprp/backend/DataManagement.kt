@@ -439,12 +439,20 @@ class DataManagement {
     ): Map<String, Any> {
         val review = repo.findReview(reviewId)
         if (review == null || review.student != studentId) return mapOf("ok" to false)
-        if (!review.done) review.done = true
-        review.feedback = feedback
-        review.points.clear()
-        review.points.addAll(points)
-        repo.saveReview(review)
-        return mapOf("ok" to true)
+        // Do not allow reviews after deadline...
+        if (review.deadline >= LocalDateTime.now()) {
+            if (!review.done) review.done = true
+            review.feedback = feedback
+            review.points.clear()
+            review.points.addAll(points)
+            repo.saveReview(review)
+            return mapOf("ok" to true)
+        }
+        if (!review.done) {
+            review.done = true
+            repo.saveReview(review)
+        }
+        return mapOf("ok" to false)
     }
 
     //================================================================================
@@ -500,13 +508,63 @@ class DataManagement {
     // And: https://www.baeldung.com/cron-expressions
     // And: https://stackoverflow.com/a/57426242/12347616
     @Scheduled(cron = "0 5 0 * * ?") // Runs every day five minutes after midnight
-    private fun closeReviews() {
-        // TODO
-        println("hi!")
+    private fun closeReviewsJob() {
+        closeReviews(LocalDateTime.now())
     }
 
-    fun closeReviewsInternal(currentTime: LocalDateTime) {
-
+    fun closeReviews(currentTime: LocalDateTime) {
+        // Get affected submissions
+        val dueReviews = repo.findAllReviewsOlderThat(currentTime)
+        val affectedSubmissions = mutableSetOf<String>()
+        for (review in dueReviews) {
+            affectedSubmissions.add(review.submission)
+        }
+        // Iterate over them
+        for (submissionId in affectedSubmissions) {
+            val submission = repo.findSubmission(submissionId)
+            if (submission != null) {
+                // Get all reviews for this submission
+                val reviews = repo.findAllReviews(submission.reviews)
+                if (reviews.isNotEmpty()) {
+                    // Get review criteria
+                    val criteria = repo.findReviewCriteria(reviews.first().criteria)
+                    if (criteria != null) {
+                        // Calculate points and default state to "done"
+                        submission.maxPoints = criteria.maxPoints()
+                        submission.pointsMean = 0
+                        val weights = mutableListOf<Int>()
+                        for (criterion in criteria.criteria) weights.add(criterion.weight)
+                        for (review in reviews) {
+                            if (!review.done) {
+                                review.done = true
+                                repo.saveReview(review)
+                            }
+                            // Calculate points
+                            for (i in review.points.indices) {
+                                submission.pointsMean = submission.pointsMean?.plus(review.points[i] * weights[i])
+                            }
+                        }
+                        submission.pointsMean = submission.pointsMean?.div(reviews.size)
+                        submission.reviewsDone = true
+                        repo.saveSubmission(submission)
+                    } else {
+                        // Only default state to "done"
+                        for (review in reviews) {
+                            if (!review.done) {
+                                review.done = true
+                                repo.saveReview(review)
+                            }
+                        }
+                        submission.reviewsDone = true
+                        repo.saveSubmission(submission)
+                    }
+                } else {
+                    // No reviews, but set submission to "done"
+                    submission.reviewsDone = true
+                    repo.saveSubmission(submission)
+                }
+            }
+        }
     }
 
     private fun calculateReviewDeadline(submissionDate: LocalDateTime): LocalDateTime {

@@ -170,12 +170,24 @@ class WrapperRepository {
         return reviewRepository.findFirstById(reviewId)
     }
 
+    fun findReview(reviewId: String, workshopId: String): Review? {
+        return reviewRepository.findFirstByIdAndWorkshop(reviewId, workshopId)
+    }
+
+    fun findAllReviews(reviewIds: List<String>): List<Review> {
+        return reviewRepository.findAllById(reviewIds)
+    }
+
     fun findReviewCriteria(criteriaId: String): ReviewCriteria? {
         return reviewCriteriaRepository.findFirstById(criteriaId)
     }
 
     fun findAllStudentReviewsInWorkshop(studentId: String, workshopId: String): List<Review> {
         return reviewRepository.findByWorkshopAndStudentAndDeadlineGreaterThanEqual(workshopId, studentId, LocalDateTime.now())
+    }
+
+    fun findAllReviewsOlderThat(deadline: LocalDateTime): List<Review> {
+        return reviewRepository.findByDeadlineLessThanEqual(deadline)
     }
 
 

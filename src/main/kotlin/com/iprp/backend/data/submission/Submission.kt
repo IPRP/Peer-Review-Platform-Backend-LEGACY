@@ -21,9 +21,9 @@ class Submission(
     val student: String, // Student
     // "assigned"
     val reviews: MutableList<String>, // Review
-    val reviewsDone: Boolean,
-    val pointsMean: Int?,
-    val maxPoints: Int?,
+    var reviewsDone: Boolean,
+    var pointsMean: Int?,
+    var maxPoints: Int?,
 ) {
     @Id
     lateinit var id: String
