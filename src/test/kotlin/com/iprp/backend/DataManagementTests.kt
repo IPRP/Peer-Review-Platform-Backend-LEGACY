@@ -368,6 +368,80 @@ class DataManagementTests {
         assertEquals(listOf<Map<*,*>>(), response["attachments"])
     }
 
+    @Test
+    fun updateSubmission() {
+        dm.addStudent("s1", "Max", "Mustermann", "3A")
+        dm.addStudent("s2", "Max", "Mustermann", "3A")
+        dm.addTeacher("t1", "John", "Doe")
+        val workshopId = dm.addWorkshop(
+            listOf("t1"), listOf("s1", "s2"), "workshop", "my workshop", true, LocalDateTime.now(),
+            listOf(mapOf("name" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
+        )["id"] as String
+        val submissionId = dm.addSubmissionToWorkshop(
+            "s1", workshopId, "S1 submission", "Very Good", listOf()
+        )["id"] as String
+
+        dm.updateSubmission(
+            "s1", submissionId, "S1 submission (Final)", "Very Good V2", listOf(mapOf("id" to "a", "title" to "a"))
+        )
+        val response = dm.getSubmissionStudent("s1", submissionId)
+
+        assertEquals("S1 submission (Final)", response["title"])
+        assertEquals("Very Good V2", response["comment"])
+        assertEquals(listOf(mapOf("id" to "a", "title" to "a")), response["attachments"])
+        assertEquals(false, response["locked"])
+        assertNotNull(response["date"])
+        assertEquals(false, response["reviewsDone"])
+    }
+
+    @Test
+    fun updateReview() {
+        dm.addStudent("s1", "Max", "Mustermann", "3A")
+        dm.addStudent("s2", "Max", "Mustermann", "3A")
+        dm.addTeacher("t1", "John", "Doe")
+        val workshopId = dm.addWorkshop(
+            listOf("t1"), listOf("s1", "s2"), "workshop", "my workshop", true, LocalDateTime.now(),
+            listOf(mapOf("name" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
+        )["id"] as String
+        dm.addSubmissionToWorkshop(
+            "s1", workshopId, "S1 submission", "Very Good", listOf()
+        )
+        val reviewId
+            = ((dm.getStudentTodos("s2")["reviews"] as List<*>).first() as Map<*,*>)["id"] as String
+
+        dm.updateReview("s2", reviewId, "Great!", listOf(1))
+        val review = reviewRepo.findFirstById(reviewId)!!
+
+        assertNotNull(review)
+        assertTrue(review.done)
+        assertEquals("Great!", review.feedback)
+        assertEquals(listOf(1), review.points)
+    }
+
+    @Test
+    fun updateReviewAndCheckTODOs() {
+        dm.addStudent("s1", "Max", "Mustermann", "3A")
+        dm.addStudent("s2", "Max", "Mustermann", "3A")
+        dm.addTeacher("t1", "John", "Doe")
+        val workshopId = dm.addWorkshop(
+            listOf("t1"), listOf("s1", "s2"), "workshop", "my workshop", true, LocalDateTime.now(),
+            listOf(mapOf("name" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
+        )["id"] as String
+        dm.addSubmissionToWorkshop(
+            "s1", workshopId, "S1 submission", "Very Good", listOf()
+        )
+        val reviewId
+            = ((dm.getStudentTodos("s2")["reviews"] as List<*>).first() as Map<*,*>)["id"] as String
+
+        dm.updateReview("s2", reviewId, "Great!", listOf(1))
+
+        val response = dm.getStudentTodos("s2")
+
+        assertNotNull(response)
+        assertEquals(1, (response["reviews"] as List<*>).size)
+        assertTrue(((response["reviews"] as List<*>).first() as Map<*, *>)["done"] as Boolean)
+    }
+
 
 
 

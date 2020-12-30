@@ -2,21 +2,12 @@ package com.iprp.backend.repos
 
 import com.iprp.backend.attachments.Attachment
 import com.iprp.backend.data.Workshop
-import com.iprp.backend.data.grade.Grade
-import com.iprp.backend.data.grade.GradeCollection
 import com.iprp.backend.data.review.Review
 import com.iprp.backend.data.review.ReviewCriteria
 import com.iprp.backend.data.submission.Submission
-import com.iprp.backend.data.submission.SubmissionRound
 import com.iprp.backend.data.user.Person
 import com.iprp.backend.data.user.Student
 import com.iprp.backend.data.user.Teacher
-import org.bson.types.ObjectId
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.mongodb.core.MongoTemplate
-import org.springframework.data.mongodb.core.find
-import org.springframework.data.mongodb.core.query.Criteria
-import org.springframework.data.mongodb.core.query.Query
 import org.springframework.data.mongodb.repository.MongoRepository
 import java.time.LocalDateTime
 
@@ -69,12 +60,6 @@ interface SubmissionRepository : MongoRepository<Submission, String> {
     fun findFirstByAttachmentsContaining(attachments: MutableList<Attachment>): Submission?
 }
 
-interface SubmissionRoundRepository : MongoRepository<SubmissionRound, String> {
-    fun deleteByWorkshop(workshop_id: String)
-    fun findByIdIn(ids: List<String>): List<SubmissionRound>
-    fun findFirstById(id: String): SubmissionRound?
-    fun findFirstBySubmissionsContainsAndWorkshop(submission_id: String, workshop_id: String): SubmissionRound?
-}
 
 
 
@@ -89,18 +74,3 @@ interface ReviewRepository : MongoRepository<Review, String> {
 interface ReviewCriteriaRepository : MongoRepository<ReviewCriteria, String> {
     fun findFirstById(id: String): ReviewCriteria?
 }
-
-
-interface GradeCollectionRepository : MongoRepository<GradeCollection, String> {
-    fun findByStudentAndWorkshop(student_id: String, workshop_id: String): GradeCollection?
-    fun findByIdInAndWorkshop(ids: List<String>, workshop_id: String): List<GradeCollection>
-    fun deleteByWorkshop(workshop_id: String)
-    fun deleteByStudentAndWorkshop(student_id: String, workshop_id: String)
-}
-
-interface GradeRepository : MongoRepository<Grade, String> {
-    fun findByStudentAndWorkshop(student_id: String, workshop_id: String): List<Grade>
-    fun deleteByWorkshop(workshop_id: String)
-    fun deleteByStudentAndWorkshop(student_id: String, workshop_id: String)
-}
-

@@ -270,7 +270,7 @@ class DataManagement {
                         reviews.add(mapOf(
                             "id" to review.id, "deadline" to review.deadline, "title" to submission.title,
                             "firstname" to student.firstname, "lastname" to student.lastname,
-                            "workshopName" to workshop.title
+                            "workshopName" to workshop.title, "done" to review.done
                         ))
                     }
                 }

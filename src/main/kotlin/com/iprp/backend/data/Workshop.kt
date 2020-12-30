@@ -1,6 +1,5 @@
 package com.iprp.backend.data
 
-import com.iprp.backend.data.submission.SubmissionRound
 import org.springframework.data.annotation.Id
 import java.time.LocalDateTime
 
