@@ -69,7 +69,7 @@ class DataManagementTests {
     }
 
     @Test
-    fun testSearch() {
+    fun search() {
         dm.addStudent("s1", "Max", "Mustermann", "3A")
         dm.addStudent("s2", "John", "Doe", "3A")
 
@@ -86,6 +86,22 @@ class DataManagementTests {
         assertEquals("John", s2["firstname"])
         assertEquals("Doe", s2["lastname"])
         assertEquals(listOf("s1", "s2"), ids["ids"])
+    }
+
+    @Test
+    fun check() {
+        dm.addStudent("s1", "Max", "Mustermann", "3A")
+        dm.addTeacher("t1", "John", "Doe")
+
+        val studentTrue = dm.isStudent("s1")
+        val studentFalse = dm.isStudent("t1")
+        val teacherTrue = dm.isTeacher("t1")
+        val teacherFalse = dm.isTeacher("s1")
+
+        assertTrue(studentTrue)
+        assertFalse(studentFalse)
+        assertTrue(teacherTrue)
+        assertFalse(teacherFalse)
     }
 
     @Test

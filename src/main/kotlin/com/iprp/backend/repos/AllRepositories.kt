@@ -35,6 +35,7 @@ interface StudentRepository : MongoRepository<Student, String> {
 
 interface TeacherRepository : MongoRepository<Teacher, String> {
     fun findByIdIn(ids: List<String>): List<Teacher>
+    fun findFirstById(id: String): Teacher?
 }
 
 

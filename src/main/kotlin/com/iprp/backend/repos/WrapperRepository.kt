@@ -70,6 +70,15 @@ class WrapperRepository {
         return studentRepository.findByGroup(group)
     }
 
+    fun isStudent(id: String): Boolean {
+        val student = studentRepository.findFirstById(id)
+        return student != null
+    }
+
+    fun isTeacher(id: String): Boolean {
+        val teacher = teacherRepository.findFirstById(id)
+        return teacher != null
+    }
 
     /**
      * Workshop

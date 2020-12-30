@@ -609,4 +609,16 @@ class DataManagement {
     fun addTeacher(id: String, firstname: String, lastname: String) {
         repo.savePerson(Teacher(id, firstname, lastname))
     }
+
+    /**
+     * Check ids
+     */
+
+    fun isStudent(id: String): Boolean {
+        return repo.isStudent(id)
+    }
+
+    fun isTeacher(id: String): Boolean {
+        return repo.isTeacher(id)
+    }
 }
