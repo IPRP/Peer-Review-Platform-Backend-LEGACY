@@ -60,6 +60,7 @@ interface WorkshopRepository : MongoRepository<Workshop, String> {
 interface SubmissionRepository : MongoRepository<Submission, String> {
     fun deleteByWorkshop(workshop_id: String)
     fun findFirstById(id: String): Submission?
+    fun findFirstByIdAndWorkshop(id: String, workshop_id: String): Submission?
     fun findByIdIn(ids: List<String>): List<Submission>
     fun deleteByStudentAndWorkshop(student_id: String, workshop_id: String)
     fun findByStudentAndWorkshop(student_id: String, workshop_id: String): List<Submission>
@@ -81,7 +82,8 @@ interface ReviewRepository : MongoRepository<Review, String> {
     fun findFirstById(review_id: String): Review?
     fun findByStudent(student_id: String): List<Review>
     fun deleteByWorkshop(workshop_id: String)
-    fun findByWorkshopAndStudentAndDeadlineGreaterThan(workshop: String, student: String, deadline: LocalDateTime): List<Review>
+    fun findByWorkshopAndStudentAndDeadlineGreaterThanEqual(workshop: String, student: String, deadline: LocalDateTime): List<Review>
+    fun findByWorkshopAndStudentAndDeadlineLessThanEqual(workshop: String, student: String, deadline: LocalDateTime): List<Review>
 }
 
 interface ReviewCriteriaRepository : MongoRepository<ReviewCriteria, String> {

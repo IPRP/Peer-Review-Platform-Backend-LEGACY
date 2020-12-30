@@ -239,5 +239,41 @@ class DataManagementTests {
         assertEquals("workshop", ((response["submissions"] as List<*>).first() as Map<*, *>)["workshopName"])
     }
 
+    @Test
+    fun addSubmissionToWorkshop() {
+        dm.addStudent("s1", "Max", "Mustermann", "3A")
+        dm.addStudent("s2", "Max", "Mustermann", "3A")
+        dm.addTeacher("t1", "John", "Doe")
+        val id = dm.addWorkshop(
+            listOf("t1"), listOf("s1", "s2"), "workshop", "my workshop", true, LocalDateTime.now(),
+            listOf(mapOf("name" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
+        )["id"] as String
+
+        dm.addSubmissionToWorkshop("s1", id, "S1 submission", "Very Good", listOf())
+        val submissions = submissionRepo.findAll()
+        val reviews = reviewRepo.findAll()
+
+        assertEquals(1, submissions.size)
+        assertEquals(1, reviews.size)
+    }
+
+    @Test
+    fun addSubmissionToWorkshopAndTestStudentTODO() {
+        dm.addStudent("s1", "Max", "Mustermann", "3A")
+        dm.addStudent("s2", "Max", "Mustermann", "3A")
+        dm.addTeacher("t1", "John", "Doe")
+        val id = dm.addWorkshop(
+            listOf("t1"), listOf("s1", "s2"), "workshop", "my workshop", true, LocalDateTime.now(),
+            listOf(mapOf("name" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
+        )["id"] as String
+
+        dm.addSubmissionToWorkshop("s1", id, "S1 submission", "Very Good", listOf())
+        val review = reviewRepo.findAll().first()!!
+        val response = dm.getStudentTodos("s2")
+        val todoReview = ((response["reviews"] as List<*>).first() as Map<*, *>)
+
+        assertEquals(review.id, todoReview["id"])
+    }
+
 
 }

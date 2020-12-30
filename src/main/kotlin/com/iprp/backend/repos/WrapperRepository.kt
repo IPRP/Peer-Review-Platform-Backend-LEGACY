@@ -161,6 +161,10 @@ class WrapperRepository {
         return submissionRepository.findFirstByIdAndStudentAndWorkshop(submissionId, studentId, workshopId)
     }
 
+    fun findSubmissionByIdAndWorkshop(submissionId: String, workshopId: String): Submission? {
+        return submissionRepository.findFirstByIdAndWorkshop(submissionId, workshopId)
+    }
+
     fun findSubmissionByAttachment(attachment: Attachment): Submission? {
         return submissionRepository.findFirstByAttachmentsContaining(listOf(attachment) as MutableList<Attachment>)
     }
@@ -191,7 +195,7 @@ class WrapperRepository {
     }
 
     fun findAllStudentReviewsInWorkshop(studentId: String, workshopId: String): List<Review> {
-        return reviewRepository.findByWorkshopAndStudentAndDeadlineGreaterThan(studentId, workshopId, LocalDateTime.now())
+        return reviewRepository.findByWorkshopAndStudentAndDeadlineGreaterThanEqual(workshopId, studentId, LocalDateTime.now())
     }
 
     /**

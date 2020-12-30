@@ -263,8 +263,7 @@ class DataManagement {
 
             for (workshop in workshops) {
                 repo.findAllStudentReviewsInWorkshop(studentId, workshop.id).forEach { review ->
-                    val submission = repo.findSubmissionByIdAndStudentInWorkshop(
-                        review.submission, review.student, workshop.id)
+                    val submission = repo.findSubmissionByIdAndWorkshop(review.submission, workshop.id)
                     val student = repo.findStudent(review.student)
                     if (submission != null && student != null) {
                         reviews.add(mapOf(
