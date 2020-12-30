@@ -10,6 +10,7 @@ import com.iprp.backend.data.user.Student
 import com.iprp.backend.data.user.Teacher
 import com.iprp.backend.repos.WrapperRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
 import java.io.InputStream
@@ -346,12 +347,12 @@ class DataManagement {
                 attachments.add(mapOf("id" to attachment.id, "title" to attachment.title))
             }
             mapOf(
-                "ok" to true, "title" to submission.title, "attachments" to attachments
+                "ok" to true, "title" to submission.title, "comment" to submission.commment, "attachments" to attachments
             )
         }
     }
 
-    fun getSubmissionTeacher(teacherId: String, submissionId: String): Map<String, Any> {
+    fun getSubmissionTeacher(submissionId: String): Map<String, Any> {
         val submission = repo.findSubmission(submissionId) ?: return mapOf("ok" to false)
         // Return response through helper method
         return getSubmissionInternal(submission, studentMode = false)
@@ -364,7 +365,7 @@ class DataManagement {
         }
 
         val response = mutableMapOf(
-            "ok" to true, "title" to submission.title, "attachments" to attachments,
+            "ok" to true, "title" to submission.title, "comment" to submission.commment, "attachments" to attachments,
             "locked" to submission.locked, "date" to submission.date, "reviewsDone" to submission.reviewsDone
         )
 
@@ -467,20 +468,25 @@ class DataManagement {
         return null
     }
 
-    fun removeAttachment(attachmentId: String) {
-        // Update a submission if this attachment was part of it
-        val handler = attService.downloadAttachment(attachmentId)
-        if (handler.ok) {
-            val attachment = Attachment(attachmentId, handler.title())
-            val submission = repo.findSubmissionByAttachment(attachment)
-            if (submission != null) {
-                submission.attachments = submission.attachments.filter { it.id == attachmentId } as MutableList<Attachment>
-                repo.saveSubmission(submission)
+    fun removeAttachment(attachmentId: String): Map<String, Any> {
+        try {
+            // Update a submission if this attachment was part of it
+            val handler = attService.downloadAttachment(attachmentId)
+            if (handler.ok) {
+                val attachment = Attachment(attachmentId, handler.title())
+                val submission = repo.findSubmissionByAttachment(attachment)
+                if (submission != null) {
+                    submission.attachments =
+                        submission.attachments.filter { it.id == attachmentId } as MutableList<Attachment>
+                    repo.saveSubmission(submission)
+                }
+                handler.stream?.close()
             }
-            handler.stream?.close()
-        }
-        // Remove attachment
-        attService.removeAttachment(attachmentId)
+            // Remove attachment
+            attService.removeAttachment(attachmentId)
+            return mapOf("ok" to true)
+        } catch (ex: Exception) {}
+        return mapOf("ok" to false)
     }
 
     //================================================================================
@@ -491,10 +497,17 @@ class DataManagement {
 
     // Scheduled task
     // See: https://spring.io/guides/gs/scheduling-tasks/
-    /**@Scheduled(fixedRate = 50000)
-    private fun schedule() {
+    // And: https://www.baeldung.com/cron-expressions
+    // And: https://stackoverflow.com/a/57426242/12347616
+    @Scheduled(cron = "0 5 0 * * ?") // Runs every day five minutes after midnight
+    private fun closeReviews() {
+        // TODO
         println("hi!")
-    }*/
+    }
+
+    fun closeReviewsInternal(currentTime: LocalDateTime) {
+
+    }
 
     private fun calculateReviewDeadline(submissionDate: LocalDateTime): LocalDateTime {
         // Get Midnight of given submission
@@ -525,7 +538,7 @@ class DataManagement {
                 // Get three reviews at max
                 val reviews = mutableListOf<String>()
                 val reviewCount = if (students.size >= 3) 3 else students.size
-                for (i in 0..reviewCount) {
+                for (i in 0 until reviewCount) {
                     // Get random student
                     // See: https://stackoverflow.com/a/45687695/12347616
                     val reviewer = students.random()
