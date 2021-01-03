@@ -109,6 +109,46 @@ class DataManagement {
         } catch (ex: Exception) {}
         return mapOf("ok" to false)
     }
+    /**
+     * Get a specific workshop from a teacher's perspective. ALS WORKSHOP
+     * @author Georg Reisinger
+     */
+    fun getTeacherWorkshopNeu(workshopId: String): Workshop? {
+        try {
+            val workshop = repo.findWorkshop(workshopId)
+            if (workshop != null) {
+                val teachers = mutableListOf<Map<String, String>>()
+                repo.findAllTeachersByIdIn(workshop.teachers).forEach { teacher ->
+                    teachers.add(
+                        mapOf("id" to teacher.id, "firstname" to teacher.firstname, "lastname" to teacher.lastname)
+                    )
+                }
+
+                val students = mutableListOf<Map<String, Any>>()
+                repo.findAllStudentsByIdIn(workshop.students).forEach { student ->
+                    val submissions = mutableListOf<Map<String, Any>>()
+                    repo.findAllStudentSubmissionsInWorkshop(student.id, workshopId).forEach { submission ->
+                        val s = mutableMapOf<String, Any>("id" to submission.id,
+                            "date" to submission.date, "title" to submission.title, "reviewsDone" to submission.reviewsDone)
+                        if (submission.reviewsDone) {
+                            s["points"] = submission.pointsMean ?: 0
+                            s["maxPoints"] = submission.maxPoints ?: 0
+                        }
+                        submissions.add(s)
+                    }
+                    students.add(
+                        mapOf(
+                            "id" to student.id, "firstname" to student.firstname, "lastname" to student.lastname,
+                            "group" to student.group, "submissions" to submissions
+                        )
+                    )
+                }
+
+                return workshop
+            }
+        } catch (ex: Exception) {}
+        return null
+    }
 
     /**
      * Add new Workshop. Should be only used by teachers.
@@ -133,6 +173,7 @@ class DataManagement {
             val id = repo.saveWorkshop(workshop).id
             return mapOf("ok" to true, "id" to id)
         } catch (ex: Exception) {
+            println(ex.printStackTrace())
             return mapOf("ok" to false)
         }
     }
@@ -183,6 +224,25 @@ class DataManagement {
         } catch (ex: Exception) {}
         return mapOf("ok" to false)
     }
+
+    /**
+     * Update existing Workshop. Should only be used by teachers.
+     */
+    fun updateWorkshopNEU(
+        workshopId: String, studentIds: List<String>,
+        title: String, content: String, end: LocalDateTime
+    ): Workshop? {
+            val workshop = repo.findWorkshop(workshopId)
+            if (workshop != null) {
+                workshop.title = title
+                workshop.content = content
+                workshop.end = end
+
+                return repo.saveWorkshop(workshop)
+                }else {
+                return null
+            }
+            }
 
     fun deleteWorkshop(workshopId: String): Map<String, Any> {
         return try {
@@ -351,6 +411,8 @@ class DataManagement {
             )
         }
     }
+
+
 
     fun getSubmissionTeacher(submissionId: String): Map<String, Any> {
         val submission = repo.findSubmission(submissionId) ?: return mapOf("ok" to false)
