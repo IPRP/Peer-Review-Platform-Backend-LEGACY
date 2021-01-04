@@ -173,7 +173,6 @@ class DataManagement {
             val id = repo.saveWorkshop(workshop).id
             return mapOf("ok" to true, "id" to id)
         } catch (ex: Exception) {
-            println(ex.printStackTrace())
             return mapOf("ok" to false)
         }
     }

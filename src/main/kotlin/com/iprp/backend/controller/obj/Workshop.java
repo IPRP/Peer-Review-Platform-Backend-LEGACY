@@ -34,6 +34,7 @@ public class Workshop {
         this.deadline = deadline;
         this.anonym = anonym;
         this.kriterien = kriterien;
+        System.out.println(kriterien.toArray().toString());
     }
 
     @JsonGetter
