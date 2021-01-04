@@ -32,6 +32,8 @@ open class AuthConfig : WebSecurityConfigurerAdapter() {
         // TODO add authentication again later on
         //http.authorizeRequests().anyRequest().authenticated()
         //        .and().httpBasic()
-        http.csrf().disable().cors().and().authorizeRequests().anyRequest().permitAll()
+        //http.csrf().disable().cors().and().authorizeRequests().anyRequest().permitAll()
+        http.csrf().disable().cors().and().authorizeRequests().anyRequest().authenticated().and().httpBasic()
+
     }
 }
