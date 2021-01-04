@@ -1,6 +1,7 @@
 package com.iprp.backend
 
 import com.iprp.backend.attachments.Attachment
+import com.iprp.backend.attachments.AttachmentHandler
 import com.iprp.backend.attachments.AttachmentService
 import com.iprp.backend.data.Workshop
 import com.iprp.backend.data.review.Review
@@ -9,7 +10,9 @@ import com.iprp.backend.data.submission.Submission
 import com.iprp.backend.data.user.Student
 import com.iprp.backend.data.user.Teacher
 import com.iprp.backend.repos.WrapperRepository
+import com.mongodb.client.gridfs.model.GridFSFile
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.mongodb.gridfs.GridFsResource
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
@@ -530,10 +533,10 @@ class DataManagement {
         return mapOf("ok" to false)
     }
 
-    fun downloadAttachment(attachmentId: String): InputStream? {
+    fun downloadAttachment(attachmentId: String): AttachmentHandler? {
         val handler = attService.downloadAttachment(attachmentId)
         if (handler.ok) {
-            return handler.stream
+            return handler
         }
         return null
     }

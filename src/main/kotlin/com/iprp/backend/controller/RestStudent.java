@@ -1,15 +1,24 @@
 package com.iprp.backend.controller;
 
 
+import com.iprp.backend.attachments.AttachmentHandler;
 import com.iprp.backend.controller.helper.JsonHelper;
 import com.iprp.backend.repos.WrapperRepository;
+import com.mongodb.client.gridfs.model.GridFSFile;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.data.mongodb.gridfs.GridFsResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -90,28 +99,31 @@ public class RestStudent {
     }
 
     @CrossOrigin(origins = "http://localhost:8081")
-    @PostMapping("/submission/upload/")
-    public Map<String, Object> addFile(@RequestParam("title") String title,
-                          @RequestParam("submissionId") String submissionId,
-                          @RequestParam("file") MultipartFile file){
+    @PostMapping("/submission/upload")
+    public Map<String, Object> addFile(
+            @RequestParam("title") String title, @RequestParam("file") MultipartFile file) {
         return dm.uploadAttachment(title, file);
     }
 
 
     @CrossOrigin(origins = "http://localhost:8081")
-    @DeleteMapping("/submission/remove/")
-    public Map<String, Object> delSub(@RequestBody String json){
-        Map<String, Object> map = JsonHelper.jsonPayloadToMap(json);
-        assert map != null;
-        return dm.removeAttachment(map.get("attId").toString());
+    @DeleteMapping("/submission/remove/{id}")
+    public Map<String, Object> delSub(@PathVariable String id){
+        return dm.removeAttachment(id);
     }
 
+
     @CrossOrigin(origins = "http://localhost:8081")
-    @GetMapping("/submission/download/")
-    public InputStream getAtt(@RequestBody String json){
-        Map<String, Object> map = JsonHelper.jsonPayloadToMap(json);
-        assert map != null;
-        return dm.downloadAttachment(map.get("attId").toString());
+    @GetMapping("/submission/download/{id}")
+    public ResponseEntity getAtt(@PathVariable String id) throws IOException {
+        // Download from GridFS
+        // See: https://stackoverflow.com/a/32397941/12347616
+        AttachmentHandler file = dm.downloadAttachment(id);
+        if (file == null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return ResponseEntity.ok()
+                .contentLength(file.getGridFsResource().contentLength())
+                .contentType(MediaType.parseMediaType(file.getContentType()))
+                .body(new InputStreamResource(file.getStream()));
     }
 
     @CrossOrigin(origins = "http://localhost:8081")

@@ -27,8 +27,9 @@ class AttachmentService {
     fun uploadAttachment(title: String, file: MultipartFile): AttachmentUpload {
         return try {
             val metaData = BasicDBObject()
-            metaData["type"] = "attachment"
+            //metaData["type"] = "attachment"
             metaData["title"] = title
+            metaData["contentType"] = file.contentType
             val id = gridFsTemplate.store(
                 file.inputStream, file.name, file.contentType, metaData
             )
@@ -41,12 +42,14 @@ class AttachmentService {
     fun downloadAttachment(id: String): AttachmentHandler {
         return try {
             val file = gridFsTemplate.findOne(Query(Criteria.where("_id").`is`(id)))
+            val resource = operations.getResource(file)
             AttachmentHandler(
-                true, file.metadata!!["title"].toString(), operations.getResource(file).inputStream
+                true, file.metadata!!["title"].toString(),file.metadata!!["contentType"].toString(),
+                resource.inputStream, resource,
             )
         } catch (ex: Exception) {
             AttachmentHandler(
-                false, null, null
+                false, null, null, null, null
             )
         }
     }
