@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -19,12 +20,15 @@ public class RestStudent {
     @Autowired
     private com.iprp.backend.DataManagement dm;
 
-
     @CrossOrigin(origins = "http://localhost:8081")
-    @GetMapping("/student/workshop")
-    public Map<String, Object> rest_get_student_workshop(@RequestBody String json){
-        Map<String, Object> map = JsonHelper.jsonPayloadToMap(json);
-        return dm.getStudentWorkshop(map.get("studentId").toString(), map.get("workshopId").toString());
+    @GetMapping(value = "/student/workshop/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Object> rest_get_student_workshop(
+            @PathVariable String id, Authentication authentication
+    ) {
+        if (id == null || authentication == null) {
+            return Collections.singletonMap("ok", false);
+        }
+        return dm.getStudentWorkshop(authentication.getName(), id);
     }
 
     @CrossOrigin(origins = "http://localhost:8081")
@@ -34,35 +38,56 @@ public class RestStudent {
     }
 
     @CrossOrigin(origins = "http://localhost:8081")
-    @GetMapping("/student/todos")
-    public Map<String, Object> rest_get_student_delivery(@RequestBody String json){
-        Map<String, Object> map = JsonHelper.jsonPayloadToMap(json);
-        assert map != null;
-        return dm.getStudentTodos(map.get("studentId").toString());
-    }
-    @CrossOrigin(origins = "http://localhost:8081")
-    @PostMapping("/submission")
-    public Map<String, Object> rest_addsumbmission(@RequestBody String json){
-        Map<String, Object> map = JsonHelper.jsonPayloadToMap(json);
-        assert map != null;
-        return dm.addSubmissionToWorkshop(map.get("studentId").toString(),map.get("workshopId").toString(), map.get("title").toString(), map.get("comment").toString(), (List<? extends Map<String, String>>) map.get("attatchments"));
-    }
-    @CrossOrigin(origins = "http://localhost:8081")
-    @GetMapping("/submission")
-    public Map<String, Object> rest_submissionsget(@RequestBody String json){
-        Map<String, Object> map = JsonHelper.jsonPayloadToMap(json);
-        assert map != null;
-        return dm.getSubmissionStudent(map.get("studentId").toString(), map.get("submissionId").toString());
+    @GetMapping(value = "/student/todos", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Object> rest_get_student_delivery(Authentication authentication){
+        if (authentication == null) {
+            return Collections.singletonMap("ok", false);
+        }
+        return dm.getStudentTodos(authentication.getName());
     }
 
-    /**
     @CrossOrigin(origins = "http://localhost:8081")
-    @PutMapping("/submission")
-    public Map<String, Object> putsubmission(@RequestBody String json){
-        Map<String, Object> map = JsonHelper.jsonPayloadToMap(json);
-        assert map != null;
-        return sdfgfg.updateSubmission(map.get("studentId").toString(), map.get("submissionId").toString(), map.get("title").toString(), map.get("comment").toString(), (List<? extends Map<String, String>>) map.get("attatchments")));
-    }*/
+    @PostMapping(value = "/submission/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Object> rest_addsumbmission(
+            Authentication authentication, @PathVariable String id, @RequestBody Map<String, Object> json
+    ){
+        if (authentication == null ||
+            !json.containsKey("title") || !json.containsKey("comment") || !json.containsKey("attachments")) {
+            return Collections.singletonMap("ok", false);
+        }
+
+        return dm.addSubmissionToWorkshop(authentication.getName(), id,
+                (String) json.get("title"), (String) json.get("comment"),
+                (List<? extends Map<String, String>>) json.get("attachments")
+        );
+
+    }
+
+    @CrossOrigin(origins = "http://localhost:8081")
+    @GetMapping(value = "/submission/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Object> rest_submissionsget(Authentication authentication, @PathVariable String id) {
+        if (authentication == null || id == null) {
+            return Collections.singletonMap("ok", false);
+        }
+        return dm.getSubmissionStudent(authentication.getName(), id);
+    }
+
+
+    @CrossOrigin(origins = "http://localhost:8081")
+    @PutMapping("/submission/{id}")
+    public Map<String, Object> putsubmission(
+            Authentication authentication, @PathVariable String id, @RequestBody Map<String, Object> json
+    ) {
+        if (authentication == null || id == null ||
+                !json.containsKey("title") || !json.containsKey("comment") || !json.containsKey("attachments")) {
+            return Collections.singletonMap("ok", false);
+        }
+
+        return dm.updateSubmission(authentication.getName(), id,
+                (String) json.get("title"), (String) json.get("comment"),
+                (List<? extends Map<String, String>>) json.get("attachments")
+        );
+    }
 
     @CrossOrigin(origins = "http://localhost:8081")
     @PostMapping("/submission/upload/")

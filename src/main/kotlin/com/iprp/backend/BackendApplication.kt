@@ -1,5 +1,6 @@
 package com.iprp.backend
 
+import com.iprp.backend.repos.WrapperRepository
 import com.iprp.backend.tools.MongoUtilities
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.CommandLineRunner
@@ -17,6 +18,9 @@ open class BackendApplication : CommandLineRunner {
     @Autowired
     lateinit var dm: DataManagement
 
+    @Autowired
+    lateinit var repo: WrapperRepository
+
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
@@ -30,6 +34,7 @@ open class BackendApplication : CommandLineRunner {
 
     override fun run(vararg args: String?) {
         if (args.contains("student")) {
+            repo.deleteAll()
             // Add student debug data
             dm.addStudent("s1", "Max", "Mustermann", "3A")
             dm.addStudent("s2", "Luke", "Skywalker", "3A")
@@ -38,11 +43,11 @@ open class BackendApplication : CommandLineRunner {
             dm.addTeacher("t1", "John", "Doe")
             dm.addTeacher("t2", "John", "Doe  II")
             dm.addWorkshop(
-                listOf("t1"), listOf("s1", "s2", "s3", "s4"), "workshop", "my workshop", true, LocalDateTime.now(),
+                listOf("t1"), listOf("s1", "s2", "s3", "s4"), "Workshop 1", "Great Workshop", true, LocalDateTime.now(),
                 listOf(mapOf("title" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
             )
             dm.addWorkshop(
-                listOf("t2"), listOf("s1", "s2"), "workshop", "my workshop", true, LocalDateTime.now(),
+                listOf("t2"), listOf("s1", "s2"), "Workshop 2", "Better Workshop", true, LocalDateTime.now(),
                 listOf(mapOf("title" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
             )
         }
