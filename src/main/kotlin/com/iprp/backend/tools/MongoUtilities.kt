@@ -4,7 +4,7 @@ import java.io.IOException
 
 
 /**
- *
+ * Utilities for MongoDB like automated start.
  *
  * @author Kacper Urbaniec
  * @version 2020-10-20

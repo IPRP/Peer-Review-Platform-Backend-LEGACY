@@ -31,7 +31,13 @@ class AuthProvider : AuthenticationProvider{
             val principal: UserDetails = User(name, password, grantedAuths)
             UsernamePasswordAuthenticationToken(principal, password, grantedAuths)
         } else {
-            null
+            // Allow following students
+            return if (name == "s1" || name == "s2" || name == "s3" || name == "s4") {
+                val grantedAuths: MutableList<GrantedAuthority> = ArrayList()
+                grantedAuths.add(SimpleGrantedAuthority("ROLE_USER"))
+                val principal: UserDetails = User(name, password, grantedAuths)
+                UsernamePasswordAuthenticationToken(principal, password, grantedAuths)
+            } else null
         }
     }
 

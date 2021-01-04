@@ -1,0 +1,479 @@
+{
+	"info": {
+		"_postman_id": "4ed19ee6-958d-41f6-81c9-a94148e84718",
+		"name": "IPRP",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get all workshops",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "s1",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/student/workshops",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"student",
+						"workshops"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get specific workshop (update id in path!!!)",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "s1",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/student/workshop/5ff33ed2e85a2e637438b9cb",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"student",
+						"workshop",
+						"5ff33ed2e85a2e637438b9cb"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Todos",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "s1",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/student/todos",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"student",
+						"todos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Submission (update workshop id in path!!!)",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "s1",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"a\", \"comment\": \"b\", \"attachments\": []\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/submission/5ff33ed2e85a2e637438b9cb",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"submission",
+						"5ff33ed2e85a2e637438b9cb"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Submission (update submissionid in path!!!)",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "s1",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/submission/5ff33ef2e85a2e637438b9ce",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"submission",
+						"5ff33ef2e85a2e637438b9ce"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Submission (update submission id in path!!!)",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "s1",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"toll\", \"comment\": \"super\", \"attachments\": []\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/submission/5ff33ef2e85a2e637438b9ce",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"submission",
+						"5ff33ef2e85a2e637438b9ce"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Upload Attachment (add file in form data !!!)",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "s1",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "test",
+							"type": "text"
+						},
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/C:/Arbeit/INN1/Peer-Review/Backend/src/test/kotlin/com/iprp/backend/Integration/Hi.txt"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/submission/upload",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"submission",
+						"upload"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Attachment (update attachment id)",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "s1",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/submission/download/5ff33efee85a2e637438b9d2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"submission",
+						"download",
+						"5ff33efee85a2e637438b9d2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Attachment (update attachment id)",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "s1",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/submission/remove/5ff33efee85a2e637438b9d2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"submission",
+						"remove",
+						"5ff33efee85a2e637438b9d2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update review (not tested...)",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "s1",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"feedback\": \"Very good!\", \"points\": [ 0 ]}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/review/abc",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"review",
+						"abc"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
