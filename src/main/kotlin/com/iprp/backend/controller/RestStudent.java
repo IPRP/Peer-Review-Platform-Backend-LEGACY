@@ -83,7 +83,7 @@ public class RestStudent {
 
 
     @CrossOrigin(origins = "http://localhost:8081")
-    @PutMapping("/submission/{id}")
+    @PutMapping(value = "/submission/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Map<String, Object> putsubmission(
             Authentication authentication, @PathVariable String id, @RequestBody Map<String, Object> json
     ) {
@@ -99,7 +99,7 @@ public class RestStudent {
     }
 
     @CrossOrigin(origins = "http://localhost:8081")
-    @PostMapping("/submission/upload")
+    @PostMapping(value = "/submission/upload", produces = MediaType.APPLICATION_JSON_VALUE)
     public Map<String, Object> addFile(
             @RequestParam("title") String title, @RequestParam("file") MultipartFile file) {
         return dm.uploadAttachment(title, file);
@@ -107,7 +107,7 @@ public class RestStudent {
 
 
     @CrossOrigin(origins = "http://localhost:8081")
-    @DeleteMapping("/submission/remove/{id}")
+    @DeleteMapping(value = "/submission/remove/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Map<String, Object> delSub(@PathVariable String id){
         return dm.removeAttachment(id);
     }
@@ -127,10 +127,17 @@ public class RestStudent {
     }
 
     @CrossOrigin(origins = "http://localhost:8081")
-    @PutMapping("/review")
-    public Map<String, Object> putReview(@RequestBody String json,  @RequestParam("points") List<Integer> points){
-        Map<String, Object> map = JsonHelper.jsonPayloadToMap(json);
-        assert map != null;
-        return dm.updateReview(map.get("studentId").toString(),map.get("id").toString(),map.get("feedback").toString(), points);
+    @PutMapping(value = "/review/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Object> putReview(
+            @PathVariable String id, Authentication authentication, @RequestBody Map<String, Object> json
+    ){
+        if (authentication == null || id == null || json == null ||
+            !json.containsKey("feedback") || !json.containsKey("points")) {
+            return Collections.singletonMap("ok", false);
+        }
+
+        return dm.updateReview(
+            authentication.getName(), id, (String) json.get("feedback"), (List<Integer>) json.get("points")
+        );
     }
 }

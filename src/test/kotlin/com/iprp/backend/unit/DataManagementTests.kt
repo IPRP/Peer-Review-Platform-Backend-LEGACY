@@ -1,5 +1,6 @@
-package com.iprp.backend
+package com.iprp.backend.unit
 
+import com.iprp.backend.DataManagement
 import com.iprp.backend.data.review.ReviewCriterionType
 import com.iprp.backend.repos.*
 import org.assertj.core.api.Assertions.assertThat
