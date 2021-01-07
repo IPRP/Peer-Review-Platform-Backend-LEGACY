@@ -36,27 +36,27 @@ public class RestTeacher {
     @Autowired
     private WrapperRepository repo;
 
-    private void initNewTestData(){
-        this.members = new ArrayList<>();
-        this.submissions = new ArrayList<DoneOpenSubmissions>();
-        this.reviews = new ArrayList<DoneOpenReviews>();
-        this.subOpen = new ArrayList<SubmissionID>();
-        this.revOpen = new ArrayList<ReviewID>();
-        this.revDone = new ArrayList<ReviewID>();
-        this.subDone = new ArrayList<SubmissionID>();
-        this.workshops = new ArrayList<Workshop>();
-        this.kriterien = new ArrayList<Kriterium>();
-        this.kriterien.add(new Kriterium(1, "Kriterium 1 Ja Nein", "Beschreibung 1", true, -1, -1));
-        this.kriterien.add(new Kriterium(2, "Kriterium 2 Punkte", "Beschreibung 2", false, -1, 100));
-        this.kriterien.add(new Kriterium(3, "Kriterium 3 Prozent", "Beschreibung 3", false, -1, 100));
-        this.members.add("Lukas");
-        this.members.add("Georg");
-        this.submissions.add(new DoneOpenSubmissions(subDone, subOpen));
-        this.reviews.add(new DoneOpenReviews(revDone, revOpen));
-        this.workshop = new Workshop("1","Workshop Name 1", "Beschreibung 1", "11-11-2020 11:11", false, this.members, this.submissions, this.reviews, this.kriterien);
-        this.workshops.add(this.workshop);
-        this.workshops.add(new Workshop("2","Workshop Name 2", "Beschreibung 2", "12-12-2020 12:12", false, this.members, this.submissions, this.reviews, this.kriterien));
-    }
+//    private void initNewTestData(){
+//        this.members = new ArrayList<>();
+//        this.submissions = new ArrayList<DoneOpenSubmissions>();
+//        this.reviews = new ArrayList<DoneOpenReviews>();
+//        this.subOpen = new ArrayList<SubmissionID>();
+//        this.revOpen = new ArrayList<ReviewID>();
+//        this.revDone = new ArrayList<ReviewID>();
+//        this.subDone = new ArrayList<SubmissionID>();
+//        this.workshops = new ArrayList<Workshop>();
+//        this.kriterien = new ArrayList<Kriterium>();
+//        this.kriterien.add(new Kriterium(1, "Kriterium 1 Ja Nein", "Beschreibung 1", true, -1, -1));
+//        this.kriterien.add(new Kriterium(2, "Kriterium 2 Punkte", "Beschreibung 2", false, -1, 100));
+//        this.kriterien.add(new Kriterium(3, "Kriterium 3 Prozent", "Beschreibung 3", false, -1, 100));
+//        this.members.add("Lukas");
+//        this.members.add("Georg");
+//        this.submissions.add(new DoneOpenSubmissions(subDone, subOpen));
+//        this.reviews.add(new DoneOpenReviews(revDone, revOpen));
+//        this.workshop = new Workshop("1","Workshop Name 1", "Beschreibung 1", "11-11-2020 11:11", false, this.members, this.submissions, this.reviews, this.kriterien);
+//        this.workshops.add(this.workshop);
+//        this.workshops.add(new Workshop("2","Workshop Name 2", "Beschreibung 2", "12-12-2020 12:12", false, this.members, this.submissions, this.reviews, this.kriterien));
+//    }
 
     @CrossOrigin(origins = "http://localhost:8081/")
     @DeleteMapping("/del/all")

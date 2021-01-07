@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 @JsonAutoDetect
 public class Workshop {
@@ -34,7 +35,20 @@ public class Workshop {
         this.deadline = deadline;
         this.anonym = anonym;
         this.kriterien = kriterien;
-        System.out.println(kriterien.toArray().toString());
+        System.out.println(Arrays.toString(kriterien.toArray()));
+    }
+    
+    public Workshop(@JsonProperty("id") String id, @JsonProperty("title") String title,@JsonProperty("beschreibung") String beschreibung,@JsonProperty("deadline") String deadline,@JsonProperty("anonym") boolean anonym, @JsonProperty("members") ArrayList<String> members, @JsonProperty("kriterien") ArrayList<Kriterium> kriterien) {
+        this.title = title;
+        this.members = members;
+        this.submissions = new ArrayList<>();
+        this.reviews = new ArrayList<>();
+        this.id = id;
+        this.beschreibung = beschreibung;
+        this.deadline = deadline;
+        this.anonym = anonym;
+        this.kriterien = kriterien;
+        System.out.println(Arrays.toString(kriterien.toArray()));
     }
 
     @JsonGetter
