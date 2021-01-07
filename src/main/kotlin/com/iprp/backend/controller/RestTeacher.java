@@ -69,12 +69,12 @@ public class RestTeacher {
      * Editiert einen Workshop
      *
      */
-    @CrossOrigin(origins = "http://localhost:8081/")
+    @CrossOrigin(origins = "*")
     @PutMapping("/teacher/workshop")
     public String putteacherworkshop(@RequestBody String payload){
         Workshop listWorkshop;
         listWorkshop = new JsonHelper(payload).generateWorkshop();
-        System.out.println(listWorkshop.getTitle());
+        System.out.println(new JsonHelper(listWorkshop).generateJson());
         return datamanagement.updateWorkshopNEU(listWorkshop.getId(), listWorkshop.getMembers(), listWorkshop.getTitle(), listWorkshop.getBeschreibung(), LocalDateTime.now().plusDays(1)).toString();
     }
 
@@ -83,7 +83,7 @@ public class RestTeacher {
      * @return id des erstellten workshops
      *
      */
-    @CrossOrigin(origins = "http://localhost:8081/")
+    @CrossOrigin(origins = "*")
     @PostMapping(value="/teacher/workshop", produces = MediaType.APPLICATION_JSON_VALUE)
     public String postteacherworkshop(@RequestBody String json){
         //Erstellt user
@@ -115,7 +115,7 @@ public class RestTeacher {
             }
             ar.add(map);
         }
-
+        System.out.println(new JsonHelper(workshop).generateJson());
         Map<String, Object> map2 = datamanagement.addWorkshop(te, workshop.getMembers(), workshop.getTitle(), workshop.getBeschreibung(), false, LocalDateTime.now().plusDays(1), ar);
         System.out.println(map2.toString());
         return map2.toString();

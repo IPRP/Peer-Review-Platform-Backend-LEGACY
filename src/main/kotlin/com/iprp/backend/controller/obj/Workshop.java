@@ -37,7 +37,7 @@ public class Workshop {
         this.kriterien = kriterien;
         System.out.println(Arrays.toString(kriterien.toArray()));
     }
-    
+
     public Workshop(@JsonProperty("id") String id, @JsonProperty("title") String title,@JsonProperty("beschreibung") String beschreibung,@JsonProperty("deadline") String deadline,@JsonProperty("anonym") boolean anonym, @JsonProperty("members") ArrayList<String> members, @JsonProperty("kriterien") ArrayList<Kriterium> kriterien) {
         this.title = title;
         this.members = members;
