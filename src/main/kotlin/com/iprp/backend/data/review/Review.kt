@@ -1,6 +1,7 @@
 package com.iprp.backend.data.review
 
 import org.springframework.data.annotation.Id
+import java.math.BigDecimal
 import java.time.LocalDateTime
 
 /**
@@ -14,8 +15,8 @@ class Review(
     var done: Boolean,
     val deadline: LocalDateTime,
     var feedback: String,
-    val points: MutableList<Int>,
-    val maxPoints: Int,
+    val points: MutableList<BigDecimal>,
+    val maxPoints: BigDecimal,
     val criteria: String, // ReviewCriteria
 
     val student: String, // Student, "The Reviewer"

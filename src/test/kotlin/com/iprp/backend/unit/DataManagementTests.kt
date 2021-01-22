@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.mock.web.MockMultipartFile
+import java.math.BigDecimal
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
@@ -149,7 +150,7 @@ class DataManagementTests {
         assertTrue(updatedCriteria.criteria.first().title == "Criterion")
         assertTrue(updatedCriteria.criteria.first().type == ReviewCriterionType.TrueFalse)
         assertTrue(updatedCriteria.criteria.first().content == "abc2")
-        assertTrue(updatedCriteria.criteria.first().weight == 20)
+        assertTrue(updatedCriteria.criteria.first().weight.compareTo(BigDecimal(20)) == 0)
     }
 
     @Test
@@ -426,13 +427,13 @@ class DataManagementTests {
         val reviewId
             = ((dm.getStudentTodos("s2")["reviews"] as List<*>).first() as Map<*,*>)["id"] as String
 
-        dm.updateReview("s2", reviewId, "Great!", listOf(1))
+        dm.updateReview("s2", reviewId, "Great!", listOf(1.0))
         val review = reviewRepo.findFirstById(reviewId)!!
 
         assertNotNull(review)
         assertTrue(review.done)
         assertEquals("Great!", review.feedback)
-        assertEquals(listOf(1), review.points)
+        assertEquals(listOf(BigDecimal(1)), review.points)
     }
 
     @Test
@@ -450,7 +451,7 @@ class DataManagementTests {
         val reviewId
             = ((dm.getStudentTodos("s2")["reviews"] as List<*>).first() as Map<*,*>)["id"] as String
 
-        dm.updateReview("s2", reviewId, "Great!", listOf(1))
+        dm.updateReview("s2", reviewId, "Great!", listOf(1.0))
 
         val response = dm.getStudentTodos("s2")
 
@@ -473,7 +474,7 @@ class DataManagementTests {
         )["id"] as String
         val reviewId
             = ((dm.getStudentTodos("s2")["reviews"] as List<*>).first() as Map<*,*>)["id"] as String
-        dm.updateReview("s2", reviewId, "Great!", listOf(1))
+        dm.updateReview("s2", reviewId, "Great!", listOf(1.0))
 
         dm.closeReviews(LocalDateTime.now().plusMonths(1))
         val submission = submissionRepo.findFirstById(submissionId)!!
@@ -482,9 +483,8 @@ class DataManagementTests {
 
         assertTrue(submission.reviewsDone)
         assertTrue(review.done)
-        // TODO is this valid?
-        assertEquals(100, submission.maxPoints)
-        assertEquals(10, submission.pointsMean)
+        assertTrue(BigDecimal(100).compareTo(submission.maxPoints) == 0)
+        assertTrue(BigDecimal(10).compareTo(submission.pointsMean) == 0)
     }
 
     @Test
@@ -501,7 +501,7 @@ class DataManagementTests {
         )["id"] as String
         val reviewId
                 = ((dm.getStudentTodos("s2")["reviews"] as List<*>).first() as Map<*,*>)["id"] as String
-        dm.updateReview("s2", reviewId, "Great!", listOf(1))
+        dm.updateReview("s2", reviewId, "Great!", listOf(1.0))
 
         dm.closeReviews(LocalDateTime.now().plusMonths(1))
         val response = dm.getTeacherWorkshop(workshopId)
@@ -518,8 +518,8 @@ class DataManagementTests {
         assertEquals(1, (workshop["teachers"] as List<*>).size)
         assertEquals("S1 submission", submission["title"])
         assertTrue(submission["reviewsDone"] as Boolean)
-        assertEquals(100, submission["maxPoints"])
-        assertEquals(10, submission["points"])
+        assertTrue(BigDecimal(100).compareTo(submission["maxPoints"] as BigDecimal) == 0)
+        assertTrue(BigDecimal(10).compareTo(submission["points"] as BigDecimal) == 0)
     }
 
     @Test
@@ -536,7 +536,7 @@ class DataManagementTests {
         )["id"] as String
         val reviewId
                 = ((dm.getStudentTodos("s2")["reviews"] as List<*>).first() as Map<*,*>)["id"] as String
-        dm.updateReview("s2", reviewId, "Great!", listOf(1))
+        dm.updateReview("s2", reviewId, "Great!", listOf(1.0))
 
         dm.closeReviews(LocalDateTime.now().plusMonths(1))
         val response = dm.getStudentWorkshop("s1", workshopId)
@@ -553,8 +553,8 @@ class DataManagementTests {
         assertEquals(0, (workshop["reviews"] as List<*>).size)
         assertEquals("S1 submission", submission["title"])
         assertTrue(submission["reviewsDone"] as Boolean)
-        assertEquals(100, submission["maxPoints"])
-        assertEquals(10, submission["points"])
+        assertTrue(BigDecimal(100).compareTo(submission["maxPoints"] as BigDecimal) == 0)
+        assertTrue(BigDecimal(10).compareTo(submission["points"] as BigDecimal) == 0)
     }
 
 

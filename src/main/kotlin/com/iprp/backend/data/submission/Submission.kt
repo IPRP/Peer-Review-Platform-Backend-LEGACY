@@ -2,6 +2,7 @@ package com.iprp.backend.data.submission
 
 import com.iprp.backend.attachments.Attachment
 import org.springframework.data.annotation.Id
+import java.math.BigDecimal
 import java.time.LocalDateTime
 
 /**
@@ -22,8 +23,8 @@ class Submission(
     // "assigned"
     val reviews: MutableList<String>, // Review
     var reviewsDone: Boolean,
-    var pointsMean: Int?,
-    var maxPoints: Int?,
+    var pointsMean: BigDecimal?,
+    var maxPoints: BigDecimal?,
 ) {
     @Id
     lateinit var id: String
