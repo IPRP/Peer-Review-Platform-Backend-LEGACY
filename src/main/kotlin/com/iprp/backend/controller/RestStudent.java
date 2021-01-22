@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
@@ -100,22 +101,28 @@ public class RestStudent {
 
     @CrossOrigin(origins = "http://localhost:8081")
     @PostMapping(value = "/submission/upload", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Map<String, Object> addFile(
-            @RequestParam("title") String title, @RequestParam("file") MultipartFile file) {
-        return dm.uploadAttachment(title, file);
+    public Map<String, Object> addAttachment(
+        @RequestParam("title") String title, @RequestParam("file") MultipartFile file,
+        Authentication authentication
+    ) {
+        if (authentication != null)
+            return dm.uploadAttachment(authentication.getName(), title, file);
+        return Collections.singletonMap("ok", false);
     }
 
 
     @CrossOrigin(origins = "http://localhost:8081")
     @DeleteMapping(value = "/submission/remove/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Map<String, Object> delSub(@PathVariable String id){
-        return dm.removeAttachment(id);
+    public Map<String, Object> deleteAttachment(Authentication authentication, @PathVariable String id) {
+        if (authentication != null)
+            return dm.removeAttachment(authentication.getName(), id);
+        return Collections.singletonMap("ok", false);
     }
 
 
     @CrossOrigin(origins = "http://localhost:8081")
     @GetMapping("/submission/download/{id}")
-    public ResponseEntity getAtt(@PathVariable String id) throws IOException {
+    public ResponseEntity getAttachment(@PathVariable String id) throws IOException {
         // Download from GridFS
         // See: https://stackoverflow.com/a/32397941/12347616
         AttachmentHandler file = dm.downloadAttachment(id);
@@ -139,5 +146,12 @@ public class RestStudent {
         return dm.updateReview(
             authentication.getName(), id, (String) json.get("feedback"), (List<Double>) json.get("points")
         );
+    }
+
+    @CrossOrigin(origins = "http://localhost:8081")
+    @PostMapping(value = "/debug/close", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Object> debugCloseReviewsNow() {
+        dm.closeReviews(LocalDateTime.now().plusMonths(1));
+        return Collections.singletonMap("ok", true);
     }
 }

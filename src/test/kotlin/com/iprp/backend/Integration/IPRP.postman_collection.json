@@ -75,7 +75,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:8080/student/workshop/5ff33ed2e85a2e637438b9cb",
+					"raw": "http://localhost:8080/student/workshop/600ad509b772104dc62a6501",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -84,7 +84,7 @@
 					"path": [
 						"student",
 						"workshop",
-						"5ff33ed2e85a2e637438b9cb"
+						"600ad509b772104dc62a6501"
 					]
 				}
 			},
@@ -98,7 +98,7 @@
 					"basic": [
 						{
 							"key": "username",
-							"value": "s1",
+							"value": "s2",
 							"type": "string"
 						},
 						{
@@ -161,6 +161,57 @@
 				],
 				"body": {
 					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"a\", \"comment\": \"b\", \"attachments\": [{\"id\": \"600ad518b772104dc62a6504\", \"title\": \"Test\"}]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/submission/600ad509b772104dc62a6501",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"submission",
+						"600ad509b772104dc62a6501"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Submission (Without Attachment)",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "s1",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
 					"raw": "{\r\n    \"title\": \"a\", \"comment\": \"b\", \"attachments\": []\r\n}",
 					"options": {
 						"raw": {
@@ -169,7 +220,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/submission/5ff33ed2e85a2e637438b9cb",
+					"raw": "http://localhost:8080/submission/600ad30def4ceb09ca3cd8b2",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -177,7 +228,7 @@
 					"port": "8080",
 					"path": [
 						"submission",
-						"5ff33ed2e85a2e637438b9cb"
+						"600ad30def4ceb09ca3cd8b2"
 					]
 				}
 			},
@@ -211,7 +262,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:8080/submission/5ff33ef2e85a2e637438b9ce",
+					"raw": "http://localhost:8080/submission/600ad523b772104dc62a6506",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -219,7 +270,7 @@
 					"port": "8080",
 					"path": [
 						"submission",
-						"5ff33ef2e85a2e637438b9ce"
+						"600ad523b772104dc62a6506"
 					]
 				}
 			},
@@ -366,7 +417,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:8080/submission/download/5ff33efee85a2e637438b9d2",
+					"raw": "http://localhost:8080/submission/download/600ad1a74fe82a603bbb49ab",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -375,7 +426,7 @@
 					"path": [
 						"submission",
 						"download",
-						"5ff33efee85a2e637438b9d2"
+						"600ad1a74fe82a603bbb49ab"
 					]
 				}
 			},
@@ -409,7 +460,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:8080/submission/remove/5ff33efee85a2e637438b9d2",
+					"raw": "http://localhost:8080/submission/remove/600ad518b772104dc62a6504",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -418,21 +469,21 @@
 					"path": [
 						"submission",
 						"remove",
-						"5ff33efee85a2e637438b9d2"
+						"600ad518b772104dc62a6504"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Update review (not tested...)",
+			"name": "Update review",
 			"request": {
 				"auth": {
 					"type": "basic",
 					"basic": [
 						{
 							"key": "username",
-							"value": "s1",
+							"value": "s2",
 							"type": "string"
 						},
 						{
@@ -453,7 +504,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{ \"feedback\": \"Very good!\", \"points\": [ 0 ]}",
+					"raw": "{ \"feedback\": \"Very good!\", \"points\": [ 5.0 ]}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -461,7 +512,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/review/abc",
+					"raw": "http://localhost:8080/review/600aba413840721d9fba0318",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -469,7 +520,42 @@
 					"port": "8080",
 					"path": [
 						"review",
-						"abc"
+						"600aba413840721d9fba0318"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Close all reviews NOW",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "s1",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/debug/close",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"debug",
+						"close"
 					]
 				}
 			},

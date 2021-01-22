@@ -333,9 +333,10 @@ class DataManagement {
                     val student = repo.findStudent(review.student)
                     if (submission != null && student != null) {
                         reviews.add(mapOf(
-                            "id" to review.id, "deadline" to review.deadline, "title" to submission.title,
+                            "id" to review.id, "deadline" to review.deadline,
+                            "submission" to submission.id, "title" to submission.title,
                             "firstname" to student.firstname, "lastname" to student.lastname,
-                            "workshopName" to workshop.title, "done" to review.done
+                            "workshopName" to workshop.title, "done" to review.done,
                         ))
                     }
                 }
@@ -364,7 +365,7 @@ class DataManagement {
             val workshop = repo.findWorkshop(workshopId)
             if (workshop != null) {
                 if (!workshop.students.contains(studentId)) return mapOf("ok" to false)
-                if (repo.findAllStudentSubmissionsInWorkshop(studentId, workshopId).any { !it.locked })
+                if (repo.findAllStudentSubmissionsInWorkshop(studentId, workshopId).any { !it.reviewsDone })
                     return mapOf("ok" to false)
                 val attachmentsParsed = mutableListOf<Attachment>()
                 for (attachment in attachments) {
@@ -528,8 +529,8 @@ class DataManagement {
     // Attachments
     //================================================================================
 
-    fun uploadAttachment(title: String, file: MultipartFile): Map<String, Any> {
-        val attachmentUpload = attService.uploadAttachment(title, file)
+    fun uploadAttachment(personId: String, title: String, file: MultipartFile): Map<String, Any> {
+        val attachmentUpload = attService.uploadAttachment(personId, title, file)
         if (attachmentUpload.ok && attachmentUpload.attachment is Attachment) {
             val attachment = attachmentUpload.attachment
             return mapOf("ok" to true, "attachment" to mapOf("id" to attachment.id, "title" to attachment.title))
@@ -545,23 +546,25 @@ class DataManagement {
         return null
     }
 
-    fun removeAttachment(attachmentId: String): Map<String, Any> {
+    fun removeAttachment(personId: String, attachmentId: String): Map<String, Any> {
         try {
-            // Update a submission if this attachment was part of it
             val handler = attService.downloadAttachment(attachmentId)
-            if (handler.ok) {
+            // Check if its the attachments owner
+            if (handler.ok && handler.owner() == personId) {
                 val attachment = Attachment(attachmentId, handler.title())
+                // Update a submission if this attachment was part of it
                 val submission = repo.findSubmissionByAttachment(attachment)
                 if (submission != null) {
+
                     submission.attachments =
-                        submission.attachments.filter { it.id == attachmentId } as MutableList<Attachment>
+                        submission.attachments.filter { it.id != attachmentId } as MutableList<Attachment>
                     repo.saveSubmission(submission)
                 }
                 handler.stream?.close()
+                // Remove attachment
+                attService.removeAttachment(attachmentId)
+                return mapOf("ok" to true)
             }
-            // Remove attachment
-            attService.removeAttachment(attachmentId)
-            return mapOf("ok" to true)
         } catch (ex: Exception) {}
         return mapOf("ok" to false)
     }
@@ -622,6 +625,7 @@ class DataManagement {
                         submission.pointsMean = submission.pointsMean?.div(
                             BigDecimal(reviews.size).multiply(BigDecimal(criteria.criteria.size))
                         )
+                        submission.locked = true
                         submission.reviewsDone = true
                         repo.saveSubmission(submission)
                     } else {
@@ -632,6 +636,7 @@ class DataManagement {
                                 repo.saveReview(review)
                             }
                         }
+                        submission.locked = true
                         submission.reviewsDone = true
                         repo.saveSubmission(submission)
                     }

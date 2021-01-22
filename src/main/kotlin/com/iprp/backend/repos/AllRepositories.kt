@@ -59,6 +59,7 @@ interface SubmissionRepository : MongoRepository<Submission, String> {
     fun findFirstByIdAndStudentAndWorkshop(id: String, student: String, workshop: String): Submission?
     fun countByStudentAndWorkshop(student: String, workshop: String): Long
     fun findFirstByAttachmentsContaining(attachments: MutableList<Attachment>): Submission?
+    fun findFirstByAttachmentsId(attachments_id: String): Submission?
 }
 
 

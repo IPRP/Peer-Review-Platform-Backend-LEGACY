@@ -309,13 +309,13 @@ class DataManagementTests {
             "Hello, World!".toByteArray()
         )
 
-        val id = (dm.uploadAttachment("test", file)["attachment"] as Map<*, *>)["id"] as String
+        val id = (dm.uploadAttachment("s1","test", file)["attachment"] as Map<*, *>)["id"] as String
         assertNotNull(id)
 
         val stream = dm.downloadAttachment(id)
         assertNotNull(stream)
 
-        val isDeleted = dm.removeAttachment(id)["ok"] as Boolean
+        val isDeleted = dm.removeAttachment("s1", id)["ok"] as Boolean
         assertTrue(isDeleted)
     }
 
