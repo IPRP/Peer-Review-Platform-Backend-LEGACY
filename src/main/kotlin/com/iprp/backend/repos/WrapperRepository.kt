@@ -146,7 +146,8 @@ class WrapperRepository {
     }
 
     fun findSubmissionByAttachment(attachment: Attachment): Submission? {
-        return submissionRepository.findFirstByAttachmentsContaining(listOf(attachment) as MutableList<Attachment>)
+        return submissionRepository.findFirstByAttachmentsId(attachment.id)
+        //return submissionRepository.findFirstByAttachmentsContaining(listOf(attachment) as MutableList<Attachment>)
     }
 
     fun countStudentSubmissionsInWorkshop(studentId: String, workshopId: String): Long {

@@ -13,12 +13,18 @@ import java.io.InputStream
 class AttachmentHandler(
     val ok: Boolean,
     val title: String?,
+    val owner: String?,
     val contentType: String?,
     val stream: InputStream?,
     val gridFsResource: GridFsResource?
 ) {
     fun title(): String {
         if (ok && title is String) return title
+        throw InvalidInvocationException("Invoked on non ok AttachmentHandler")
+    }
+
+    fun owner(): String {
+        if (ok && owner is String) return owner
         throw InvalidInvocationException("Invoked on non ok AttachmentHandler")
     }
 

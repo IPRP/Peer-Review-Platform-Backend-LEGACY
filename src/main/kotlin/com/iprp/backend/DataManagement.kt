@@ -529,8 +529,8 @@ class DataManagement {
     // Attachments
     //================================================================================
 
-    fun uploadAttachment(title: String, file: MultipartFile): Map<String, Any> {
-        val attachmentUpload = attService.uploadAttachment(title, file)
+    fun uploadAttachment(personId: String, title: String, file: MultipartFile): Map<String, Any> {
+        val attachmentUpload = attService.uploadAttachment(personId, title, file)
         if (attachmentUpload.ok && attachmentUpload.attachment is Attachment) {
             val attachment = attachmentUpload.attachment
             return mapOf("ok" to true, "attachment" to mapOf("id" to attachment.id, "title" to attachment.title))
@@ -546,23 +546,25 @@ class DataManagement {
         return null
     }
 
-    fun removeAttachment(attachmentId: String): Map<String, Any> {
+    fun removeAttachment(personId: String, attachmentId: String): Map<String, Any> {
         try {
-            // Update a submission if this attachment was part of it
             val handler = attService.downloadAttachment(attachmentId)
-            if (handler.ok) {
+            // Check if its the attachments owner
+            if (handler.ok && handler.owner() == personId) {
                 val attachment = Attachment(attachmentId, handler.title())
+                // Update a submission if this attachment was part of it
                 val submission = repo.findSubmissionByAttachment(attachment)
                 if (submission != null) {
+
                     submission.attachments =
-                        submission.attachments.filter { it.id == attachmentId } as MutableList<Attachment>
+                        submission.attachments.filter { it.id != attachmentId } as MutableList<Attachment>
                     repo.saveSubmission(submission)
                 }
                 handler.stream?.close()
+                // Remove attachment
+                attService.removeAttachment(attachmentId)
+                return mapOf("ok" to true)
             }
-            // Remove attachment
-            attService.removeAttachment(attachmentId)
-            return mapOf("ok" to true)
         } catch (ex: Exception) {}
         return mapOf("ok" to false)
     }

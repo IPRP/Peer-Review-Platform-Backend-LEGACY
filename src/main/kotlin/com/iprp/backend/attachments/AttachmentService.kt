@@ -24,12 +24,12 @@ class AttachmentService {
     @Autowired
     private lateinit var operations: GridFsOperations
 
-    fun uploadAttachment(title: String, file: MultipartFile): AttachmentUpload {
+    fun uploadAttachment(personId: String, title: String, file: MultipartFile): AttachmentUpload {
         return try {
             val metaData = BasicDBObject()
-            //metaData["type"] = "attachment"
             metaData["title"] = title
             metaData["contentType"] = file.contentType
+            metaData["owner"] = personId
             val id = gridFsTemplate.store(
                 file.inputStream, file.name, file.contentType, metaData
             )
@@ -44,12 +44,14 @@ class AttachmentService {
             val file = gridFsTemplate.findOne(Query(Criteria.where("_id").`is`(id)))
             val resource = operations.getResource(file)
             AttachmentHandler(
-                true, file.metadata!!["title"].toString(),file.metadata!!["contentType"].toString(),
+                true, file.metadata!!["title"].toString(),
+                file.metadata!!["owner"].toString(),
+                file.metadata!!["contentType"].toString(),
                 resource.inputStream, resource,
             )
         } catch (ex: Exception) {
             AttachmentHandler(
-                false, null, null, null, null
+                false, null,null, null, null, null
             )
         }
     }
