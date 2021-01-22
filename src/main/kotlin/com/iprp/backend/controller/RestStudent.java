@@ -137,7 +137,7 @@ public class RestStudent {
         }
 
         return dm.updateReview(
-            authentication.getName(), id, (String) json.get("feedback"), (List<Integer>) json.get("points")
+            authentication.getName(), id, (String) json.get("feedback"), (List<Double>) json.get("points")
         );
     }
 }

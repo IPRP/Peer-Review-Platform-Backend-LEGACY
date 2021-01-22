@@ -1,6 +1,7 @@
 package com.iprp.backend.data.review
 
 import org.springframework.data.annotation.Id
+import java.math.BigDecimal
 
 /**
  *
@@ -15,9 +16,10 @@ class ReviewCriteria(
     lateinit var id: String
         private set
 
-    fun maxPoints(): Int {
-        var maxPoints = 0
-        criteria.forEach { criterion -> maxPoints += criterion.weight * 10 }
+    fun maxPoints(): BigDecimal {
+        var maxPoints = BigDecimal(0)
+        val pointRange = BigDecimal(10)
+        criteria.forEach { criterion -> maxPoints += criterion.weight * pointRange }
         return maxPoints
     }
 
@@ -31,7 +33,7 @@ class ReviewCriteria(
                     val title = criterion["title"] ?: ""
                     val content = criterion["content"] ?: ""
                     val check = (criterion["type"] ?: "").toLowerCase()
-                    val weight = (criterion["weight"] ?: "").toIntOrNull() ?: continue
+                    val weight = BigDecimal(criterion["weight"] ?: "1")
                     var type: ReviewCriterionType? = null
                     when(check) {
                         "point"         -> type = ReviewCriterionType.Point
@@ -52,7 +54,12 @@ class ReviewCriteria(
 
 // "weight" is in fact a float, but for consistency it is stored as a integer
 // to get the "true" value divide through 10.0
-data class ReviewCriterionTuple(var type: ReviewCriterionType, var title: String, var content: String, var weight: Int)
+data class ReviewCriterionTuple(
+    var type: ReviewCriterionType,
+    var title: String,
+    var content: String,
+    var weight: BigDecimal
+)
 
 enum class ReviewCriterionType {
     Point,      // 1 - 10

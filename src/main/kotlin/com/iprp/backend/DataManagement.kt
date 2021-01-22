@@ -17,6 +17,7 @@ import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
 import java.io.InputStream
+import java.math.BigDecimal
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.util.*
@@ -500,16 +501,18 @@ class DataManagement {
     //================================================================================
 
     fun updateReview(
-        studentId: String, reviewId: String, feedback: String, points: List<Int>
+        studentId: String, reviewId: String, feedback: String, points: List<Double>
     ): Map<String, Any> {
         val review = repo.findReview(reviewId)
         if (review == null || review.student != studentId) return mapOf("ok" to false)
         // Do not allow reviews after deadline...
         if (review.deadline >= LocalDateTime.now()) {
+            // Point conversion double to BigDecimal
+            val decimalPoints = points.map { BigDecimal(it) }.toList()
             if (!review.done) review.done = true
             review.feedback = feedback
             review.points.clear()
-            review.points.addAll(points)
+            review.points.addAll(decimalPoints)
             repo.saveReview(review)
             return mapOf("ok" to true)
         }
@@ -596,8 +599,8 @@ class DataManagement {
                     if (criteria != null) {
                         // Calculate points and default state to "done"
                         submission.maxPoints = criteria.maxPoints()
-                        submission.pointsMean = 0
-                        val weights = mutableListOf<Int>()
+                        submission.pointsMean = BigDecimal.ZERO
+                        val weights = mutableListOf<BigDecimal>()
                         for (criterion in criteria.criteria) weights.add(criterion.weight)
                         for (review in reviews) {
                             if (!review.done) {
@@ -609,7 +612,7 @@ class DataManagement {
                                 submission.pointsMean = submission.pointsMean?.plus(review.points[i] * weights[i])
                             }
                         }
-                        submission.pointsMean = submission.pointsMean?.div(reviews.size)
+                        submission.pointsMean = submission.pointsMean?.div(BigDecimal(reviews.size))
                         submission.reviewsDone = true
                         repo.saveSubmission(submission)
                     } else {
