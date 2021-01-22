@@ -150,7 +150,7 @@ class DataManagementTests {
         assertTrue(updatedCriteria.criteria.first().title == "Criterion")
         assertTrue(updatedCriteria.criteria.first().type == ReviewCriterionType.TrueFalse)
         assertTrue(updatedCriteria.criteria.first().content == "abc2")
-        assertTrue(updatedCriteria.criteria.first().weight == BigDecimal(20))
+        assertTrue(updatedCriteria.criteria.first().weight.compareTo(BigDecimal(20)) == 0)
     }
 
     @Test
@@ -483,9 +483,8 @@ class DataManagementTests {
 
         assertTrue(submission.reviewsDone)
         assertTrue(review.done)
-        // TODO is this valid?
-        assertEquals(BigDecimal(100), submission.maxPoints)
-        assertEquals(BigDecimal(10), submission.pointsMean)
+        assertTrue(BigDecimal(100).compareTo(submission.maxPoints) == 0)
+        assertTrue(BigDecimal(10).compareTo(submission.pointsMean) == 0)
     }
 
     @Test
@@ -519,8 +518,8 @@ class DataManagementTests {
         assertEquals(1, (workshop["teachers"] as List<*>).size)
         assertEquals("S1 submission", submission["title"])
         assertTrue(submission["reviewsDone"] as Boolean)
-        assertEquals(BigDecimal(100), submission["maxPoints"])
-        assertEquals(BigDecimal(10), submission["points"])
+        assertTrue(BigDecimal(100).compareTo(submission["maxPoints"] as BigDecimal) == 0)
+        assertTrue(BigDecimal(10).compareTo(submission["points"] as BigDecimal) == 0)
     }
 
     @Test
@@ -554,8 +553,8 @@ class DataManagementTests {
         assertEquals(0, (workshop["reviews"] as List<*>).size)
         assertEquals("S1 submission", submission["title"])
         assertTrue(submission["reviewsDone"] as Boolean)
-        assertEquals(BigDecimal(100), submission["maxPoints"])
-        assertEquals(BigDecimal(10), submission["points"])
+        assertTrue(BigDecimal(100).compareTo(submission["maxPoints"] as BigDecimal) == 0)
+        assertTrue(BigDecimal(10).compareTo(submission["points"] as BigDecimal) == 0)
     }
 
 

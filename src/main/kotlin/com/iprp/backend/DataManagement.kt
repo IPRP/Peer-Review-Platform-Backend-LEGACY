@@ -165,12 +165,13 @@ class DataManagement {
         try {
             // Create workshop
             val students = repo.findAllStudentsByIdIn(studentIds) as MutableList<Student>
+            val foundStudentIds = students.map { it.id }.toMutableList()
 
             var criteriaType = ReviewCriteria.fromList(criteria)
             criteriaType = repo.saveReviewCriteria(criteriaType)
 
             val workshop = Workshop(
-                title, content, end, anonymous, studentIds as MutableList<String>,
+                title, content, end, anonymous, foundStudentIds,
                 teacherIds as MutableList<String>, criteriaType.id
             )
 
@@ -600,19 +601,27 @@ class DataManagement {
                         // Calculate points and default state to "done"
                         submission.maxPoints = criteria.maxPoints()
                         submission.pointsMean = BigDecimal.ZERO
-                        val weights = mutableListOf<BigDecimal>()
-                        for (criterion in criteria.criteria) weights.add(criterion.weight)
+                        //val weights = mutableListOf<BigDecimal>()
+                        //for (criterion in criteria.criteria) weights.add(criterion.weight)
                         for (review in reviews) {
-                            if (!review.done) {
-                                review.done = true
-                                repo.saveReview(review)
-                            }
-                            // Calculate points
-                            for (i in review.points.indices) {
-                                submission.pointsMean = submission.pointsMean?.plus(review.points[i] * weights[i])
+                            if (review.points.size == criteria.criteria.size) {
+                                if (!review.done) {
+                                    review.done = true
+                                    repo.saveReview(review)
+                                }
+                                // Calculate points
+                                for (i in review.points.indices) {
+                                    submission.pointsMean = submission.pointsMean?.plus(
+                                        ReviewCriteria.calculatePoints(
+                                            review.points[i], criteria.criteria[i].weight, criteria.criteria[i].type
+                                        )
+                                    )
+                                }
                             }
                         }
-                        submission.pointsMean = submission.pointsMean?.div(BigDecimal(reviews.size))
+                        submission.pointsMean = submission.pointsMean?.div(
+                            BigDecimal(reviews.size).multiply(BigDecimal(criteria.criteria.size))
+                        )
                         submission.reviewsDone = true
                         repo.saveSubmission(submission)
                     } else {
