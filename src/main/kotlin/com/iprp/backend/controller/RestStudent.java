@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
@@ -139,5 +140,12 @@ public class RestStudent {
         return dm.updateReview(
             authentication.getName(), id, (String) json.get("feedback"), (List<Double>) json.get("points")
         );
+    }
+
+    @CrossOrigin(origins = "http://localhost:8081")
+    @PostMapping(value = "/debug/close", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Object> debugCloseReviewsNow() {
+        dm.closeReviews(LocalDateTime.now().plusMonths(1));
+        return Collections.singletonMap("ok", true);
     }
 }

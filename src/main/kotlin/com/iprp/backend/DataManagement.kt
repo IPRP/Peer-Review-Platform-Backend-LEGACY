@@ -333,9 +333,10 @@ class DataManagement {
                     val student = repo.findStudent(review.student)
                     if (submission != null && student != null) {
                         reviews.add(mapOf(
-                            "id" to review.id, "deadline" to review.deadline, "title" to submission.title,
+                            "id" to review.id, "deadline" to review.deadline,
+                            "submission" to submission.id, "title" to submission.title,
                             "firstname" to student.firstname, "lastname" to student.lastname,
-                            "workshopName" to workshop.title, "done" to review.done
+                            "workshopName" to workshop.title, "done" to review.done,
                         ))
                     }
                 }
@@ -364,7 +365,7 @@ class DataManagement {
             val workshop = repo.findWorkshop(workshopId)
             if (workshop != null) {
                 if (!workshop.students.contains(studentId)) return mapOf("ok" to false)
-                if (repo.findAllStudentSubmissionsInWorkshop(studentId, workshopId).any { !it.locked })
+                if (repo.findAllStudentSubmissionsInWorkshop(studentId, workshopId).any { !it.reviewsDone })
                     return mapOf("ok" to false)
                 val attachmentsParsed = mutableListOf<Attachment>()
                 for (attachment in attachments) {
@@ -622,6 +623,7 @@ class DataManagement {
                         submission.pointsMean = submission.pointsMean?.div(
                             BigDecimal(reviews.size).multiply(BigDecimal(criteria.criteria.size))
                         )
+                        submission.locked = true
                         submission.reviewsDone = true
                         repo.saveSubmission(submission)
                     } else {
@@ -632,6 +634,7 @@ class DataManagement {
                                 repo.saveReview(review)
                             }
                         }
+                        submission.locked = true
                         submission.reviewsDone = true
                         repo.saveSubmission(submission)
                     }
