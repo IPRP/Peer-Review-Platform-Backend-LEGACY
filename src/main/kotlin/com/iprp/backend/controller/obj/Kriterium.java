@@ -73,4 +73,7 @@ public class Kriterium {
     public void setJanein(boolean janein) {
         this.janein = janein;
     }
+
+    public String getType() {
+    }
 }
