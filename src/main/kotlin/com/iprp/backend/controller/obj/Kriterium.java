@@ -14,14 +14,36 @@ public class Kriterium {
     @JsonProperty
     private boolean janein;
 
+    private int type;
+
     @JsonCreator
-    public Kriterium(@JsonProperty("id") int id, @JsonProperty("name") String name, @JsonProperty("beschreibung") String beschreibung, @JsonProperty("prozent") double prozent, @JsonProperty("punkte") double punkte, @JsonProperty("janein") boolean janein) {
+    public Kriterium(@JsonProperty("id") int id, @JsonProperty("name") String name, @JsonProperty("beschreibung") String beschreibung, @JsonProperty("janein") boolean janein,  @JsonProperty("punkte") double punkte, @JsonProperty("prozent") double prozent) {
         this.id = id;
         this.name = name;
         this.beschreibung = beschreibung;
-        this.prozent = prozent;
+        this.prozent = punkte;
         this.punkte = punkte;
         this.janein = janein;
+        if (prozent == -1 && punkte != -1){
+            this.type = 2;
+        }else if(punkte == -1 && prozent != -1){
+            this.type = 3;
+        }else {
+            this.type = 1;
+        }
+
+    }
+    public String getType(){
+        switch (this.type){
+            case 1:
+                return "truefalse";
+            case 2:
+                return "point";
+            case 3:
+                return "percentage";
+            default:
+                return "grade";
+        }
     }
 
     @JsonGetter
@@ -72,8 +94,5 @@ public class Kriterium {
     @JsonSetter
     public void setJanein(boolean janein) {
         this.janein = janein;
-    }
-
-    public String getType() {
     }
 }
