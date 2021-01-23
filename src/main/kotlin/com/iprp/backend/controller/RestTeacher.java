@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -136,9 +137,9 @@ public class RestTeacher {
     @GetMapping(value="/testget")
     public List<Map<String, Object>> testes(){
         //datamanagement.addSubmissionToWorkshop("Georg", "5ff264c301c74810f5448368", "TEST", "TESTSTSTSTST", new ArrayList<Map<String, String>>());
-        ArrayList<Integer> points = new ArrayList<>();
-        points.add(10);
-        datamanagement.updateReview("Georg", "5ff38e8c3836146dfe9dd7fc", "ÖILDKFHJSLÖ", points);
+        ArrayList<Double> points = new ArrayList<>();
+        points.add(10.0);
+        datamanagement.updateReview("Georg", "5ff38e8c3836146dfe9dd7fc", "hhkl", points);
         Map<String, List<Map<String, String>>> wokshops = datamanagement.getAllWorkshops("teacher");
         List<Map<String, Object>> realworkshop = new LinkedList<>();
         for(Map<String, String> wo: wokshops.get("workshops")){
@@ -194,18 +195,18 @@ public class RestTeacher {
                             ReviewCriteria criteria = repo.findReviewCriteria(review.getCriteria());
                             if (student != null && criteria != null) {
                                 ArrayList<Map<String, Object>> points = new ArrayList<>();
-                                for (int i : review.getPoints()) {
+                                for (BigDecimal i : review.getPoints()) {
                                     System.out.println("Points: " + i);
-                                    System.out.println("Criteria: " + criteria.getCriteria().get(i).getTitle() + criteria.getCriteria().get(i).getContent());
-                                    com.iprp.backend.data.review.ReviewCriterionType crty = criteria.getCriteria().get(i).getType();
+                                    System.out.println("Criteria: " + criteria.getCriteria().get(i.intValue()).getTitle() + criteria.getCriteria().get(i.intValue()).getContent());
+                                    com.iprp.backend.data.review.ReviewCriterionType crty = criteria.getCriteria().get(i.intValue()).getType();
                                     if (crty.equals(ReviewCriterionType.Percentage)) {
-                                        kriteriumArrayList.add(new Kriterium(0, criteria.getCriteria().get(i).getTitle(), criteria.getCriteria().get(i).getContent(), false, -1, review.getPoints().get(i)));
+                                        kriteriumArrayList.add(new Kriterium(0, criteria.getCriteria().get(i.intValue()).getTitle(), criteria.getCriteria().get(i.intValue()).getContent(), false, -1, review.getPoints().get(i.intValue()).doubleValue()));
                                     } else if (crty.equals(ReviewCriterionType.Point)) {
-                                        kriteriumArrayList.add(new Kriterium(0, criteria.getCriteria().get(i).getTitle(), criteria.getCriteria().get(i).getContent(), false, review.getPoints().get(i), -1));
+                                        kriteriumArrayList.add(new Kriterium(0, criteria.getCriteria().get(i.intValue()).getTitle(), criteria.getCriteria().get(i.intValue()).getContent(), false, review.getPoints().get(i.intValue()).doubleValue(), -1));
                                     } else if (crty.equals(ReviewCriterionType.Grade)) {
                                         // TODO
                                     } else if (crty.equals(ReviewCriterionType.TrueFalse)) {
-                                        kriteriumArrayList.add(new Kriterium(0, criteria.getCriteria().get(i).getTitle(), criteria.getCriteria().get(i).getContent(), review.getPoints().get(i) != 0, -1, -1));
+                                        kriteriumArrayList.add(new Kriterium(0, criteria.getCriteria().get(i.intValue()).getTitle(), criteria.getCriteria().get(i.intValue()).getContent(), review.getPoints().get(i.intValue()).compareTo(new BigDecimal(0)) != 0, -1, -1));
                                     }
                                 }
                             }
