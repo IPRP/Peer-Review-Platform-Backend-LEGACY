@@ -69,14 +69,20 @@ public class RestTeacher {
     /**
      * Editiert einen Workshop
      *
+     * @return
      */
     @CrossOrigin(origins = "*")
     @PutMapping("/teacher/workshop")
-    public String putteacherworkshop(@RequestBody String payload){
+    public Map<String, Object> putteacherworkshop(@RequestBody String payload){
         Workshop listWorkshop;
         listWorkshop = new JsonHelper(payload).generateWorkshop();
         System.out.println(new JsonHelper(listWorkshop).generateJson());
-        return datamanagement.updateWorkshopNEU(listWorkshop.getId(), listWorkshop.getMembers(), listWorkshop.getTitle(), listWorkshop.getBeschreibung(), LocalDateTime.now().plusDays(1)).toString();
+        Map<String, Object> workshop = datamanagement.getTeacherWorkshop(listWorkshop.getId());
+        System.out.println("workshop ausgabe");
+        System.out.println(workshop);
+        com.iprp.backend.data.Workshop workshop1 = new com.iprp.backend.data.Workshop(listWorkshop.getId(), listWorkshop.getBeschreibung(), LocalDateTime.now().plusDays(1), listWorkshop.isAnonym(), listWorkshop.getMembers(), new ArrayList<>(), "");
+        return datamanagement.updateWorkshop(listWorkshop.getId(), workshop1.getTeachers(), workshop1.getStudents(), workshop1.getTitle(), workshop1.getContent(), workshop1.getEnd(), new ArrayList<>());
+//        return datamanagement.updateWorkshopNEU(listWorkshop.getId(), listWorkshop.getMembers(), listWorkshop.getTitle(), listWorkshop.getBeschreibung(), LocalDateTime.now().plusDays(1)).toString());
     }
 
     /**
