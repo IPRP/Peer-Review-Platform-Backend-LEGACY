@@ -38,8 +38,6 @@ class DataManagement {
 
     // TODO implement MongoDB transactions
 
-    // TODO lock reviews every midnight
-
     //================================================================================
     //
     // WORKSHOP
@@ -372,7 +370,10 @@ class DataManagement {
                     if (attachment.containsKey("id") && attachment.containsKey("title")) {
                         val id = attachment["id"].toString()
                         val attachmentTitle = attachment["title"].toString()
-                        attachmentsParsed.add(Attachment(id, attachmentTitle))
+                        // Check if attachment is valid, if not return error
+                        if (attService.attachmentExists(id))
+                            attachmentsParsed.add(Attachment(id, attachmentTitle))
+                        else return mapOf("ok" to false)
                     }
                 }
                 var submission = Submission(
@@ -501,6 +502,15 @@ class DataManagement {
     //================================================================================
     // Reviews
     //================================================================================
+
+    fun getReview(
+        studentId: String, reviewId: String
+    ): Map<String, Any> {
+        val review = repo.findReview(reviewId)
+        if (review == null || review.student != studentId || !review.done)
+            return mapOf("ok" to false)
+        return mapOf("ok" to true, "feedback" to review.feedback, "points" to review.points)
+    }
 
     fun updateReview(
         studentId: String, reviewId: String, feedback: String, points: List<Double>

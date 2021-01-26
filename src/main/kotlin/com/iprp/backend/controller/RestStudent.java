@@ -142,10 +142,18 @@ public class RestStudent {
             !json.containsKey("feedback") || !json.containsKey("points")) {
             return Collections.singletonMap("ok", false);
         }
-
         return dm.updateReview(
             authentication.getName(), id, (String) json.get("feedback"), (List<Double>) json.get("points")
         );
+    }
+
+    @CrossOrigin(origins = "http://localhost:8081")
+    @GetMapping(value = "/review/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Object> getReview(@PathVariable String id, Authentication authentication) {
+        if (authentication == null || id == null) {
+            return Collections.singletonMap("ok", false);
+        }
+        return dm.getReview(authentication.getName(), id);
     }
 
     @CrossOrigin(origins = "http://localhost:8081")
