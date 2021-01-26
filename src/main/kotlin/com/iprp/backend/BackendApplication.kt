@@ -33,6 +33,8 @@ open class BackendApplication : CommandLineRunner {
     }
 
     override fun run(vararg args: String?) {
+        dm.addStudent("georg", "Georg", "Reisinger", "3D")
+        dm.addStudent("georg", "Lukas", "Nowy", "3D")
         if (args.contains("student")) {
             repo.deleteAll()
             // Add student debug data

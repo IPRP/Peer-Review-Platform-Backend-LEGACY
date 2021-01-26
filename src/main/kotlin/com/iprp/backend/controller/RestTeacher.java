@@ -10,6 +10,7 @@ import com.iprp.backend.data.user.Student;
 import com.iprp.backend.repos.WrapperRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -30,7 +31,7 @@ public class RestTeacher {
     private ArrayList<Kriterium> kriterien = new ArrayList<Kriterium>();
     private Workshop workshop;
     private ArrayList<Workshop> workshops = new ArrayList<Workshop>();
-
+    ArrayList<com.iprp.backend.data.user.Student> foundStudent = new ArrayList<>();
     @Autowired
     private com.iprp.backend.DataManagement datamanagement;
 
@@ -73,16 +74,18 @@ public class RestTeacher {
      */
     @CrossOrigin(origins = "*")
     @PutMapping("/teacher/workshop")
-    public Map<String, Object> putteacherworkshop(@RequestBody String payload){
+    public Map<String, Object> putteacherworkshop(@RequestBody String payload, Authentication authentication){
+        if (authentication == null) {
+            return Collections.singletonMap("ok", false);
+        }
         Workshop listWorkshop;
         listWorkshop = new JsonHelper(payload).generateWorkshop();
         System.out.println(new JsonHelper(listWorkshop).generateJson());
         Map<String, Object> workshop = datamanagement.getTeacherWorkshop(listWorkshop.getId());
         System.out.println("workshop ausgabe");
         System.out.println(workshop);
-        com.iprp.backend.data.Workshop workshop1 = new com.iprp.backend.data.Workshop(listWorkshop.getId(), listWorkshop.getBeschreibung(), LocalDateTime.now().plusDays(1), listWorkshop.isAnonym(), listWorkshop.getMembers(), new ArrayList<>(), "");
-        return datamanagement.updateWorkshop(listWorkshop.getId(), workshop1.getTeachers(), listWorkshop.getMembers(), listWorkshop.getTitle(), listWorkshop.getBeschreibung(), workshop1.getEnd(), new ArrayList<>());
-//        return datamanagement.updateWorkshopNEU(listWorkshop.getId(), listWorkshop.getMembers(), listWorkshop.getTitle(), listWorkshop.getBeschreibung(), LocalDateTime.now().plusDays(1)).toString());
+        com.iprp.backend.data.Workshop workshop1 = new com.iprp.backend.data.Workshop(listWorkshop.getId(), listWorkshop.getBeschreibung(), LocalDateTime.now().plusDays(1), listWorkshop.isAnonym(), getStudent(listWorkshop), new ArrayList<>(), "");
+        return datamanagement.updateWorkshop(listWorkshop.getId(), workshop1.getTeachers(), getStudent(listWorkshop), listWorkshop.getTitle(), listWorkshop.getBeschreibung(), workshop1.getEnd(), new ArrayList<>());
     }
 
     /**
@@ -92,11 +95,14 @@ public class RestTeacher {
      */
     @CrossOrigin(origins = "*")
     @PostMapping(value="/teacher/workshop", produces = MediaType.APPLICATION_JSON_VALUE)
-    public String postteacherworkshop(@RequestBody String json){
+    public String postteacherworkshop(@RequestBody String json, Authentication authentication){
+        if (authentication == null) {
+            return Collections.singletonMap("ok", false).toString();
+        }
         //Erstellt user
         datamanagement.addTeacher("teacher", "teacher", "teacher");
-        datamanagement.addStudent("Georg", "Georg", "Georg", " ");
-        datamanagement.addStudent("Lukas", "Lukas", "Lukas", " ");
+        datamanagement.addStudent("Georg", "Georg", "Reisinger", " ");
+        datamanagement.addStudent("Lukas", "Lukas", "Nowy", " ");
         //Erstellt Frontend Workshop
         workshop = new JsonHelper(json).generateWorkshop();
         //Teacher Backend
@@ -125,7 +131,13 @@ public class RestTeacher {
             }
 
             System.out.println(new JsonHelper(workshop).generateJson());
-            Map<String, Object> map2 = datamanagement.addWorkshop(te, workshop.getMembers(), workshop.getTitle(), workshop.getBeschreibung(), false, LocalDateTime.now().plusDays(1), ar);
+            datamanagement.addStudent("ge", "georg", "reisinger", "3D");
+            datamanagement.addStudent("lu", "lukas", "nowy", "3D");
+//            System.out.println("im rest conroller");
+//            System.out.println(repo.findStudent("georg", "reisinger"));
+//            this.foundStudent.add(repo.findStudent("georg", "reisinger"));
+//            workshop.findStudent();
+            Map<String, Object> map2 = datamanagement.addWorkshop(te, getStudent(workshop), workshop.getTitle(), workshop.getBeschreibung(), false, LocalDateTime.now().plusDays(1), ar);
             System.out.println(map2.toString());
 
             return map2.toString();
@@ -134,10 +146,30 @@ public class RestTeacher {
         }
     }
 
+    private ArrayList<String> getStudent(Workshop wo){
+        this.foundStudent = new ArrayList<>();
+        ArrayList<String> studentsid= new ArrayList<>();
+        for (com.iprp.backend.controller.obj.Student stu:
+                wo.getMembers()) {
+            if(!stu.getFirstname().isEmpty() && !stu.getLastname().isEmpty()){
+                Student tmpstu =  repo.findStudent("georg", "reisinger");
+                System.out.println("tmpstu");
+                System.out.println(tmpstu);
+                System.out.println(tmpstu.getId());
+                this.foundStudent.add(tmpstu);
+                studentsid.add(tmpstu.getId());
+            }
+
+        }
+        return studentsid;
+    }
 
     @CrossOrigin(origins = "http://localhost:8081")
     @DeleteMapping(value="/teacher/workshop/{id}")
-    public String techerdelworkshop(@PathVariable String id){
+    public String techerdelworkshop(@PathVariable String id, Authentication authentication){
+        if (authentication == null) {
+            return Collections.singletonMap("ok", false).toString();
+        }
         System.out.println("DEL workshops");
         System.out.println(id);
         datamanagement.deleteWorkshop(id);
@@ -147,8 +179,10 @@ public class RestTeacher {
 
     @CrossOrigin(origins = "http://localhost:8081")
     @GetMapping(value="/testget")
-    public List<Map<String, Object>> testes(){
-        //datamanagement.addSubmissionToWorkshop("Georg", "5ff264c301c74810f5448368", "TEST", "TESTSTSTSTST", new ArrayList<Map<String, String>>());
+    public List<Map<String, Object>> testes(Authentication authentication){
+       if (authentication == null) {
+            return (List<Map<String, Object>>) Collections.singletonMap("ok", false);
+        }
         ArrayList<Double> points = new ArrayList<>();
         points.add(10.0);
         datamanagement.updateReview("Georg", "5ff38e8c3836146dfe9dd7fc", "hhkl", points);
@@ -161,10 +195,10 @@ public class RestTeacher {
     }
 
     private String getWorkshops(){
-
         List<com.iprp.backend.data.Workshop> workshops = repo.findAllWorkshops("teacher");
         ArrayList<Workshop> myWorkshops = new ArrayList<>();
-        ArrayList<String> students = new ArrayList<>();
+        ArrayList<Student> students = new ArrayList<>();
+
         ArrayList<Submission> submissions = new ArrayList<>();
         System.out.println("GET workshops");
         //Geht durch alle workshops
@@ -174,7 +208,7 @@ public class RestTeacher {
             for (String stu : wo.getStudents()) {
                 System.out.println("stu: " + stu + " " + repo.findStudent(stu).getId());
                 System.out.println(" WO id: " + wo.getId());
-                students.add(repo.findStudent(stu).getId());
+                students.add(repo.findStudent(stu));
                 submissions.addAll(repo.findAllStudentSubmissionsInWorkshop(stu, wo.getId()));
             }
 //            Geht durch alle submissions
@@ -225,20 +259,22 @@ public class RestTeacher {
                         }
                     }
                 }
-
-
 //            Geht durch alle reviews
                 ArrayList<DoneOpenSubmissions> myDoneOpenSubmissions = new ArrayList<>();
                 ArrayList<DoneOpenReviews> myDoneOpenReviews = new ArrayList<>();
                 myDoneOpenReviews.add(new DoneOpenReviews(myReviewDone, myReviewOpen));
                 myDoneOpenSubmissions.add(new DoneOpenSubmissions(mySubmissionsDone, mySubmissionsOpen));
-                myWorkshops.add(new Workshop(wo.getId(), wo.getTitle(), wo.getContent(), wo.getEnd().toString(), wo.getAnonymous(), students, myDoneOpenSubmissions, myDoneOpenReviews, kriteriumArrayList));
+                ArrayList<com.iprp.backend.controller.obj.Student> studentsJava = new ArrayList<>();
+                for (Student stu:
+                     students) {
+                    studentsJava.add(new com.iprp.backend.controller.obj.Student(stu.getId(), stu.getFirstname(), stu.getLastname(), stu.getGroup()));
+                }
+
+                myWorkshops.add(new Workshop(wo.getId(), wo.getTitle(), wo.getContent(), wo.getEnd().toString(), wo.getAnonymous(), studentsJava, myDoneOpenSubmissions, myDoneOpenReviews, kriteriumArrayList));
             }else{
                 System.out.println("NO submission");
             }
         }
-
-
         return new JsonHelper(myWorkshops).generateJson();
     }
 
@@ -248,66 +284,10 @@ public class RestTeacher {
      */
     @CrossOrigin(origins = "http://localhost:8081")
     @GetMapping(value="/teacher/workshops", produces = MediaType.APPLICATION_JSON_VALUE)
-    public String teacherworkshops(){
+    public String teacherworkshops(Authentication authentication){
+        if (authentication == null) {
+            return Collections.singletonMap("ok", false).toString();
+        }
         return getWorkshops();
-    }
-
-    /**
-     * Zeigt alle zuweisungen eines gewählten workshops
-     * @return JSON mit den zuteilungen
-     */
-    @GetMapping("/teacher/workshop/assign")
-    public String getteacherworkshopassign(@RequestBody String payload){
-        return "{inhalt: inhalt}";
-    }
-
-    /**
-     * Manuelle zuteilung
-     */
-    @PutMapping("/teacher/workshop/assign")
-    public void putteacherworkshopassign(@RequestBody String payload){
-    }
-
-    /**
-     * Automatische zuteilung starten
-     */
-    @PutMapping("/teacher/workshop/assign/auto")
-    public void putteacherworkshopassignauto(@RequestBody String payload){
-    }
-
-    /**
-     * Alle Reviews eines Workshops
-     * @return JSON mit den Reviews
-     */
-    @GetMapping("/teacher/reviews")
-    public String getteacherreviews(@RequestBody String payload){
-        return "{inhalt: inhalt}";
-    }
-
-    /**
-     * Einzelnes Review ausgeben
-     * @return JSON mit dem Review
-     */
-    @GetMapping("/teacher/review")
-    public String getteacherreview(@RequestBody String payload){
-        return "{inhalt: inhalt}";
-    }
-
-    /**
-     * Alle abgaben von einem Workshop
-     * @return JSON mit den abgaben
-     */
-    @GetMapping("/teacher/deliverys")
-    public String getteacherdeliverys(@RequestBody String payload){
-        return "{inhalt: inhalt}";
-    }
-
-    /**
-     * Einzelen Abgabe ausgeben
-     * @return JSON mit der Abgabe
-     */
-    @GetMapping("/teacher/delivery")
-    public String getteacherdelivery(@RequestBody String payload){
-        return "{inhalt: inhalt}";
     }
 }

@@ -1,5 +1,7 @@
 package com.iprp.backend.data.user
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect
+import com.fasterxml.jackson.annotation.JsonCreator
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 

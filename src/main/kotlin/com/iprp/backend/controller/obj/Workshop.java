@@ -2,8 +2,15 @@ package com.iprp.backend.controller.obj;
 
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.iprp.backend.DataManagement;
+import com.iprp.backend.controller.obj.Student;
+import com.iprp.backend.repos.WrapperRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 @JsonAutoDetect
 public class Workshop {
@@ -14,8 +21,8 @@ public class Workshop {
     private boolean anonym;
     @JsonProperty
     private String title, beschreibung, deadline;
-    @JsonDeserialize(as = ArrayList.class, contentAs = String.class)
-    private ArrayList<String> members;
+    @JsonDeserialize(as = ArrayList.class, contentAs = Student.class)
+    private ArrayList<Student> members;
     @JsonDeserialize(as = ArrayList.class, contentAs = DoneOpenSubmissions.class)
     private ArrayList<DoneOpenSubmissions> submissions;
     @JsonDeserialize(as = ArrayList.class, contentAs = DoneOpenReviews.class)
@@ -24,7 +31,7 @@ public class Workshop {
     private ArrayList<Kriterium> kriterien;
 
     @JsonCreator
-    public Workshop(@JsonProperty("id") String id, @JsonProperty("title") String title,@JsonProperty("beschreibung") String beschreibung,@JsonProperty("deadline") String deadline,@JsonProperty("anonym") boolean anonym, @JsonProperty("members") ArrayList<String> members, @JsonProperty("submissions") ArrayList<DoneOpenSubmissions> submissions, @JsonProperty("reviews") ArrayList<DoneOpenReviews> reviews, @JsonProperty("kriterien") ArrayList<Kriterium> kriterien) {
+    public Workshop(@JsonProperty("id") String id, @JsonProperty("title") String title, @JsonProperty("beschreibung") String beschreibung, @JsonProperty("deadline") String deadline, @JsonProperty("anonym") boolean anonym, @JsonProperty("members") ArrayList<Student> members, @JsonProperty("submissions") ArrayList<DoneOpenSubmissions> submissions, @JsonProperty("reviews") ArrayList<DoneOpenReviews> reviews, @JsonProperty("kriterien") ArrayList<Kriterium> kriterien) {
         this.title = title;
         this.members = members;
         this.submissions = submissions;
@@ -35,6 +42,7 @@ public class Workshop {
         this.anonym = anonym;
         this.kriterien = kriterien;
     }
+
 
     @JsonGetter
     public ArrayList<Kriterium> getKriterien() {
@@ -93,12 +101,12 @@ public class Workshop {
     }
 
     @JsonGetter
-    public ArrayList<String> getMembers() {
+    public ArrayList<Student> getMembers() {
         return members;
     }
 
     @JsonSetter
-    public void setMembers(ArrayList<String> members) {
+    public void setMembers(ArrayList<Student> members) {
         this.members = members;
     }
 

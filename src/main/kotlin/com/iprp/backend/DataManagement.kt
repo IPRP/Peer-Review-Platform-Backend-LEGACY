@@ -228,25 +228,6 @@ class DataManagement {
         return mapOf("ok" to false)
     }
 
-    /**
-     * Update existing Workshop. Should only be used by teachers.
-     */
-    fun updateWorkshopNEU(
-        workshopId: String, studentIds: List<String>,
-        title: String, content: String, end: LocalDateTime
-    ): Workshop? {
-            val workshop = repo.findWorkshop(workshopId)
-            if (workshop != null) {
-                workshop.title = title
-                workshop.content = content
-                workshop.end = end
-
-                return repo.saveWorkshop(workshop)
-                }else {
-                return null
-            }
-            }
-
     fun deleteWorkshop(workshopId: String): Map<String, Any> {
         return try {
             repo.deleteWorkshop(workshopId)
