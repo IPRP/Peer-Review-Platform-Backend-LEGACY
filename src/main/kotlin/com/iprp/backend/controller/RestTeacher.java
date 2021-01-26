@@ -152,12 +152,19 @@ public class RestTeacher {
         for (com.iprp.backend.controller.obj.Student stu:
                 wo.getMembers()) {
             if(!stu.getFirstname().isEmpty() && !stu.getLastname().isEmpty()){
-                Student tmpstu =  repo.findStudent("georg", "reisinger");
-                System.out.println("tmpstu");
-                System.out.println(tmpstu);
-                System.out.println(tmpstu.getId());
+                Student tmpstu =  repo.findStudent(stu.getFirstname(), stu.getLastname());
                 this.foundStudent.add(tmpstu);
                 studentsid.add(tmpstu.getId());
+            }else if(!stu.getGroup().isEmpty()){
+                List<Student> tmpstu =  repo.findStudents(stu.getGroup());
+                this.foundStudent.addAll(tmpstu);
+                for (Student tmpstustu:
+                     tmpstu) {
+                    System.out.println("in der for each");
+                    System.out.println(tmpstustu.getId());
+                    studentsid.add(tmpstustu.getId());
+                }
+
             }
 
         }
