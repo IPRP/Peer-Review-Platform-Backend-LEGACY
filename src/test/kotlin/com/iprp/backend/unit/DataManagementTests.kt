@@ -437,6 +437,34 @@ class DataManagementTests {
     }
 
     @Test
+    fun getReview() {
+        dm.addStudent("s1", "Max", "Mustermann", "3A")
+        dm.addStudent("s2", "Max", "Mustermann", "3A")
+        dm.addTeacher("t1", "John", "Doe")
+        val workshopId = dm.addWorkshop(
+            listOf("t1"), listOf("s1", "s2"), "workshop", "my workshop", true, LocalDateTime.now(),
+            listOf(mapOf("title" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
+        )["id"] as String
+        dm.addSubmissionToWorkshop(
+            "s1", workshopId, "S1 submission", "Very Good", listOf()
+        )
+        val reviewId
+                = ((dm.getStudentTodos("s2")["reviews"] as List<*>).first() as Map<*,*>)["id"] as String
+
+        val invalidQuery = dm.getReview("s2", reviewId)
+        dm.updateReview("s2", reviewId, "Great!", listOf(1.0))
+        val validQuery = dm.getReview("s2", reviewId)
+
+        assertNotNull(invalidQuery)
+        assertEquals(false, invalidQuery["ok"])
+        assertNotNull(validQuery)
+        assertEquals(true, validQuery["ok"])
+        assertEquals("Great!", validQuery["feedback"])
+        assertEquals("Great!", validQuery["feedback"])
+        assertEquals(listOf(BigDecimal(1)), validQuery["points"])
+    }
+
+    @Test
     fun updateReviewAndCheckTODOs() {
         dm.addStudent("s1", "Max", "Mustermann", "3A")
         dm.addStudent("s2", "Max", "Mustermann", "3A")

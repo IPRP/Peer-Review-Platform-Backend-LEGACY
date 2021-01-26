@@ -1,6 +1,7 @@
 package com.iprp.backend.attachments
 
 import com.mongodb.BasicDBObject
+import com.mongodb.client.gridfs.model.GridFSFile
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
@@ -58,5 +59,14 @@ class AttachmentService {
 
     fun removeAttachment(id: String) {
         gridFsTemplate.delete(Query(Criteria.where("_id").`is`(id)))
+    }
+
+    fun attachmentExists(id: String): Boolean {
+        return try {
+            val file = gridFsTemplate.findOne(Query(Criteria.where("_id").`is`(id)))
+            true
+        } catch (ex: Exception) {
+            false
+        }
     }
 }

@@ -75,7 +75,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:8080/student/workshop/600ad509b772104dc62a6501",
+					"raw": "http://localhost:8080/student/workshop/60103c98845c942deb97afb5",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -84,7 +84,7 @@
 					"path": [
 						"student",
 						"workshop",
-						"600ad509b772104dc62a6501"
+						"60103c98845c942deb97afb5"
 					]
 				}
 			},
@@ -161,7 +161,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"title\": \"a\", \"comment\": \"b\", \"attachments\": [{\"id\": \"600ad518b772104dc62a6504\", \"title\": \"Test\"}]\r\n}",
+					"raw": "{\r\n    \"title\": \"a\", \"comment\": \"b\", \"attachments\": [{\"id\": \"60103d22cbcffc5b7d6562d6\", \"title\": \"Test\"}]\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -169,7 +169,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/submission/600ad509b772104dc62a6501",
+					"raw": "http://localhost:8080/submission/60103cdfcbcffc5b7d6562d3",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -177,7 +177,7 @@
 					"port": "8080",
 					"path": [
 						"submission",
-						"600ad509b772104dc62a6501"
+						"60103cdfcbcffc5b7d6562d3"
 					]
 				}
 			},
@@ -262,7 +262,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:8080/submission/600ad523b772104dc62a6506",
+					"raw": "http://localhost:8080/submission/60103a726a61622e1feb2258",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -270,7 +270,7 @@
 					"port": "8080",
 					"path": [
 						"submission",
-						"600ad523b772104dc62a6506"
+						"60103a726a61622e1feb2258"
 					]
 				}
 			},
@@ -512,7 +512,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/review/600aba413840721d9fba0318",
+					"raw": "http://localhost:8080/review/60103d2ecbcffc5b7d6562d9",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -520,7 +520,61 @@
 					"port": "8080",
 					"path": [
 						"review",
-						"600aba413840721d9fba0318"
+						"60103d2ecbcffc5b7d6562d9"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get review",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "s2",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"feedback\": \"Very good!\", \"points\": [ 5.0 ]}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/review/60103d2ecbcffc5b7d6562d9",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"review",
+						"60103d2ecbcffc5b7d6562d9"
 					]
 				}
 			},
