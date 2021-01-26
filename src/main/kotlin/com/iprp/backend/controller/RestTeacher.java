@@ -81,7 +81,7 @@ public class RestTeacher {
         System.out.println("workshop ausgabe");
         System.out.println(workshop);
         com.iprp.backend.data.Workshop workshop1 = new com.iprp.backend.data.Workshop(listWorkshop.getId(), listWorkshop.getBeschreibung(), LocalDateTime.now().plusDays(1), listWorkshop.isAnonym(), listWorkshop.getMembers(), new ArrayList<>(), "");
-        return datamanagement.updateWorkshop(listWorkshop.getId(), workshop1.getTeachers(), workshop1.getStudents(), workshop1.getTitle(), workshop1.getContent(), workshop1.getEnd(), new ArrayList<>());
+        return datamanagement.updateWorkshop(listWorkshop.getId(), workshop1.getTeachers(), listWorkshop.getMembers(), listWorkshop.getTitle(), listWorkshop.getBeschreibung(), workshop1.getEnd(), new ArrayList<>());
 //        return datamanagement.updateWorkshopNEU(listWorkshop.getId(), listWorkshop.getMembers(), listWorkshop.getTitle(), listWorkshop.getBeschreibung(), LocalDateTime.now().plusDays(1)).toString());
     }
 
@@ -104,28 +104,34 @@ public class RestTeacher {
         te.add("teacher");
         ArrayList<Map<String, String>> ar = new ArrayList<>();
         //Geht durch alle kriterien des frontends
-        for(Kriterium kr : workshop.getKriterien()){
-            Map<String, String> map = new java.util.HashMap<>(Collections.emptyMap());
-            System.out.println(kr.getType() + " " + kr.getName());
-            map.put("type", kr.getType());
-            map.put("title", kr.getName());
-            map.put("content", kr.getBeschreibung());
-            switch (kr.getType()){
-                case "point":
-                    break;
-                case "grade":
-                    break;
-                case "percentage":
-                    break;
-                case "truefalse":
-                    break;
+        if(workshop != null && workshop.getKriterien() != null) {
+            for (Kriterium kr : workshop.getKriterien()) {
+                Map<String, String> map = new java.util.HashMap<>(Collections.emptyMap());
+                System.out.println(kr.getType() + " " + kr.getName());
+                map.put("type", kr.getType());
+                map.put("title", kr.getName());
+                map.put("content", kr.getBeschreibung());
+                switch (kr.getType()) {
+                    case "point":
+                        break;
+                    case "grade":
+                        break;
+                    case "percentage":
+                        break;
+                    case "truefalse":
+                        break;
+                }
+                ar.add(map);
             }
-            ar.add(map);
+
+            System.out.println(new JsonHelper(workshop).generateJson());
+            Map<String, Object> map2 = datamanagement.addWorkshop(te, workshop.getMembers(), workshop.getTitle(), workshop.getBeschreibung(), false, LocalDateTime.now().plusDays(1), ar);
+            System.out.println(map2.toString());
+
+            return map2.toString();
+        }else{
+            return "false";
         }
-        System.out.println(new JsonHelper(workshop).generateJson());
-        Map<String, Object> map2 = datamanagement.addWorkshop(te, workshop.getMembers(), workshop.getTitle(), workshop.getBeschreibung(), false, LocalDateTime.now().plusDays(1), ar);
-        System.out.println(map2.toString());
-        return map2.toString();
     }
 
 
