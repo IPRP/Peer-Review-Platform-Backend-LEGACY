@@ -212,11 +212,18 @@ public class RestTeacher {
         for (com.iprp.backend.data.Workshop wo : workshops) {
             System.out.println("Workshop");
 //            Geht durch alle students
-            for (String stu : wo.getStudents()) {
-                System.out.println("stu: " + stu + " " + repo.findStudent(stu).getId());
-                System.out.println(" WO id: " + wo.getId());
-                students.add(repo.findStudent(stu));
-                submissions.addAll(repo.findAllStudentSubmissionsInWorkshop(stu, wo.getId()));
+//            for (String stu : wo.getStudents()) {
+//                System.out.println("stu: " + stu + " " + repo.findStudent(stu).getId());
+//                System.out.println(" WO id: " + wo.getId());
+//                students.add(repo.findStudent(stu));
+//                submissions.addAll(repo.findAllStudentSubmissionsInWorkshop(stu, wo.getId()));
+//            }
+            System.out.println(datamanagement.getTeacherWorkshopStudents(wo.getId()));
+            for (Map<String, Object> stu:
+                 datamanagement.getTeacherWorkshopStudents(wo.getId())) {
+                System.out.println(stu.get("id").toString());
+                students.add(new Student(stu.get("id").toString(), stu.get("firstname").toString(), stu.get("lastname").toString(), stu.get("group").toString()));
+                submissions.addAll(repo.findAllStudentSubmissionsInWorkshop(stu.get("id").toString(), wo.getId()));
             }
 //            Geht durch alle submissions
             if (submissions != null) {
@@ -274,6 +281,8 @@ public class RestTeacher {
                 ArrayList<com.iprp.backend.controller.obj.Student> studentsJava = new ArrayList<>();
                 for (Student stu:
                      students) {
+                    System.out.println("get workshop student namen");
+                    System.out.println(stu.getId()+stu.getFirstname()+stu.getLastname()+stu.getGroup());
                     studentsJava.add(new com.iprp.backend.controller.obj.Student(stu.getId(), stu.getFirstname(), stu.getLastname(), stu.getGroup()));
                 }
 

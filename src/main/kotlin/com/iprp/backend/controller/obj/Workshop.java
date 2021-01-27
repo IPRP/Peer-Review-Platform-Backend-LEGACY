@@ -2,15 +2,7 @@ package com.iprp.backend.controller.obj;
 
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.iprp.backend.DataManagement;
-import com.iprp.backend.controller.obj.Student;
-import com.iprp.backend.repos.WrapperRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 @JsonAutoDetect
 public class Workshop {

@@ -115,7 +115,7 @@ class DataManagement {
      * Get a specific workshop from a teacher's perspective. ALS WORKSHOP
      * @author Georg Reisinger
      */
-    fun getTeacherWorkshopNeu(workshopId: String): Workshop? {
+    fun getTeacherWorkshopStudents(workshopId: String): MutableList<Map<String, Any>> {
         try {
             val workshop = repo.findWorkshop(workshopId)
             if (workshop != null) {
@@ -146,10 +146,10 @@ class DataManagement {
                     )
                 }
 
-                return workshop
+                return students;
             }
-        } catch (ex: Exception) {}
-        return null
+        } catch (ex: Exception) {ex.printStackTrace()}
+        return mutableListOf<Map<String, Any>>();
     }
 
     /**
