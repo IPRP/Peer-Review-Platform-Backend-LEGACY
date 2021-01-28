@@ -99,6 +99,7 @@ public class Workshop {
 
     @JsonSetter
     public void setMembers(ArrayList<Student> members) {
+        this.members = new ArrayList<>();
         this.members = members;
     }
 

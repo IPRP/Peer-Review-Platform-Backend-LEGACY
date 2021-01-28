@@ -80,10 +80,7 @@ public class RestTeacher {
         }
         Workshop listWorkshop;
         listWorkshop = new JsonHelper(payload).generateWorkshop();
-        System.out.println(new JsonHelper(listWorkshop).generateJson());
         Map<String, Object> workshop = datamanagement.getTeacherWorkshop(listWorkshop.getId());
-        System.out.println("workshop ausgabe");
-        System.out.println(workshop);
         com.iprp.backend.data.Workshop workshop1 = new com.iprp.backend.data.Workshop(listWorkshop.getId(), listWorkshop.getBeschreibung(), LocalDateTime.now().plusDays(1), listWorkshop.isAnonym(), getStudent(listWorkshop), new ArrayList<>(), "");
         return datamanagement.updateWorkshop(listWorkshop.getId(), workshop1.getTeachers(), getStudent(listWorkshop), listWorkshop.getTitle(), listWorkshop.getBeschreibung(), workshop1.getEnd(), new ArrayList<>());
     }
@@ -99,10 +96,6 @@ public class RestTeacher {
         if (authentication == null) {
             return Collections.singletonMap("ok", false).toString();
         }
-        //Erstellt user
-        datamanagement.addTeacher("teacher", "teacher", "teacher");
-        datamanagement.addStudent("Georg", "Georg", "Reisinger", " ");
-        datamanagement.addStudent("Lukas", "Lukas", "Nowy", " ");
         //Erstellt Frontend Workshop
         workshop = new JsonHelper(json).generateWorkshop();
         //Teacher Backend
@@ -113,7 +106,6 @@ public class RestTeacher {
         if(workshop != null && workshop.getKriterien() != null) {
             for (Kriterium kr : workshop.getKriterien()) {
                 Map<String, String> map = new java.util.HashMap<>(Collections.emptyMap());
-                System.out.println(kr.getType() + " " + kr.getName());
                 map.put("type", kr.getType());
                 map.put("title", kr.getName());
                 map.put("content", kr.getBeschreibung());
@@ -130,15 +122,7 @@ public class RestTeacher {
                 ar.add(map);
             }
 
-            System.out.println(new JsonHelper(workshop).generateJson());
-            datamanagement.addStudent("ge", "georg", "reisinger", "3D");
-            datamanagement.addStudent("lu", "lukas", "nowy", "3D");
-//            System.out.println("im rest conroller");
-//            System.out.println(repo.findStudent("georg", "reisinger"));
-//            this.foundStudent.add(repo.findStudent("georg", "reisinger"));
-//            workshop.findStudent();
             Map<String, Object> map2 = datamanagement.addWorkshop(te, getStudent(workshop), workshop.getTitle(), workshop.getBeschreibung(), false, LocalDateTime.now().plusDays(1), ar);
-            System.out.println(map2.toString());
 
             return map2.toString();
         }else{
@@ -160,8 +144,6 @@ public class RestTeacher {
                 this.foundStudent.addAll(tmpstu);
                 for (Student tmpstustu:
                      tmpstu) {
-                    System.out.println("in der for each");
-                    System.out.println(tmpstustu.getId());
                     studentsid.add(tmpstustu.getId());
                 }
 
@@ -177,8 +159,6 @@ public class RestTeacher {
         if (authentication == null) {
             return Collections.singletonMap("ok", false).toString();
         }
-        System.out.println("DEL workshops");
-        System.out.println(id);
         datamanagement.deleteWorkshop(id);
         return getWorkshops();
     }
@@ -210,31 +190,19 @@ public class RestTeacher {
         System.out.println("GET workshops");
         //Geht durch alle workshops
         for (com.iprp.backend.data.Workshop wo : workshops) {
-            System.out.println("Workshop");
-//            Geht durch alle students
-//            for (String stu : wo.getStudents()) {
-//                System.out.println("stu: " + stu + " " + repo.findStudent(stu).getId());
-//                System.out.println(" WO id: " + wo.getId());
-//                students.add(repo.findStudent(stu));
-//                submissions.addAll(repo.findAllStudentSubmissionsInWorkshop(stu, wo.getId()));
-//            }
-            System.out.println(datamanagement.getTeacherWorkshopStudents(wo.getId()));
             for (Map<String, Object> stu:
                  datamanagement.getTeacherWorkshopStudents(wo.getId())) {
-                System.out.println(stu.get("id").toString());
                 students.add(new Student(stu.get("id").toString(), stu.get("firstname").toString(), stu.get("lastname").toString(), stu.get("group").toString()));
                 submissions.addAll(repo.findAllStudentSubmissionsInWorkshop(stu.get("id").toString(), wo.getId()));
             }
 //            Geht durch alle submissions
             if (submissions != null) {
-                System.out.println("Submission 0 title: " + submissions.toArray().toString());
                 ArrayList<SubmissionID> mySubmissionsDone = new ArrayList<>();
                 ArrayList<SubmissionID> mySubmissionsOpen = new ArrayList<>();
                 ArrayList<Kriterium> kriteriumArrayList = new ArrayList<>();
                 ArrayList<ReviewID> myReviewDone = new ArrayList<>();
                 ArrayList<ReviewID> myReviewOpen = new ArrayList<>();
                 for (Submission su : submissions) {
-                    System.out.println("Submission title: " + su.getTitle());
                     if (su.getReviewsDone()) {
                         mySubmissionsDone.add(new SubmissionID(su.getId(), su.getTitle(), false));
                     } else {
@@ -242,11 +210,9 @@ public class RestTeacher {
                     }
                     //criteria
                     for (String reId : su.getReviews()) {
-                        System.out.println("review id: " + reId);
                         Review review = repo.findReview(reId);
                         if (review != null) {
                             Student student = repo.findStudent(review.getStudent());
-                            System.out.println("student name: " + student.getFirstname() + " " + student.getLastname());
                             if (review.getDone() && student != null) {
                                 myReviewDone.add(new ReviewID(review.getId(), student.getFirstname() + " " + student.getLastname(),review.getFeedback()));
                             } else if (student != null) {
@@ -256,8 +222,6 @@ public class RestTeacher {
                             if (student != null && criteria != null) {
                                 ArrayList<Map<String, Object>> points = new ArrayList<>();
                                 for (BigDecimal i : review.getPoints()) {
-                                    System.out.println("Points: " + i);
-                                    System.out.println("Criteria: " + criteria.getCriteria().get(i.intValue()).getTitle() + criteria.getCriteria().get(i.intValue()).getContent());
                                     com.iprp.backend.data.review.ReviewCriterionType crty = criteria.getCriteria().get(i.intValue()).getType();
                                     if (crty.equals(ReviewCriterionType.Percentage)) {
                                         kriteriumArrayList.add(new Kriterium(0, criteria.getCriteria().get(i.intValue()).getTitle(), criteria.getCriteria().get(i.intValue()).getContent(), false, -1, review.getPoints().get(i.intValue()).doubleValue()));
@@ -281,8 +245,6 @@ public class RestTeacher {
                 ArrayList<com.iprp.backend.controller.obj.Student> studentsJava = new ArrayList<>();
                 for (Student stu:
                      students) {
-                    System.out.println("get workshop student namen");
-                    System.out.println(stu.getId()+stu.getFirstname()+stu.getLastname()+stu.getGroup());
                     studentsJava.add(new com.iprp.backend.controller.obj.Student(stu.getId(), stu.getFirstname(), stu.getLastname(), stu.getGroup()));
                 }
 
@@ -291,7 +253,21 @@ public class RestTeacher {
                 System.out.println("NO submission");
             }
         }
-        return new JsonHelper(myWorkshops).generateJson();
+        ArrayList<Workshop> returnWorkshops = new ArrayList<>();
+        for (Workshop workshop:
+             myWorkshops) {
+            String workshopid = workshop.getId();
+            com.iprp.backend.data.Workshop kotlinWorkshop = repo.findWorkshop(workshopid);
+            ArrayList<com.iprp.backend.controller.obj.Student> studentenJava = new ArrayList<>();
+            assert kotlinWorkshop != null;
+            for(String studentid : kotlinWorkshop.getStudents()) {
+                Student student = repo.findStudent(studentid);
+                studentenJava.add(new com.iprp.backend.controller.obj.Student(student.getId(), student.getFirstname(), student.getLastname(), student.getGroup()));
+            }
+            workshop.setMembers(studentenJava);
+            returnWorkshops.add(workshop);
+        }
+        return new JsonHelper(returnWorkshops).generateJson();
     }
 
     /**

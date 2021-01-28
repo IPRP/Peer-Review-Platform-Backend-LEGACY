@@ -33,8 +33,6 @@ open class BackendApplication : CommandLineRunner {
     }
 
     override fun run(vararg args: String?) {
-        dm.addStudent("georg", "Georg", "Reisinger", "3D")
-        dm.addStudent("georg", "Lukas", "Nowy", "3D")
         if (args.contains("student")) {
             repo.deleteAll()
             // Add student debug data
@@ -52,6 +50,11 @@ open class BackendApplication : CommandLineRunner {
                 listOf("t2"), listOf("s1", "s2"), "Workshop 2", "Better Workshop", true, LocalDateTime.now(),
                 listOf(mapOf("title" to "criterion", "type" to "point", "content" to "abc", "weight" to "10"))
             )
+        }
+        if(args.contains("teacher")){
+            dm.addTeacher("te", "teacher", "teacher")
+            dm.addStudent("ge", "georg", "reisinger", "3d")
+            dm.addStudent("lu", "lukas", "nowy", "3d")
         }
     }
 
